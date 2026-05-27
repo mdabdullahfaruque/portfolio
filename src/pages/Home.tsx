@@ -24,7 +24,9 @@ import {
   Phone,
   PencilSimple,
   FloppyDisk,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Trash,
+  Plus
 } from '@phosphor-icons/react'
 import { PortfolioData } from '@/lib/types'
 import { toast } from 'sonner'
@@ -89,7 +91,7 @@ export function Home({ data, t, onDownloadPDF, isAdmin, onUpdate }: HomeProps) {
                   <Label>Profile Picture</Label>
                   <div className="flex items-center gap-6 mt-3">
                     <Avatar className="w-24 h-24">
-                      <AvatarImage src={editedData.photoUrl} alt={editedData.name} />
+                      <AvatarImage src={editedData.photoUrl} alt={editedData.name} className="object-cover" />
                       <AvatarFallback>{editedData.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
@@ -209,6 +211,83 @@ export function Home({ data, t, onDownloadPDF, isAdmin, onUpdate }: HomeProps) {
                         contact: { ...editedData.contact, github: e.target.value }
                       })}
                     />
+                  </div>
+                </div>
+
+                <div className="border-t pt-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <Label className="text-base font-semibold">Stats Section</Label>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        const newStats = editedData.stats || []
+                        setEditedData({
+                          ...editedData,
+                          stats: [
+                            ...newStats,
+                            {
+                              id: Date.now().toString(),
+                              label: 'New Stat',
+                              value: '0',
+                              icon: ''
+                            }
+                          ]
+                        })
+                      }}
+                      className="gap-2"
+                    >
+                      <Plus size={16} weight="bold" />
+                      Add Stat
+                    </Button>
+                  </div>
+                  <div className="space-y-4 max-h-64 overflow-y-auto">
+                    {editedData.stats && editedData.stats.map((stat, index) => (
+                      <Card key={stat.id} className="p-4">
+                        <div className="flex gap-3">
+                          <div className="flex-1 space-y-3">
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <Label className="text-xs">Value</Label>
+                                <Input
+                                  value={stat.value}
+                                  onChange={(e) => {
+                                    const newStats = [...(editedData.stats || [])]
+                                    newStats[index] = { ...stat, value: e.target.value }
+                                    setEditedData({ ...editedData, stats: newStats })
+                                  }}
+                                  placeholder="e.g. 50+"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-xs">Label</Label>
+                                <Input
+                                  value={stat.label}
+                                  onChange={(e) => {
+                                    const newStats = [...(editedData.stats || [])]
+                                    newStats[index] = { ...stat, label: e.target.value }
+                                    setEditedData({ ...editedData, stats: newStats })
+                                  }}
+                                  placeholder="e.g. Projects Completed"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => {
+                              const newStats = (editedData.stats || []).filter((_, i) => i !== index)
+                              setEditedData({ ...editedData, stats: newStats })
+                            }}
+                          >
+                            <Trash size={16} weight="bold" className="text-destructive" />
+                          </Button>
+                        </div>
+                      </Card>
+                    ))}
                   </div>
                 </div>
               </div>
