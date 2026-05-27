@@ -225,7 +225,7 @@ export const initialPortfolioData: PortfolioData = {
   stats: [
     { id: '1', label: 'Years Experience', value: '6+', icon: 'briefcase' },
     { id: '2', label: 'Projects Completed', value: '50+', icon: 'code' },
-    { id: '3', label: 'Companies Worked', value: '4', icon: 'buildings' },
+    { id: '3', label: 'Live Products', value: '2', icon: 'rocket' },
     { id: '4', label: 'Technologies', value: '30+', icon: 'stack' },
   ],
   highlights: [
