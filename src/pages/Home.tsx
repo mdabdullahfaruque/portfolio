@@ -512,7 +512,7 @@ export function Home({ data, t, onDownloadPDF, isAdmin, onUpdate }: HomeProps) {
         </section>
       )}
 
-      <section className="py-16 px-6 bg-muted/30">
+      <section className="py-20 px-6 bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -520,8 +520,12 @@ export function Home({ data, t, onDownloadPDF, isAdmin, onUpdate }: HomeProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl font-bold mb-8 text-center text-foreground">Recent Experience</h2>
-            <div className="space-y-6">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold mb-3 text-foreground">Recent Experience</h2>
+              <p className="text-muted-foreground text-lg">Key roles that shaped my professional journey</p>
+            </div>
+            
+            <div className="space-y-8">
               {data.experiences.slice(0, 3).map((exp, index) => (
                 <motion.div
                   key={exp.id}
@@ -530,36 +534,72 @@ export function Home({ data, t, onDownloadPDF, isAdmin, onUpdate }: HomeProps) {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="p-6 hover:shadow-lg transition-shadow">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between mb-3">
-                      <div>
-                        <h3 className="text-xl font-semibold text-foreground">{exp.title}</h3>
-                        <p className="text-primary font-medium">{exp.company}</p>
+                  <Card className="p-8 hover:shadow-xl transition-all duration-300 hover:border-accent/50 border-2">
+                    <div className="flex flex-col lg:flex-row gap-6">
+                      <div className="flex-1">
+                        <div className="flex flex-col md:flex-row md:items-start justify-between mb-4 gap-3">
+                          <div>
+                            <h3 className="text-2xl font-bold text-foreground mb-2">{exp.title}</h3>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <p className="text-lg text-primary font-semibold">{exp.company}</p>
+                              {exp.companyType && (
+                                <>
+                                  <span className="text-muted-foreground">•</span>
+                                  <p className="text-sm text-muted-foreground italic">{exp.companyType}</p>
+                                </>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-3 mt-2 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-1">
+                                <MapPin size={16} weight="fill" className="text-accent" />
+                                {exp.location}
+                              </div>
+                              <span>•</span>
+                              <div className="flex items-center gap-1">
+                                <Briefcase size={16} weight="fill" className="text-accent" />
+                                {exp.startDate} - {exp.endDate}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <p className="text-foreground/90 mb-4 leading-relaxed">{exp.description}</p>
+
+                        {exp.achievements && exp.achievements.length > 0 && (
+                          <div className="mb-4">
+                            <h4 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">Key Achievements:</h4>
+                            <div className="space-y-2">
+                              {exp.achievements.slice(0, 4).map((achievement, idx) => (
+                                <div key={idx} className="flex items-start gap-2">
+                                  <CheckCircle size={18} weight="fill" className="text-accent mt-0.5 flex-shrink-0" />
+                                  <p className="text-sm text-muted-foreground leading-relaxed">{achievement}</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div>
+                          <h4 className="text-sm font-semibold text-foreground mb-2 uppercase tracking-wide">Technologies:</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {exp.technologies.map((tech) => (
+                              <Badge key={tech} variant="secondary" className="text-xs font-medium px-3 py-1">
+                                {tech}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                      <Badge variant="secondary" className="mt-2 md:mt-0 w-fit">
-                        {exp.startDate} - {exp.endDate}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-3">{exp.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {exp.technologies.slice(0, 5).map((tech) => (
-                        <Badge key={tech} variant="outline" className="text-xs">
-                          {tech}
-                        </Badge>
-                      ))}
-                      {exp.technologies.length > 5 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{exp.technologies.length - 5} more
-                        </Badge>
-                      )}
                     </div>
                   </Card>
                 </motion.div>
               ))}
             </div>
-            <div className="text-center mt-8">
-              <Button variant="outline" onClick={() => navigate('/experience')}>
-                View All Experience <ArrowRight size={18} weight="bold" className="ml-2" />
+            
+            <div className="text-center mt-10">
+              <Button size="lg" variant="outline" onClick={() => navigate('/experience')} className="gap-2">
+                View All Experience 
+                <ArrowRight size={20} weight="bold" />
               </Button>
             </div>
           </motion.div>
