@@ -40,14 +40,23 @@ interface HomeProps {
 }
 
 export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
-  const handleDownloadResume = () => {
-    const link = document.createElement('a')
-    link.href = resumePDF
-    link.download = 'MdAbdullahFaruque_Resume.pdf'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    toast.success('Resume downloaded successfully!')
+  const handleDownloadResume = async () => {
+    try {
+      const response = await fetch(resumePDF)
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = 'MdAbdullahFaruque_Resume.pdf'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+      toast.success('Resume downloaded successfully!')
+    } catch (error) {
+      toast.error('Failed to download resume. Please try again.')
+      console.error('Resume download error:', error)
+    }
   }
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [editedData, setEditedData] = useState<PortfolioData>(data)
