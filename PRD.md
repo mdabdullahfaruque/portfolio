@@ -61,22 +61,27 @@ An advanced, multi-page portfolio web application for MD Abdullah Faruque with f
 
 ## Design Direction
 
-The design should evoke **technical excellence, modern professionalism, and enterprise trustworthiness** - like a senior software architect's portfolio. Deep navy blues convey technical depth and corporate trust, while electric blue accents provide energy and draw attention to key interactions. The aesthetic should communicate "I build scalable systems for global markets" through visual precision, generous whitespace, and confident typography.
+The design should evoke **technical excellence, innovative creativity, and sophisticated professionalism** - like a senior software architect's portfolio that stands out in a competitive market. The aesthetic moves beyond minimalism to showcase personality and technical prowess through dynamic interactions, bold visual elements, and immersive experiences. Rich gradients, depth through shadows and layers, smooth animations, and modern glass-morphism effects create an engaging, memorable experience that communicates "I build cutting-edge, scalable systems with exceptional attention to detail and user experience."
 
 ## Color Selection
 
-A sophisticated corporate palette with deep navy as foundation, conveying technical expertise and trustworthiness.
+A vibrant, modern palette with deep purple-blue gradients, energetic accents, and sophisticated depth conveying innovation and technical mastery.
 
-- **Primary Color**: Deep Navy Blue (oklch(0.25 0.08 250)) - Represents technical depth, professionalism, corporate trust
+- **Primary Color**: Deep Indigo (oklch(0.32 0.12 265)) - Represents technical innovation, creativity, modern professionalism
 - **Secondary Colors**: 
-  - Cool Gray (oklch(0.85 0.01 250)) - Card backgrounds and subtle separations
-  - Slate Gray (oklch(0.45 0.02 250)) - Supporting neutral for less prominent content
-- **Accent Color**: Electric Blue (oklch(0.65 0.15 245)) - CTAs, links, interactive elements, active states
+  - Vibrant Purple (oklch(0.55 0.20 290)) - Supporting accent for CTAs and highlights
+  - Rich Teal (oklch(0.60 0.15 200)) - Secondary interactive elements
+  - Cool Slate (oklch(0.42 0.02 250)) - Supporting text and less prominent content
+- **Accent Color**: Electric Cyan (oklch(0.72 0.18 210)) - Primary CTAs, links, interactive elements, active states, key highlights
+- **Background Layers**: 
+  - Base: Nearly White (oklch(0.99 0 0))
+  - Card: Pure White (oklch(1 0 0)) with subtle shadows
+  - Muted: Light Gray-Blue (oklch(0.96 0.005 250))
 - **Foreground/Background Pairings**: 
-  - Primary Navy (oklch(0.25 0.08 250)): White text (oklch(0.98 0 0)) - Ratio 11.2:1 ✓
-  - Accent Blue (oklch(0.65 0.15 245)): White text (oklch(0.98 0 0)) - Ratio 5.8:1 ✓
-  - Background (oklch(0.98 0 0)): Navy text (oklch(0.25 0.08 250)) - Ratio 11.2:1 ✓
-  - Muted Gray (oklch(0.92 0.01 250)): Slate text (oklch(0.45 0.02 250)) - Ratio 4.9:1 ✓
+  - Primary Indigo (oklch(0.32 0.12 265)): White text (oklch(0.99 0 0)) - Ratio 10.5:1 ✓
+  - Accent Cyan (oklch(0.72 0.18 210)): Indigo text (oklch(0.32 0.12 265)) - Ratio 5.2:1 ✓
+  - Background (oklch(0.99 0 0)): Indigo text (oklch(0.32 0.12 265)) - Ratio 10.5:1 ✓
+  - Purple Accent (oklch(0.55 0.20 290)): White text (oklch(0.99 0 0)) - Ratio 6.1:1 ✓
 
 ## Font Selection
 

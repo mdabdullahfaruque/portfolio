@@ -44,18 +44,22 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
     toast.success('Project deleted')
   }
   return (
-    <div className="min-h-screen pt-28 pb-20 px-6">
+    <div className="min-h-screen pt-28 pb-20 px-6 bg-gradient-to-b from-background via-muted/20 to-background">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="flex items-center justify-between mb-12">
+          <div className="flex items-center justify-between mb-16">
             <div>
-              <h1 className="text-5xl font-bold mb-4">{t.nav.projects}</h1>
-              <p className="text-xl text-muted-foreground">
-                Showcasing {data.projects.length} impactful projects
+              <h1 className="text-5xl lg:text-6xl font-black mb-4">
+                <span className="bg-gradient-to-r from-accent via-secondary to-accent bg-clip-text text-transparent">
+                  {t.nav.projects}
+                </span>
+              </h1>
+              <p className="text-xl lg:text-2xl text-muted-foreground font-medium">
+                Showcasing {data.projects.length} impactful projects built for global markets
               </p>
             </div>
             
@@ -73,9 +77,10 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                   })
                   setIsDialogOpen(true)
                 }}
-                className="gap-2"
+                size="lg"
+                className="gap-2 shadow-xl shadow-accent/30"
               >
-                <Plus size={20} weight="bold" />
+                <Plus size={24} weight="bold" />
                 Add Project
               </Button>
             )}
@@ -87,11 +92,14 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                 key={project.id}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -12, scale: 1.02 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="p-8 h-full flex flex-col hover:shadow-2xl transition-all duration-300 group relative">
+                <Card className="p-8 h-full flex flex-col hover:shadow-2xl hover:shadow-accent/20 transition-all duration-300 group relative border-2 border-border hover:border-accent/50 bg-gradient-to-br from-card via-card to-muted overflow-hidden">
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-accent/10 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                  
                   {isAdmin && (
-                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                       <Button
                         size="sm"
                         variant="outline"
@@ -99,40 +107,47 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                           setEditingProject(project)
                           setIsDialogOpen(true)
                         }}
+                        className="shadow-lg"
                       >
-                        <Pencil size={16} />
+                        <Pencil size={16} weight="bold" />
                       </Button>
                       <Button
                         size="sm"
                         variant="destructive"
                         onClick={() => handleDelete(project.id)}
+                        className="shadow-lg"
                       >
-                        <Trash size={16} />
+                        <Trash size={16} weight="bold" />
                       </Button>
                     </div>
                   )}
 
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <h3 className="text-2xl font-semibold group-hover:text-accent transition-colors">
+                  <div className="flex items-start justify-between gap-4 mb-4 relative z-10">
+                    <h3 className="text-2xl lg:text-3xl font-bold group-hover:text-accent transition-colors">
                       {project.name}
                     </h3>
-                    <Badge variant="outline" className="text-xs whitespace-nowrap">
+                    <Badge 
+                      variant={project.status === 'Active' ? 'default' : 'outline'}
+                      className="text-xs whitespace-nowrap px-3 py-1 font-bold"
+                    >
                       {project.status}
                     </Badge>
                   </div>
 
                   {project.market && (
-                    <p className="text-sm text-accent font-medium mb-3">
-                      Market: {project.market}
-                    </p>
+                    <div className="flex items-center gap-2 mb-4 relative z-10">
+                      <Badge variant="secondary" className="text-sm font-semibold">
+                        📍 {project.market}
+                      </Badge>
+                    </div>
                   )}
 
-                  <p className="text-foreground/90 mb-4 flex-grow">{project.description}</p>
+                  <p className="text-foreground/80 text-base mb-6 flex-grow leading-relaxed relative z-10">{project.description}</p>
 
                   {project.technologies && project.technologies.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="flex flex-wrap gap-2 mb-6 relative z-10">
                       {project.technologies.map((tech) => (
-                        <Badge key={tech} variant="secondary" className="text-xs">
+                        <Badge key={tech} variant="secondary" className="text-xs font-medium hover:bg-accent hover:text-accent-foreground transition-colors">
                           {tech}
                         </Badge>
                       ))}
@@ -140,11 +155,11 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                   )}
 
                   {project.url && (
-                    <Button asChild className="w-full mt-auto gap-2">
+                    <Button asChild className="w-full mt-auto gap-2 text-base h-12 shadow-lg hover:shadow-xl transition-all relative z-10" size="lg">
                       <a href={project.url} target="_blank" rel="noopener noreferrer">
-                        <Globe size={16} weight="bold" />
+                        <Globe size={20} weight="bold" />
                         Visit Project
-                        <ArrowRight size={16} weight="bold" />
+                        <ArrowRight size={20} weight="bold" />
                       </a>
                     </Button>
                   )}
