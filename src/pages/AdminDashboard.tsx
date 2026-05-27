@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card } from '@/components/ui/card'
@@ -32,6 +32,10 @@ interface AdminDashboardProps {
 
 export function AdminDashboard({ data, onUpdate, onLogout }: AdminDashboardProps) {
   const [editedData, setEditedData] = useState<PortfolioData>(data)
+
+  useEffect(() => {
+    setEditedData(data)
+  }, [data])
 
   const handleSave = () => {
     onUpdate(editedData)

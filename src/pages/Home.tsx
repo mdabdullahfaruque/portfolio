@@ -1,10 +1,14 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog'
 import { 
   ArrowRight, 
   Briefcase, 
@@ -17,17 +21,44 @@ import {
   CheckCircle,
   MapPin,
   Envelope,
-  Phone
+  Phone,
+  PencilSimple,
+  FloppyDisk,
+  Image as ImageIcon
 } from '@phosphor-icons/react'
 import { PortfolioData } from '@/lib/types'
+import { toast } from 'sonner'
 
 interface HomeProps {
   data: PortfolioData
   t: any
   onDownloadPDF: () => void
+  isAdmin?: boolean
+  onUpdate?: (updatedData: PortfolioData) => void
 }
 
-export function Home({ data, t, onDownloadPDF }: HomeProps) {
+export function Home({ data, t, onDownloadPDF, isAdmin, onUpdate }: HomeProps) {
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [editedData, setEditedData] = useState<PortfolioData>(data)
+
+  const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setEditedData({ ...editedData, photoUrl: reader.result as string })
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleSave = () => {
+    if (onUpdate) {
+      onUpdate(editedData)
+      toast.success('Home page updated successfully!')
+      setEditDialogOpen(false)
+    }
+  }
   const navigate = useNavigate()
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
@@ -39,6 +70,163 @@ export function Home({ data, t, onDownloadPDF }: HomeProps) {
 
   return (
     <div className="min-h-screen bg-background" ref={containerRef}>
+      {isAdmin && (
+        <div className="fixed bottom-6 right-6 z-50 no-print">
+          <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="lg" className="gap-2 shadow-lg" onClick={() => setEditedData(data)}>
+                <PencilSimple size={20} weight="bold" />
+                Edit Home Page
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Edit Home Page Information</DialogTitle>
+              </DialogHeader>
+              
+              <div className="space-y-6 py-4">
+                <div>
+                  <Label>Profile Picture</Label>
+                  <div className="flex items-center gap-6 mt-3">
+                    <Avatar className="w-24 h-24">
+                      <AvatarImage src={editedData.photoUrl} alt={editedData.name} />
+                      <AvatarFallback>{editedData.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleProfileImageUpload}
+                        className="mb-2"
+                        id="profile-image-upload"
+                      />
+                      <p className="text-xs text-muted-foreground">Upload a new profile picture (PNG, JPG, or GIF)</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-name">Full Name</Label>
+                    <Input
+                      id="edit-name"
+                      value={editedData.name}
+                      onChange={(e) => setEditedData({ ...editedData, name: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-title">Job Title</Label>
+                    <Input
+                      id="edit-title"
+                      value={editedData.title}
+                      onChange={(e) => setEditedData({ ...editedData, title: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="edit-tagline">Tagline</Label>
+                  <Input
+                    id="edit-tagline"
+                    value={editedData.tagline}
+                    onChange={(e) => setEditedData({ ...editedData, tagline: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="edit-summary">Professional Summary</Label>
+                  <Textarea
+                    id="edit-summary"
+                    value={editedData.summary}
+                    onChange={(e) => setEditedData({ ...editedData, summary: e.target.value })}
+                    rows={4}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="edit-aboutMe">About Me (Extended)</Label>
+                  <Textarea
+                    id="edit-aboutMe"
+                    value={editedData.aboutMe}
+                    onChange={(e) => setEditedData({ ...editedData, aboutMe: e.target.value })}
+                    rows={3}
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-email">Email</Label>
+                    <Input
+                      id="edit-email"
+                      type="email"
+                      value={editedData.contact.email}
+                      onChange={(e) => setEditedData({
+                        ...editedData,
+                        contact: { ...editedData.contact, email: e.target.value }
+                      })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-phone">Phone</Label>
+                    <Input
+                      id="edit-phone"
+                      value={editedData.contact.phone}
+                      onChange={(e) => setEditedData({
+                        ...editedData,
+                        contact: { ...editedData.contact, phone: e.target.value }
+                      })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-location">Location</Label>
+                    <Input
+                      id="edit-location"
+                      value={editedData.contact.location}
+                      onChange={(e) => setEditedData({
+                        ...editedData,
+                        contact: { ...editedData.contact, location: e.target.value }
+                      })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-linkedin">LinkedIn URL</Label>
+                    <Input
+                      id="edit-linkedin"
+                      value={editedData.contact.linkedin}
+                      onChange={(e) => setEditedData({
+                        ...editedData,
+                        contact: { ...editedData.contact, linkedin: e.target.value }
+                      })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-github">GitHub URL</Label>
+                    <Input
+                      id="edit-github"
+                      value={editedData.contact.github}
+                      onChange={(e) => setEditedData({
+                        ...editedData,
+                        contact: { ...editedData.contact, github: e.target.value }
+                      })}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleSave} className="gap-2">
+                  <FloppyDisk size={18} weight="bold" />
+                  Save Changes
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      )}
+
       <section className="min-h-screen flex items-center justify-center relative pt-24 pb-16 px-6">
         <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-background to-background" />
         

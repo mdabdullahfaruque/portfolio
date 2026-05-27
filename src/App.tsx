@@ -115,6 +115,8 @@ function App() {
                 data={portfolioData}
                 t={t}
                 onDownloadPDF={handleDownloadPDF}
+                isAdmin={isAdmin}
+                onUpdate={handleDataUpdate}
               />
             }
           />
