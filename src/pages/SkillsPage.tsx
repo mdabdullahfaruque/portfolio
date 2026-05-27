@@ -29,7 +29,7 @@ interface SkillsPageProps {
   onUpdate: (data: PortfolioData) => void
 }
 
-interface SkillBarProps {
+interface SkillItemProps {
   skill: Skill
   index: number
 }
@@ -45,71 +45,24 @@ const categoryIcons: Record<string, any> = {
   ai: Robot
 }
 
-const categoryColors: Record<string, string> = {
-  backend: 'from-blue-500/20 to-blue-600/20 border-blue-500/30',
-  frontend: 'from-purple-500/20 to-purple-600/20 border-purple-500/30',
-  cloud: 'from-cyan-500/20 to-cyan-600/20 border-cyan-500/30',
-  databases: 'from-green-500/20 to-green-600/20 border-green-500/30',
-  testing: 'from-orange-500/20 to-orange-600/20 border-orange-500/30',
-  tools: 'from-pink-500/20 to-pink-600/20 border-pink-500/30',
-  cms: 'from-indigo-500/20 to-indigo-600/20 border-indigo-500/30',
-  ai: 'from-violet-500/20 to-violet-600/20 border-violet-500/30'
-}
-
-function SkillBar({ skill, index }: SkillBarProps) {
+function SkillItem({ skill, index }: SkillItemProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.5 })
-
-  const getProficiencyLabel = (proficiency: number) => {
-    if (proficiency >= 90) return { label: 'Expert', color: 'text-green-600 bg-green-50' }
-    if (proficiency >= 75) return { label: 'Advanced', color: 'text-blue-600 bg-blue-50' }
-    if (proficiency >= 60) return { label: 'Intermediate', color: 'text-yellow-600 bg-yellow-50' }
-    return { label: 'Beginner', color: 'text-gray-600 bg-gray-50' }
-  }
-
-  const proficiencyInfo = getProficiencyLabel(skill.proficiency)
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: -20 }}
-      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-      transition={{ duration: 0.5, delay: index * 0.05 }}
-      className="space-y-2"
+      initial={{ opacity: 0, y: 10 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+      transition={{ duration: 0.3, delay: index * 0.03 }}
+      className="flex items-center justify-between px-4 py-3 rounded-lg bg-card/50 hover:bg-card border border-border/50 hover:border-border transition-all duration-200"
     >
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-foreground">{skill.name}</span>
-          <Badge variant="secondary" className={`text-xs px-2 py-0.5 ${proficiencyInfo.color}`}>
-            {proficiencyInfo.label}
-          </Badge>
-        </div>
-        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-          {skill.yearsOfExperience && skill.yearsOfExperience > 0 && (
-            <span className="font-mono bg-muted px-2 py-1 rounded">
-              {skill.yearsOfExperience}yr{skill.yearsOfExperience > 1 ? 's' : ''}
-            </span>
-          )}
-          <span className="font-mono font-semibold">
-            {skill.proficiency}%
-          </span>
-        </div>
-      </div>
-      <div className="h-2.5 bg-muted rounded-full overflow-hidden shadow-inner">
-        <motion.div
-          className="h-full bg-gradient-to-r from-primary via-secondary to-accent rounded-full relative overflow-hidden"
-          initial={{ width: 0 }}
-          animate={isInView ? { width: `${skill.proficiency}%` } : { width: 0 }}
-          transition={{ duration: 1.2, delay: index * 0.05 + 0.2, ease: [0.4, 0, 0.2, 1] }}
-        >
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-            initial={{ x: '-100%' }}
-            animate={{ x: '200%' }}
-            transition={{ duration: 2, delay: index * 0.05 + 0.4, ease: 'easeInOut' }}
-          />
-        </motion.div>
-      </div>
+      <span className="text-sm font-medium text-foreground">{skill.name}</span>
+      {skill.yearsOfExperience && skill.yearsOfExperience > 0 && (
+        <Badge variant="secondary" className="text-xs font-mono">
+          {skill.yearsOfExperience}yr{skill.yearsOfExperience > 1 ? 's' : ''}
+        </Badge>
+      )}
     </motion.div>
   )
 }
@@ -172,11 +125,6 @@ export function SkillsPage({ data, t, isAdmin, onUpdate }: SkillsPageProps) {
     return (totalYears / allSkills.length).toFixed(1)
   }
 
-  const getExpertSkillsCount = () => {
-    const allSkills = Object.values(data.skills).flat()
-    return allSkills.filter(skill => skill.proficiency >= 90).length
-  }
-
   return (
     <div className="min-h-screen pt-28 pb-20 px-6 bg-background">
       <div className="max-w-7xl mx-auto">
@@ -185,38 +133,37 @@ export function SkillsPage({ data, t, isAdmin, onUpdate }: SkillsPageProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="mb-12">
-            <h1 className="text-5xl font-bold mb-4 text-foreground">{t.nav.skills}</h1>
-            <p className="text-lg text-muted-foreground mb-8 max-w-3xl">
-              A comprehensive overview of my technical expertise, demonstrating proficiency across multiple domains with years of hands-on experience.
+          <div className="mb-10">
+            <h1 className="text-4xl font-bold mb-3 text-foreground">{t.nav.skills}</h1>
+            <p className="text-base text-muted-foreground mb-6 max-w-2xl">
+              Technical expertise across multiple domains with hands-on experience.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <Card className="p-6 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <Card className="p-5 border">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-primary mb-2">{getTotalSkills()}</div>
-                  <div className="text-sm text-muted-foreground uppercase tracking-wide">Total Technologies</div>
+                  <div className="text-3xl font-bold text-foreground mb-1">{getTotalSkills()}</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wide">Technologies</div>
                 </div>
               </Card>
-              <Card className="p-6 bg-gradient-to-br from-secondary/5 to-secondary/10 border-secondary/20">
+              <Card className="p-5 border">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-secondary mb-2">{getExpertSkillsCount()}</div>
-                  <div className="text-sm text-muted-foreground uppercase tracking-wide">Expert Level Skills</div>
+                  <div className="text-3xl font-bold text-foreground mb-1">{getAverageYears()}</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wide">Avg. Years Exp.</div>
                 </div>
               </Card>
-              <Card className="p-6 bg-gradient-to-br from-accent/5 to-accent/10 border-accent/20">
+              <Card className="p-5 border">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-accent mb-2">{getAverageYears()}</div>
-                  <div className="text-sm text-muted-foreground uppercase tracking-wide">Avg. Years Experience</div>
+                  <div className="text-3xl font-bold text-foreground mb-1">{Object.keys(data.skills).length}</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wide">Categories</div>
                 </div>
               </Card>
             </div>
           </div>
 
-          <div className="grid gap-8">
+          <div className="grid gap-6">
             {Object.entries(data.skills).map(([category, categorySkills], catIndex) => {
               const Icon = categoryIcons[category]
-              const colorClass = categoryColors[category]
               
               return (
                 <motion.div
@@ -225,7 +172,7 @@ export function SkillsPage({ data, t, isAdmin, onUpdate }: SkillsPageProps) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: catIndex * 0.1 }}
                 >
-                  <Card className={`p-8 hover:shadow-xl transition-all duration-300 relative group bg-gradient-to-br ${colorClass} border-2`}>
+                  <Card className="p-6 hover:shadow-md transition-all duration-300 relative group">
                     {isAdmin && (
                       <Button
                         size="sm"
@@ -238,23 +185,18 @@ export function SkillsPage({ data, t, isAdmin, onUpdate }: SkillsPageProps) {
                       </Button>
                     )}
                     
-                    <div className="flex items-center gap-4 mb-8 pb-4 border-b border-border/50">
-                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <Icon size={28} weight="duotone" className="text-primary" />
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Icon size={20} weight="duotone" className="text-primary" />
                       </div>
-                      <div>
-                        <h3 className="text-2xl font-bold text-foreground">
-                          {t.labels.skillCategories[category as keyof typeof t.labels.skillCategories]}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          {categorySkills.length} skill{categorySkills.length !== 1 ? 's' : ''} in this category
-                        </p>
-                      </div>
+                      <h3 className="text-xl font-semibold text-foreground">
+                        {t.labels.skillCategories[category as keyof typeof t.labels.skillCategories]}
+                      </h3>
                     </div>
                     
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
                       {categorySkills.map((skill, index) => (
-                        <SkillBar key={skill.name} skill={skill} index={index} />
+                        <SkillItem key={skill.name} skill={skill} index={index} />
                       ))}
                     </div>
                   </Card>
