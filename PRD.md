@@ -1,165 +1,167 @@
 # Planning Guide
 
-An interactive, modern portfolio website showcasing MD Abdullah Faruque as a Senior Full Stack Developer with dynamic sections, admin panel for content management, multi-language support, and professional presentation inspired by contemporary portfolio designs.
+An advanced, multi-page portfolio web application for MD Abdullah Faruque with full admin panel functionality, allowing complete data management without redeployment, multi-language support, and professional presentation of 6+ years of software engineering experience.
 
 **Experience Qualities**: 
-1. **Dynamic** - Interactive elements, smooth animations, and engaging user experience that showcases technical expertise
-2. **Professional** - Modern, polished design with sophisticated visual hierarchy that commands attention
-3. **Manageable** - Owner-accessible admin panel for updating all content without redeployment, making the portfolio always current
+1. **Interactive & Advanced** - Multi-page architecture with smooth page transitions, dynamic routing, and engaging animations that showcase technical sophistication
+2. **Professional & Modern** - Polished design with a sophisticated color palette (deep navy & electric blue), refined typography (Space Grotesk & IBM Plex Sans), and enterprise-grade visual hierarchy
+3. **Fully Manageable** - Complete admin panel with authentication (admin@abdullahfaruque.com / Admin@123456) allowing real-time editing of all portfolio content including experiences, projects, skills, and personal information
 
-**Complexity Level**: Complex Application (advanced functionality with multiple views and admin capabilities)
-- Features comprehensive admin panel, real-time content editing, multi-language support, project showcase, interactive hero section, contact form, and dynamic PDF generation
+**Complexity Level**: Complex Application (advanced functionality with multiple views and complete admin capabilities)
+- Features comprehensive multi-page routing, full admin authentication, real-time content editing across all sections, multi-language support (English/German), project showcase with filtering, contact form integration, and PDF resume generation
 
 ## Essential Features
 
+### Admin Authentication & Management
+- **Functionality**: Secure login system with credentials (admin@abdullahfaruque.com / Admin@123456) providing full portfolio editing capabilities
+- **Purpose**: Enables the portfolio owner to update all content without requiring code changes or redeployment
+- **Trigger**: Access /admin route or click Admin button in navigation
+- **Progression**: User enters credentials → System validates → Admin logged in → Edit controls appear on all pages → Changes saved to KV → Data persists → Logout available
+- **Success criteria**: Admin can log in, see edit controls on all pages, modify any content, and see changes persist across sessions
+
+### Multi-Page Architecture
+- **Functionality**: Separate pages for Home, Experience, Projects, Skills, and Contact with client-side routing
+- **Purpose**: Provides organized, focused presentation of different portfolio aspects with improved navigation and UX
+- **Trigger**: Navigation bar clicks or direct URL access
+- **Progression**: User clicks nav item → Page transition animation → New page loads → URL updates → Active nav indicator moves
+- **Success criteria**: All pages load quickly, transitions are smooth, browser back/forward works correctly
+
+### Experience Management (Admin)
+- **Functionality**: Full CRUD operations for work experiences with dialog-based editing
+- **Purpose**: Keep professional history current without code changes
+- **Trigger**: Admin clicks edit/add buttons on Experience page
+- **Progression**: Admin clicks edit → Dialog opens with form → Fields populated → Admin modifies → Saves → Data updates in KV → UI refreshes → Toast confirmation
+- **Success criteria**: Can add, edit, delete experiences; all fields editable; changes persist
+
 ### Multi-Language Support
 - **Functionality**: Toggle between English and German languages with potential for additional EU languages
-- **Purpose**: Makes the resume accessible to international employers in Europe and English-speaking markets
+- **Purpose**: Makes the portfolio accessible to international employers in Europe and English-speaking markets
 - **Trigger**: Language selector in header
 - **Progression**: User clicks language toggle → Content instantly switches → Language preference persists → All sections update simultaneously
 - **Success criteria**: All text content updates without page reload, selected language persists across sessions
 
-### Editable Content Management
-- **Functionality**: All resume data stored in KV store and editable without redeployment
-- **Purpose**: Allows easy updates to experience, skills, projects, and contact information
-- **Trigger**: Admin mode accessed by the owner
-- **Progression**: Owner clicks edit mode → Sections become editable → Changes saved to KV store → Content updates live
-- **Success criteria**: All content can be modified and persists, including profile photo, experience entries, skills, and projects
-
-### Professional Photo Display
-- **Functionality**: Large, professional headshot with elegant presentation
-- **Purpose**: Personalizes the resume and creates connection with viewers
-- **Trigger**: Loads on page view
-- **Progression**: Page loads → Photo displays with subtle animation → Maintains aspect ratio responsively
-- **Success criteria**: Photo loads quickly, looks professional, scales appropriately on all devices
-
-### Structured Resume Sections
-- **Functionality**: Clear sections for Summary, Experience, Education, Skills, Projects, Certifications
-- **Purpose**: Organizes 6 years of experience into scannable, digestible sections
-- **Trigger**: Page scroll or section navigation
-- **Progression**: User scrolls → Sections smoothly reveal → Navigation highlights current section → Easy jump between sections
-- **Success criteria**: All career information is logically organized and easy to navigate
-
-### PDF Download
-- **Functionality**: Download formatted resume as PDF matching original resume style
+### PDF Resume Download
+- **Functionality**: Generate printable/downloadable PDF version of resume using browser print
 - **Purpose**: Provides traditional format for application systems and offline viewing
 - **Trigger**: Download button click
-- **Progression**: User clicks download → PDF generates with current language → Opens/downloads with proper formatting → Matches professional resume layout
+- **Progression**: User clicks download → Browser print dialog opens → User saves/prints → PDF generated with current language
 - **Success criteria**: PDF generated successfully with all content properly formatted
 
 ## Edge Case Handling
 
-- **Missing Profile Photo**: Display placeholder avatar with initials until photo loads
-- **Empty Content Sections**: Show "Coming Soon" state for sections without data
-- **Failed PDF Generation**: Show error toast with option to retry or print page
-- **Language Switch During Edit**: Preserve edit mode state when switching languages
-- **Incomplete Translations**: Fall back to English if German translation missing
-- **Long Skill Lists**: Organize into collapsible categories to prevent overwhelming view
-- **Mobile PDF Download**: Adapt download experience for mobile browsers
+- **Invalid Admin Credentials**: Show error toast, do not reveal which part is wrong (security)
+- **Missing Portfolio Photo**: Display avatar with initials until photo loads
+- **Empty Content Sections**: Show "No items yet" state with add button for admin
+- **Failed PDF Generation**: Show error toast with option to retry or standard print
+- **Network/KV Storage Errors**: Show error toast, retry logic, graceful degradation
+- **Long Experience/Project Lists**: Implement smooth scrolling, maintain performance
+- **Mobile Admin Editing**: Adapt dialogs for mobile screens, maintain full functionality
+- **Concurrent Admin Sessions**: Last write wins, consider adding conflict detection
+- **Session Expiry**: Admin status persists in sessionStorage, cleared on browser close/logout
 
 ## Design Direction
 
-The design should evoke **trust, expertise, and modern professionalism** - like a senior architect's portfolio. It should feel refined, confident, and technically sophisticated without being flashy. Think clean lines, generous whitespace, and typography that commands respect. The aesthetic should communicate "I build enterprise systems at scale" through visual restraint and precision.
+The design should evoke **technical excellence, modern professionalism, and enterprise trustworthiness** - like a senior software architect's portfolio. Deep navy blues convey technical depth and corporate trust, while electric blue accents provide energy and draw attention to key interactions. The aesthetic should communicate "I build scalable systems for global markets" through visual precision, generous whitespace, and confident typography.
 
 ## Color Selection
 
-A sophisticated, corporate palette with deep navy as the foundation, conveying technical expertise and trustworthiness.
+A sophisticated corporate palette with deep navy as foundation, conveying technical expertise and trustworthiness.
 
-- **Primary Color**: Deep Navy Blue (oklch(0.25 0.08 250)) - Represents technical depth, professionalism, and corporate trust
+- **Primary Color**: Deep Navy Blue (oklch(0.25 0.08 250)) - Represents technical depth, professionalism, corporate trust
 - **Secondary Colors**: 
-  - Slate Gray (oklch(0.45 0.02 250)) - Supporting neutral for less prominent content
   - Cool Gray (oklch(0.85 0.01 250)) - Card backgrounds and subtle separations
-- **Accent Color**: Electric Blue (oklch(0.65 0.15 245)) - CTAs, links, and interactive elements that draw attention
+  - Slate Gray (oklch(0.45 0.02 250)) - Supporting neutral for less prominent content
+- **Accent Color**: Electric Blue (oklch(0.65 0.15 245)) - CTAs, links, interactive elements, active states
 - **Foreground/Background Pairings**: 
   - Primary Navy (oklch(0.25 0.08 250)): White text (oklch(0.98 0 0)) - Ratio 11.2:1 ✓
   - Accent Blue (oklch(0.65 0.15 245)): White text (oklch(0.98 0 0)) - Ratio 5.8:1 ✓
   - Background (oklch(0.98 0 0)): Navy text (oklch(0.25 0.08 250)) - Ratio 11.2:1 ✓
-  - Muted Gray (oklch(0.85 0.01 250)): Slate text (oklch(0.45 0.02 250)) - Ratio 4.9:1 ✓
+  - Muted Gray (oklch(0.92 0.01 250)): Slate text (oklch(0.45 0.02 250)) - Ratio 4.9:1 ✓
 
 ## Font Selection
 
-Typography should convey technical precision and modern professionalism with excellent readability for dense information.
+Typography conveys technical precision and modern professionalism with excellent readability for dense information.
 
 - **Typographic Hierarchy**: 
-  - H1 (Name/Title): Space Grotesk Bold / 48px / -0.02em letter-spacing
-  - H2 (Section Headers): Space Grotesk SemiBold / 32px / -0.01em
-  - H3 (Job Titles): Space Grotesk Medium / 24px / normal
+  - H1 (Page Titles): Space Grotesk Bold / 48-56px / -0.02em letter-spacing
+  - H2 (Section Headers): Space Grotesk SemiBold / 32-40px / -0.01em
+  - H3 (Job Titles/Project Names): Space Grotesk Medium / 24px / normal
   - H4 (Company Names): IBM Plex Sans SemiBold / 18px / normal
   - Body (Descriptions): IBM Plex Sans Regular / 16px / 0.01em / 1.6 line-height
   - Small (Dates/Meta): IBM Plex Mono Regular / 14px / normal
 
 Primary: **Space Grotesk** for headers - geometric precision with warmth, conveys modern technical expertise
-Secondary: **IBM Plex Sans** for body - designed for tech, excellent readability in long-form content
-Monospace: **IBM Plex Mono** for technical details like dates and code references
+Secondary: **IBM Plex Sans** for body - designed for tech contexts, excellent readability in long-form content
+Monospace: **IBM Plex Mono** for technical details like dates, code references, language toggle
 
 ## Animations
 
-Animations should be subtle and purposeful, reinforcing the professional nature while providing smooth, satisfying interactions.
+Animations are purposeful and refined, reinforcing professionalism while providing smooth, satisfying interactions.
 
 **Functional Animations:**
-- Section reveal: Gentle fade-up (opacity + translateY) as sections enter viewport
+- Page transitions: Smooth fade with slight vertical movement (300ms) between routes
+- Content reveal: Gentle fade-up (opacity + translateY) as sections enter viewport
 - Language toggle: Quick cross-fade (200ms) between content versions
 - Button interactions: Subtle scale (0.98) on press with smooth shadow transitions
-- Navigation: Smooth scroll with easing when jumping between sections
-- Photo entrance: Soft fade-in with slight scale (1.02 → 1.0) on page load
+- Navigation: Active indicator slides smoothly between nav items with spring physics
+- Admin dialogs: Smooth slide-up entrance with backdrop fade
 
 **Moments of Delight:**
-- Skill pills: Gentle hover lift with shadow depth increase
-- PDF download: Progress indicator with success checkmark animation
-- Edit mode toggle: Smooth panel slide-in for editing interface
+- Hero photo: Soft fade-in with slight scale (1.02 → 1.0) on page load
+- Skill badges: Gentle hover lift (translateY: -2px) with shadow depth increase
+- Project cards: Subtle scale increase and shadow enhancement on hover
+- Edit mode: Controls fade in smoothly when admin logged in
 
 ## Component Selection
 
 - **Components**: 
-  - `Card` for experience entries, education, and project showcases with subtle shadow elevation
-  - `Badge` for skills, technologies, and tags with hover states
-  - `Button` for primary actions (Download PDF, Contact, Edit Mode) with solid fills for primary, ghost for secondary
-  - `Separator` for section divisions with subtle gradient fades
-  - `Tabs` for organizing dense skill categories
-  - `Dialog` for edit mode panels when owner makes changes
-  - `ScrollArea` for potentially long skill lists or project details
-  - `Avatar` for professional photo with fallback
-  - Custom navigation dots for section jumping
+  - `Card` for experiences, projects, education with subtle shadow elevation and hover states
+  - `Badge` for skills, technologies, status indicators with custom colors
+  - `Button` for primary actions (Login, Save, Download) with variants (solid, outline, ghost)
+  - `Dialog` for admin edit forms with form fields and validation
+  - `Input` & `Textarea` for admin form fields with clear focus states
+  - `Sheet` for mobile navigation drawer
+  - `Avatar` for professional photo with fallback to initials
+  - `Toaster` (Sonner) for success/error notifications
+  - Custom Navbar component with route highlighting
   
 - **Customizations**: 
-  - Custom timeline component for experience history with connecting lines
-  - Language switcher component with flag icons (EN/DE)
-  - Custom PDF generation layout component
-  - Profile header component with photo, name, title, and contact icons
+  - Multi-page routing with React Router DOM
+  - Admin authentication layer with session management
+  - Edit mode overlays that appear for admin users
+  - Language switcher with persistent preference
+  - Print-optimized styles for PDF generation
   
 - **States**: 
-  - Buttons: Default navy, hover with slight brightness increase, active with press effect, disabled with reduced opacity
-  - Inputs (edit mode): Clear borders, focus with accent blue ring, filled state with subtle background
-  - Links: Accent blue with underline on hover, visited state same as default
-  - Cards: Subtle elevation by default, increased shadow on hover for interactive cards
+  - Buttons: Default navy, hover with brightness increase, active press effect, disabled opacity, loading spinner
+  - Inputs: Clear borders, focus with accent blue ring (2px), error state in red, success in green
+  - Links/Nav: Accent blue for active, gray for inactive, animated underline indicator
+  - Cards: Subtle elevation, increased shadow on hover, border highlight for interactive cards
+  - Admin controls: Fade in/out based on admin status, edit buttons visible only on hover
   
-- **Icon Selection**: 
-  - `@phosphor-icons/react` for all icons
-  - `EnvelopeSimple` for email
-  - `LinkedinLogo` for LinkedIn
-  - `MapPin` for location
-  - `Phone` for phone number
-  - `GithubLogo` for GitHub
-  - `DownloadSimple` for PDF download
+- **Icon Selection** (Phosphor Icons): 
+  - `User`, `SignOut`, `LockKey` for admin/auth
   - `Globe` for language switcher
-  - `PencilSimple` for edit mode
-  - `Check` for achievements/checkmarks
-  - `Buildings` for companies
-  - `GraduationCap` for education
+  - `List`, `ArrowRight` for navigation
+  - `EnvelopeSimple`, `Phone`, `MapPin` for contact
+  - `LinkedinLogo`, `GithubLogo` for social
+  - `DownloadSimple` for PDF download
+  - `Briefcase`, `Code`, `GraduationCap`, `Certificate` for sections
+  - `Plus`, `Pencil`, `Trash`, `Check` for admin operations
+  - `Sparkle` for hero greeting badge
   
 - **Spacing**: 
-  - Section padding: `py-16 md:py-24`
+  - Section padding: `pt-28 pb-20` (accounts for fixed nav)
+  - Page max-width: `max-w-7xl` for home, `max-w-5xl` for content pages
   - Card padding: `p-6 md:p-8`
-  - Element gaps: `gap-6` for loose groupings, `gap-4` for related items, `gap-2` for tight groups
-  - Container max-width: `max-w-5xl` for optimal readability
+  - Element gaps: `gap-8` for major sections, `gap-6` for cards, `gap-4` for related items
   - Consistent `space-y-8` between major section elements
   
 - **Mobile**: 
-  - Single column layout below 768px
-  - Sticky header with condensed navigation
-  - Profile photo reduces to 120px on mobile
-  - Skill badges wrap gracefully with maintained spacing
-  - PDF download button becomes fixed bottom bar on mobile
-  - Timeline simplifies to vertical with smaller connecting elements
-  - Language switcher remains in header but condensed
+  - Responsive grid: 1 col mobile, 2 cols tablet, 3-4 cols desktop
+  - Sticky header with backdrop blur, collapses to hamburger <768px
+  - Sheet drawer for mobile navigation
   - Touch-friendly button sizes (min 44px height)
+  - Admin dialogs adapt to mobile viewport with full-screen on small devices
+  - Form fields stack vertically on mobile
+  - Cards maintain readability with adjusted padding
