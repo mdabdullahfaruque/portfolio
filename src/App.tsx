@@ -9,6 +9,7 @@ import { ProjectsPage } from '@/pages/ProjectsPage'
 import { SkillsPage } from '@/pages/SkillsPage'
 import { ContactPage } from '@/pages/ContactPage'
 import { AdminLogin } from '@/pages/AdminLogin'
+import { AdminDashboard } from '@/pages/AdminDashboard'
 import { PortfolioData } from '@/lib/types'
 import { translations } from '@/lib/translations'
 import { initialPortfolioData } from '@/lib/initialData'
@@ -162,7 +163,15 @@ function App() {
           <Route
             path="/admin"
             element={
-              isAdmin ? <Navigate to="/" replace /> : <AdminLogin onLogin={handleLogin} />
+              isAdmin ? (
+                <AdminDashboard
+                  data={portfolioData}
+                  onUpdate={handleDataUpdate}
+                  onLogout={handleLogout}
+                />
+              ) : (
+                <AdminLogin onLogin={handleLogin} />
+              )
             }
           />
         </Routes>
