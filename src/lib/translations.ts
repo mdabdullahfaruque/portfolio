@@ -1,8 +1,7 @@
-import { Translations } from './types'
-
-export const translations: Translations = {
+export const translations = {
   en: {
     nav: {
+      home: 'Home',
       about: 'About',
       experience: 'Experience',
       education: 'Education',
@@ -11,14 +10,26 @@ export const translations: Translations = {
       certifications: 'Certifications',
       contact: 'Contact',
     },
+    hero: {
+      greeting: 'Hello, I am',
+      viewWork: 'View My Work',
+      contactMe: 'Contact Me',
+      downloadResume: 'Download Resume',
+    },
     labels: {
       downloadPDF: 'Download Resume',
+      adminPanel: 'Admin Panel',
       editMode: 'Edit Mode',
       present: 'Present',
       languages: 'Languages',
       summary: 'Professional Summary',
+      aboutMe: 'About Me',
       keyAchievements: 'Key Achievements',
       technologies: 'Technologies',
+      viewProject: 'View Project',
+      viewCredential: 'View Credential',
+      getInTouch: 'Get In Touch',
+      sendMessage: 'Send Message',
       skillCategories: {
         backend: 'Backend Technologies',
         frontend: 'Frontend Technologies',
@@ -33,6 +44,7 @@ export const translations: Translations = {
   },
   de: {
     nav: {
+      home: 'Startseite',
       about: 'Über mich',
       experience: 'Berufserfahrung',
       education: 'Ausbildung',
@@ -41,14 +53,26 @@ export const translations: Translations = {
       certifications: 'Zertifizierungen',
       contact: 'Kontakt',
     },
+    hero: {
+      greeting: 'Hallo, ich bin',
+      viewWork: 'Meine Arbeit ansehen',
+      contactMe: 'Kontaktiere mich',
+      downloadResume: 'Lebenslauf herunterladen',
+    },
     labels: {
       downloadPDF: 'Lebenslauf herunterladen',
+      adminPanel: 'Admin-Panel',
       editMode: 'Bearbeitungsmodus',
       present: 'Heute',
       languages: 'Sprachen',
       summary: 'Berufliche Zusammenfassung',
+      aboutMe: 'Über mich',
       keyAchievements: 'Wichtigste Erfolge',
       technologies: 'Technologien',
+      viewProject: 'Projekt ansehen',
+      viewCredential: 'Zertifikat ansehen',
+      getInTouch: 'Kontakt aufnehmen',
+      sendMessage: 'Nachricht senden',
       skillCategories: {
         backend: 'Backend-Technologien',
         frontend: 'Frontend-Technologien',

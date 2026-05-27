@@ -4,6 +4,7 @@ export interface ContactInfo {
   location: string
   phone: string
   github: string
+  website?: string
 }
 
 export interface Experience {
@@ -16,6 +17,7 @@ export interface Experience {
   description: string
   achievements: string[]
   technologies: string[]
+  companyType?: string
 }
 
 export interface Education {
@@ -26,6 +28,7 @@ export interface Education {
   startDate: string
   endDate: string
   description: string
+  gpa?: string
 }
 
 export interface Project {
@@ -35,6 +38,9 @@ export interface Project {
   description: string
   status: string
   features?: string[]
+  image?: string
+  technologies?: string[]
+  market?: string
 }
 
 export interface Certification {
@@ -45,12 +51,14 @@ export interface Certification {
   credentialUrl?: string
 }
 
-export interface ResumeData {
+export interface PortfolioData {
   name: string
   title: string
+  tagline: string
   photoUrl: string
   contact: ContactInfo
   summary: string
+  aboutMe: string
   experiences: Experience[]
   education: Education[]
   skills: {
@@ -66,6 +74,24 @@ export interface ResumeData {
   projects: Project[]
   certifications: Certification[]
   languages: { name: string; proficiency: string }[]
+  testimonials?: Testimonial[]
+  stats?: StatItem[]
+}
+
+export interface Testimonial {
+  id: string
+  name: string
+  role: string
+  company: string
+  content: string
+  avatar?: string
+}
+
+export interface StatItem {
+  id: string
+  label: string
+  value: string
+  icon?: string
 }
 
 export interface Translations {
