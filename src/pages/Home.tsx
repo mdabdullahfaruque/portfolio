@@ -417,7 +417,7 @@ export function Home({ data, t, onDownloadPDF, isAdmin, onUpdate }: HomeProps) {
               className="flex justify-center lg:justify-end"
             >
               <Avatar className="w-64 h-64 lg:w-80 lg:h-80 border-4 border-card shadow-xl">
-                <AvatarImage src={data.photoUrl} alt={data.name} className="object-cover" />
+                <AvatarImage src={data.photoUrl} alt={data.name} className="object-contain" />
                 <AvatarFallback className="text-4xl font-bold bg-muted text-foreground">
                   {data.name.split(' ').map((n) => n[0]).join('')}
                 </AvatarFallback>
