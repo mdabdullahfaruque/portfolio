@@ -9,7 +9,7 @@ export const initialPortfolioData: PortfolioData = {
     email: 'mabdullahfaruque@gmail.com',
     linkedin: 'https://www.linkedin.com/in/mdabdullahfaruque',
     location: 'Kuala Lumpur, Malaysia',
-    phone: '+60-XXX-XXX-XXXX',
+    phone: '+60175165646',
     github: 'https://github.com/mdabdullahfaruque',
     website: 'https://www.ahsanmalik.com/',
   },
@@ -224,7 +224,7 @@ export const initialPortfolioData: PortfolioData = {
   ],
   stats: [
     { id: '1', label: 'Years Experience', value: '6+', icon: 'briefcase' },
-    { id: '2', label: 'Projects Completed', value: '50+', icon: 'code' },
+    { id: '2', label: 'Projects Completed', value: '15+', icon: 'code' },
     { id: '3', label: 'Live Products', value: '2', icon: 'rocket' },
     { id: '4', label: 'Technologies', value: '30+', icon: 'stack' },
   ],
