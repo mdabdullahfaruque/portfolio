@@ -12,6 +12,7 @@ import { AdminLogin } from '@/pages/AdminLogin'
 import { PortfolioData } from '@/lib/types'
 import { translations } from '@/lib/translations'
 import { initialPortfolioData } from '@/lib/initialData'
+import { initializeAdminCredentials, validateAdminLogin } from '@/lib/auth'
 import { toast } from 'sonner'
 
 type Language = 'en' | 'de'
@@ -19,16 +20,29 @@ type Language = 'en' | 'de'
 function App() {
   const [language, setLanguage] = useKV<Language>('portfolio-language', 'en')
   const [portfolioData, setPortfolioData] = useKV<PortfolioData | null>('portfolio-data', null)
+  const [adminPasswordHash, setAdminPasswordHash] = useKV<string>('admin-password-hash', '')
   const [isAdmin, setIsAdmin] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
 
   const currentLanguage = language || 'en'
   const t = translations[currentLanguage]
 
   useEffect(() => {
-    if (!portfolioData) {
-      setPortfolioData(() => initialPortfolioData)
+    async function initialize() {
+      if (!portfolioData) {
+        setPortfolioData(() => initialPortfolioData)
+      }
+      
+      if (!adminPasswordHash) {
+        const credentials = await initializeAdminCredentials()
+        setAdminPasswordHash(() => credentials.passwordHash)
+      }
+      
+      setIsInitialized(true)
     }
-  }, [portfolioData, setPortfolioData])
+    
+    initialize()
+  }, [])
 
   useEffect(() => {
     const adminStatus = sessionStorage.getItem('admin-logged-in')
@@ -41,8 +55,13 @@ function App() {
     setLanguage((current) => ((current || 'en') === 'en' ? 'de' : 'en'))
   }
 
-  const handleLogin = (email: string, password: string) => {
-    if (email === 'admin@abdullahfaruque.com' && password === 'Admin@123456') {
+  const handleLogin = async (email: string, password: string) => {
+    if (!adminPasswordHash) {
+      return false
+    }
+    
+    const isValid = await validateAdminLogin(email, password, adminPasswordHash)
+    if (isValid) {
       setIsAdmin(true)
       sessionStorage.setItem('admin-logged-in', 'true')
       return true
@@ -65,7 +84,7 @@ function App() {
     setPortfolioData(() => updatedData)
   }
 
-  if (!portfolioData) {
+  if (!portfolioData || !isInitialized) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center space-y-4">
@@ -116,6 +135,7 @@ function App() {
                 data={portfolioData}
                 t={t}
                 isAdmin={isAdmin}
+                onUpdate={handleDataUpdate}
               />
             }
           />
@@ -125,6 +145,8 @@ function App() {
               <SkillsPage
                 data={portfolioData}
                 t={t}
+                isAdmin={isAdmin}
+                onUpdate={handleDataUpdate}
               />
             }
           />

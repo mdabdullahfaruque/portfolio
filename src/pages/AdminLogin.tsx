@@ -8,22 +8,31 @@ import { LockKey } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface AdminLoginProps {
-  onLogin: (email: string, password: string) => boolean
+  onLogin: (email: string, password: string) => Promise<boolean>
 }
 
 export function AdminLogin({ onLogin }: AdminLoginProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
     
-    if (onLogin(email, password)) {
-      toast.success('Login successful!')
-      navigate('/')
-    } else {
-      toast.error('Invalid credentials')
+    try {
+      const success = await onLogin(email, password)
+      if (success) {
+        toast.success('Login successful!')
+        navigate('/')
+      } else {
+        toast.error('Invalid credentials')
+      }
+    } catch (error) {
+      toast.error('Login failed')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -67,15 +76,10 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
               />
             </div>
 
-            <Button type="submit" className="w-full" size="lg">
-              Sign In
+            <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+              {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
-
-          <div className="mt-6 text-center text-sm text-muted-foreground">
-            <p>Demo credentials:</p>
-            <p className="font-mono mt-1">admin@abdullahfaruque.com / Admin@123456</p>
-          </div>
         </Card>
       </motion.div>
     </div>
