@@ -51,6 +51,12 @@ export interface Certification {
   credentialUrl?: string
 }
 
+export interface Skill {
+  name: string
+  proficiency: number
+  yearsOfExperience?: number
+}
+
 export interface PortfolioData {
   name: string
   title: string
@@ -62,20 +68,21 @@ export interface PortfolioData {
   experiences: Experience[]
   education: Education[]
   skills: {
-    backend: string[]
-    frontend: string[]
-    cloud: string[]
-    databases: string[]
-    testing: string[]
-    tools: string[]
-    cms: string[]
-    ai: string[]
+    backend: Skill[]
+    frontend: Skill[]
+    cloud: Skill[]
+    databases: Skill[]
+    testing: Skill[]
+    tools: Skill[]
+    cms: Skill[]
+    ai: Skill[]
   }
   projects: Project[]
   certifications: Certification[]
   languages: { name: string; proficiency: string }[]
   testimonials?: Testimonial[]
   stats?: StatItem[]
+  highlights?: string[]
 }
 
 export interface Testimonial {

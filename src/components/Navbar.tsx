@@ -37,37 +37,35 @@ export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: Nav
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-background/90 backdrop-blur-xl shadow-2xl border-b border-border/50' 
-        : 'bg-transparent'
+        ? 'bg-background/95 backdrop-blur-md shadow-sm border-b border-border' 
+        : 'bg-background/80 backdrop-blur-sm'
     }`}>
-      <div className="max-w-7xl mx-auto px-6 py-5">
+      <div className="max-w-6xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link to="/">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="font-black text-2xl lg:text-3xl cursor-pointer transition-all"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="font-bold text-xl lg:text-2xl cursor-pointer text-foreground"
             >
-              <span className="bg-gradient-to-r from-accent via-secondary to-accent bg-clip-text text-transparent">
-                Portfolio
-              </span>
+              Portfolio
             </motion.div>
           </Link>
 
-          <div className="hidden md:flex items-center gap-1 lg:gap-2">
+          <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
               >
                 <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`px-4 lg:px-5 py-2 rounded-xl text-sm lg:text-base font-semibold transition-all relative ${
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                     location.pathname === item.to 
-                      ? 'text-accent-foreground bg-gradient-to-br from-accent to-secondary shadow-lg' 
+                      ? 'text-primary-foreground bg-primary' 
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                   }`}
                 >
@@ -77,15 +75,15 @@ export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: Nav
             ))}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={onLanguageToggle} 
-              className="gap-2 hover:bg-accent/10 hover:text-accent rounded-xl"
+              className="gap-2"
             >
-              <Globe size={20} weight="bold" />
-              <span className="font-mono text-sm font-bold">{language.toUpperCase()}</span>
+              <Globe size={18} />
+              <span className="text-xs font-medium">{language.toUpperCase()}</span>
             </Button>
 
             {isAdmin && (
@@ -93,10 +91,10 @@ export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: Nav
                 variant="outline" 
                 size="sm" 
                 onClick={onLogout} 
-                className="gap-2 border-2 hover:border-destructive hover:text-destructive rounded-xl"
+                className="gap-2"
               >
-                <SignOut size={20} weight="bold" />
-                <span className="hidden sm:inline font-semibold">Logout</span>
+                <SignOut size={18} />
+                <span className="hidden sm:inline text-xs">Logout</span>
               </Button>
             )}
 
@@ -105,33 +103,33 @@ export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: Nav
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="gap-2 hover:bg-accent/10 hover:text-accent rounded-xl"
+                  className="gap-2"
                 >
-                  <User size={20} weight="bold" />
-                  <span className="hidden sm:inline font-semibold">Admin</span>
+                  <User size={18} />
+                  <span className="hidden sm:inline text-xs">Admin</span>
                 </Button>
               </Link>
             )}
 
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="sm" className="md:hidden rounded-xl">
-                  <List size={24} weight="bold" />
+                <Button variant="ghost" size="sm" className="md:hidden">
+                  <List size={24} />
                 </Button>
               </SheetTrigger>
               <SheetContent className="w-80">
-                <div className="flex flex-col gap-4 mt-12">
+                <div className="flex flex-col gap-3 mt-12">
                   {navItems.map((item) => (
                     <Link
                       key={item.to}
                       to={item.to}
                     >
                       <motion.div
-                        whileHover={{ x: 8 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`text-left p-4 rounded-xl text-lg font-bold transition-all ${
+                        whileHover={{ x: 4 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`text-left p-3 rounded-md text-base font-medium transition-all ${
                           location.pathname === item.to
-                            ? 'text-accent-foreground bg-gradient-to-r from-accent to-secondary'
+                            ? 'text-primary-foreground bg-primary'
                             : 'text-foreground hover:bg-muted'
                         }`}
                       >
