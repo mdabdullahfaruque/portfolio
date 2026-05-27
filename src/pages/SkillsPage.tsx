@@ -66,13 +66,13 @@ function SkillItem({ skill, index }: SkillItemProps) {
       transition={{ duration: 0.3, delay: index * 0.03 }}
       className="flex items-center justify-between gap-2 px-4 py-3 rounded-lg bg-card/50 hover:bg-card border border-border/50 hover:border-border transition-all duration-200"
     >
-      <span className="text-sm font-medium text-foreground flex-shrink-0">{skill.name}</span>
+      <span className="text-base font-semibold text-foreground flex-shrink-0">{skill.name}</span>
       <div className="flex items-center gap-2 flex-shrink-0">
-        <Badge variant={profLevel.variant} className="text-[10px] font-semibold uppercase tracking-wide">
+        <Badge variant={profLevel.variant} className="text-[9px] font-medium uppercase tracking-wide opacity-70">
           {profLevel.label}
         </Badge>
         {skill.yearsOfExperience && skill.yearsOfExperience > 0 && (
-          <Badge variant="outline" className="text-xs font-mono">
+          <Badge variant="outline" className="text-[10px] font-mono opacity-60">
             {skill.yearsOfExperience}yr{skill.yearsOfExperience > 1 ? 's' : ''}
           </Badge>
         )}
