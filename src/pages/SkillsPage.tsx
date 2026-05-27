@@ -129,16 +129,6 @@ export function SkillsPage({ data, t, isAdmin, onUpdate }: SkillsPageProps) {
     toast.success('Skills updated successfully')
   }
 
-  const getTotalSkills = () => {
-    return Object.values(data.skills).reduce((acc, skills) => acc + skills.length, 0)
-  }
-
-  const getAverageYears = () => {
-    const allSkills = Object.values(data.skills).flat()
-    const totalYears = allSkills.reduce((acc, skill) => acc + (skill.yearsOfExperience || 0), 0)
-    return (totalYears / allSkills.length).toFixed(1)
-  }
-
   return (
     <div className="min-h-screen pt-28 pb-20 px-6 bg-background">
       <div className="max-w-7xl mx-auto">
@@ -149,30 +139,9 @@ export function SkillsPage({ data, t, isAdmin, onUpdate }: SkillsPageProps) {
         >
           <div className="mb-10">
             <h1 className="text-4xl font-bold mb-3 text-foreground">{t.nav.skills}</h1>
-            <p className="text-base text-muted-foreground mb-6 max-w-2xl">
+            <p className="text-base text-muted-foreground max-w-2xl">
               Technical expertise across multiple domains with hands-on experience.
             </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <Card className="p-5 border">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-foreground mb-1">{getTotalSkills()}</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wide">Technologies</div>
-                </div>
-              </Card>
-              <Card className="p-5 border">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-foreground mb-1">{getAverageYears()}</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wide">Avg. Years Exp.</div>
-                </div>
-              </Card>
-              <Card className="p-5 border">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-foreground mb-1">{Object.keys(data.skills).length}</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wide">Categories</div>
-                </div>
-              </Card>
-            </div>
           </div>
 
           <div className="grid gap-6">
