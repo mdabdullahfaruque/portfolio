@@ -92,7 +92,7 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                   <div className="flex items-center gap-2">
                     <TrendUp size={16} weight="bold" className="text-accent" />
                     <span className="text-sm text-muted-foreground">
-                      <span className="font-bold text-foreground">{data.projects.filter(p => p.status === 'Active').length}</span> Live Products
+                      <span className="font-bold text-foreground">{data.projects.filter(p => p.status?.toLowerCase() === 'live' || p.status?.toLowerCase() === 'active').length}</span> Live Products
                     </span>
                   </div>
                 </div>

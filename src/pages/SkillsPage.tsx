@@ -45,9 +45,18 @@ const categoryIcons: Record<string, any> = {
   ai: Robot
 }
 
+function getProficiencyLevel(proficiency: number): { label: string; variant: 'default' | 'secondary' | 'outline' } {
+  if (proficiency >= 90) return { label: 'Expert', variant: 'default' }
+  if (proficiency >= 80) return { label: 'Advanced', variant: 'default' }
+  if (proficiency >= 70) return { label: 'Proficient', variant: 'secondary' }
+  if (proficiency >= 60) return { label: 'Competent', variant: 'secondary' }
+  return { label: 'Familiar', variant: 'outline' }
+}
+
 function SkillItem({ skill, index }: SkillItemProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.5 })
+  const profLevel = getProficiencyLevel(skill.proficiency || 50)
 
   return (
     <motion.div
@@ -55,14 +64,19 @@ function SkillItem({ skill, index }: SkillItemProps) {
       initial={{ opacity: 0, y: 10 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
       transition={{ duration: 0.3, delay: index * 0.03 }}
-      className="flex items-center justify-between px-4 py-3 rounded-lg bg-card/50 hover:bg-card border border-border/50 hover:border-border transition-all duration-200"
+      className="flex items-center justify-between gap-2 px-4 py-3 rounded-lg bg-card/50 hover:bg-card border border-border/50 hover:border-border transition-all duration-200"
     >
-      <span className="text-sm font-medium text-foreground">{skill.name}</span>
-      {skill.yearsOfExperience && skill.yearsOfExperience > 0 && (
-        <Badge variant="secondary" className="text-xs font-mono">
-          {skill.yearsOfExperience}yr{skill.yearsOfExperience > 1 ? 's' : ''}
+      <span className="text-sm font-medium text-foreground flex-shrink-0">{skill.name}</span>
+      <div className="flex items-center gap-2 flex-shrink-0">
+        <Badge variant={profLevel.variant} className="text-[10px] font-semibold uppercase tracking-wide">
+          {profLevel.label}
         </Badge>
-      )}
+        {skill.yearsOfExperience && skill.yearsOfExperience > 0 && (
+          <Badge variant="outline" className="text-xs font-mono">
+            {skill.yearsOfExperience}yr{skill.yearsOfExperience > 1 ? 's' : ''}
+          </Badge>
+        )}
+      </div>
     </motion.div>
   )
 }
