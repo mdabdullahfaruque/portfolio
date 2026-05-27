@@ -1,10 +1,11 @@
 import { PortfolioData } from './types'
+import profilePhoto from '@/assets/images/PHOTO-PS-MD_ABDULLAH_FARUQUE.JPG'
 
 export const initialPortfolioData: PortfolioData = {
   name: 'MD Abdullah Faruque',
   title: 'Senior Full Stack Developer',
   tagline: 'Building scalable, cloud-native applications with modern technologies',
-  photoUrl: '/Photo_Md_Abdullah_Faruque.JPG',
+  photoUrl: profilePhoto,
   contact: {
     email: 'mabdullahfaruque@gmail.com',
     linkedin: 'https://www.linkedin.com/in/mdabdullahfaruque',

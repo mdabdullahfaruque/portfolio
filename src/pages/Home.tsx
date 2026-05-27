@@ -30,16 +30,25 @@ import {
 } from '@phosphor-icons/react'
 import { PortfolioData } from '@/lib/types'
 import { toast } from 'sonner'
+import resumePDF from '@/assets/documents/MdAbdullahFaruque_Resume.pdf'
 
 interface HomeProps {
   data: PortfolioData
   t: any
-  onDownloadPDF: () => void
   isAdmin?: boolean
   onUpdate?: (updatedData: PortfolioData) => void
 }
 
-export function Home({ data, t, onDownloadPDF, isAdmin, onUpdate }: HomeProps) {
+export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
+  const handleDownloadResume = () => {
+    const link = document.createElement('a')
+    link.href = resumePDF
+    link.download = 'MdAbdullahFaruque_Resume.pdf'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    toast.success('Resume downloaded successfully!')
+  }
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [editedData, setEditedData] = useState<PortfolioData>(data)
 
@@ -364,7 +373,7 @@ export function Home({ data, t, onDownloadPDF, isAdmin, onUpdate }: HomeProps) {
                 <Button 
                   size="lg" 
                   variant="ghost"
-                  onClick={onDownloadPDF}
+                  onClick={handleDownloadResume}
                   className="gap-2"
                 >
                   <DownloadSimple size={20} weight="bold" />

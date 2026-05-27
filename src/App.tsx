@@ -76,11 +76,6 @@ function App() {
     toast.success('Logged out successfully')
   }
 
-  const handleDownloadPDF = () => {
-    window.print()
-    toast.success(currentLanguage === 'en' ? 'Resume ready to print!' : 'Lebenslauf druckbereit!')
-  }
-
   const handleDataUpdate = (updatedData: PortfolioData) => {
     setPortfolioData(() => updatedData)
   }
@@ -114,7 +109,6 @@ function App() {
               <Home
                 data={portfolioData}
                 t={t}
-                onDownloadPDF={handleDownloadPDF}
                 isAdmin={isAdmin}
                 onUpdate={handleDataUpdate}
               />
