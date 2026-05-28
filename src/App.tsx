@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { useKV } from '@github/spark/hooks'
+import { HashRouter, Routes, Route } from 'react-router-dom'
+import { useLocalStorage } from '@/hooks/use-local-storage'
 import { Toaster } from '@/components/ui/sonner'
 import { Navbar } from '@/components/Navbar'
 import { Home } from '@/pages/Home'
@@ -19,9 +19,9 @@ import { toast } from 'sonner'
 type Language = 'en' | 'de'
 
 function App() {
-  const [language, setLanguage] = useKV<Language>('portfolio-language', 'en')
-  const [portfolioData, setPortfolioData] = useKV<PortfolioData | null>('portfolio-data', null)
-  const [adminPasswordHash, setAdminPasswordHash] = useKV<string>('admin-password-hash', '')
+  const [language, setLanguage] = useLocalStorage<Language>('portfolio-language', 'en')
+  const [portfolioData, setPortfolioData] = useLocalStorage<PortfolioData | null>('portfolio-data', null)
+  const [adminPasswordHash, setAdminPasswordHash] = useLocalStorage<string>('admin-password-hash', '')
   const [isAdmin, setIsAdmin] = useState(false)
   const [isInitialized, setIsInitialized] = useState(false)
 
@@ -92,7 +92,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="min-h-screen bg-background">
         <Navbar
           language={currentLanguage}
@@ -174,7 +174,7 @@ function App() {
 
         <Toaster />
       </div>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
