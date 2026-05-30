@@ -60,14 +60,19 @@ function CountUp({ value }: { value: string }) {
   const [display, setDisplay] = useState(match ? '0' : value)
 
   useEffect(() => {
-    if (!inView || !match) return
+    if (!match) {
+      setDisplay(value)
+      return
+    }
+    setDisplay('0')
+    if (!inView) return
     const controls = animate(0, target, {
       duration: 1.4,
       ease: 'easeOut',
       onUpdate: (v) => setDisplay(Math.round(v).toString()),
     })
     return () => controls.stop()
-  }, [inView])
+  }, [inView, value])
 
   return <span ref={ref}>{match ? `${prefix}${display}${suffix}` : value}</span>
 }
@@ -591,7 +596,8 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
                                   value={stat.label}
                                   onChange={(e) => {
                                     const newStats = [...(editedData.stats || [])]
-                                    newStats[index] = { ...stat, label: e.target.value }
+                                    // clear translationKey so custom label takes effect in display
+                                    newStats[index] = { ...stat, label: e.target.value, translationKey: undefined }
                                     setEditedData({ ...editedData, stats: newStats })
                                   }}
                                   placeholder="e.g. Projects"
