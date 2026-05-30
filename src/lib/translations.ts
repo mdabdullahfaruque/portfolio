@@ -99,7 +99,7 @@ export const translations = {
       required: 'Required',
     },
     profile: {
-      title: 'Professional Developer',
+      title: 'Senior Full Stack Developer',
       tagline: 'Building scalable, cloud-native applications with modern technologies',
     },
     stats: {
@@ -209,7 +209,7 @@ export const translations = {
       required: 'Erforderlich',
     },
     profile: {
-      title: 'Professioneller Entwickler',
+      title: 'Senior Full Stack Entwickler',
       tagline: 'Entwicklung skalierbarer, cloud-nativer Anwendungen mit modernen Technologien',
     },
     stats: {

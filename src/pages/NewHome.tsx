@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -27,7 +27,10 @@ import {
   Trash,
   Plus,
   Sparkle,
-  Rocket
+  Rocket,
+  Lightning,
+  Gauge,
+  Shield
 } from '@phosphor-icons/react'
 import { PortfolioData } from '@/lib/types'
 import { toast } from 'sonner'
@@ -51,8 +54,7 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
     offset: ["start start", "end start"]
   })
 
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 200])
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 100])
 
   const handleDownloadResume = async () => {
     try {
@@ -373,56 +375,55 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
         </div>
       )}
 
-      <section 
-        className="relative min-h-[90vh] flex items-center justify-center pt-20 pb-16 px-6 overflow-hidden"
-      >
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
-          </div>
+      <section className="relative pt-24 pb-12 px-6 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }} />
           
           <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgb(var(--primary) / 0.05) 1px, transparent 0)`,
+            backgroundImage: `radial-gradient(circle at 1px 1px, oklch(0.45 0.20 265 / 0.03) 1px, transparent 0)`,
             backgroundSize: '40px 40px'
           }} />
         </div>
 
         <motion.div 
           className="max-w-7xl mx-auto w-full relative z-10"
-          style={{ y: heroY, opacity: heroOpacity }}
+          style={{ y: heroY }}
         >
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-[1.2fr,0.8fr] gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="space-y-8"
+              className="space-y-6"
             >
-              <div className="space-y-6">
-                <motion.div
+              <div className="space-y-4">
+                <motion.h1 
+                  className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <Badge variant="outline" className="mb-4 px-4 py-2 text-sm font-medium border-primary/30 bg-primary/5">
-                    <Sparkle size={16} className="mr-2" weight="fill" />
-                    {t.profile.title}
-                  </Badge>
-                </motion.div>
-
-                <motion.h1 
-                  className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
                   {data.name}
                 </motion.h1>
                 
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="flex items-center gap-3 flex-wrap"
+                >
+                  <h2 className="text-2xl md:text-3xl font-semibold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                    {data.title}
+                  </h2>
+                  <Badge className="px-3 py-1 text-sm font-medium bg-primary/10 text-primary border-primary/30">
+                    {data.contact.location}
+                  </Badge>
+                </motion.div>
+
                 <motion.p 
-                  className="text-xl md:text-2xl text-muted-foreground leading-relaxed"
+                  className="text-lg md:text-xl text-muted-foreground leading-relaxed"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
@@ -431,7 +432,7 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
                 </motion.p>
 
                 <motion.p 
-                  className="text-base text-muted-foreground/80 leading-relaxed max-w-xl"
+                  className="text-base text-muted-foreground/90 leading-relaxed"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
@@ -441,10 +442,60 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
               </div>
 
               <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="flex items-center gap-3 pt-2"
+              >
+                {data.contact.linkedin && (
+                  <motion.a
+                    href={data.contact.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 hover:from-primary hover:to-primary/80 text-foreground hover:text-primary-foreground flex items-center justify-center transition-all shadow-md hover:shadow-xl"
+                  >
+                    <LinkedinLogo size={22} weight="fill" />
+                  </motion.a>
+                )}
+                {data.contact.github && (
+                  <motion.a
+                    href={data.contact.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 hover:from-primary hover:to-primary/80 text-foreground hover:text-primary-foreground flex items-center justify-center transition-all shadow-md hover:shadow-xl"
+                  >
+                    <GithubLogo size={22} weight="fill" />
+                  </motion.a>
+                )}
+                {data.contact.email && (
+                  <motion.a
+                    href={`mailto:${data.contact.email}`}
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 hover:from-primary hover:to-primary/80 text-foreground hover:text-primary-foreground flex items-center justify-center transition-all shadow-md hover:shadow-xl"
+                  >
+                    <EnvelopeSimple size={22} weight="fill" />
+                  </motion.a>
+                )}
+                <div className="h-6 w-px bg-border mx-1" />
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="flex items-center gap-2 text-sm text-muted-foreground"
+                >
+                  <Envelope size={16} weight="fill" />
+                  <span className="font-medium">{data.contact.email}</span>
+                </motion.div>
+              </motion.div>
+
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="flex flex-wrap gap-4"
+                transition={{ delay: 0.7 }}
+                className="flex flex-wrap gap-3 pt-2"
               >
                 <Button 
                   size="lg"
@@ -458,64 +509,22 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
                 <Button 
                   size="lg"
                   variant="outline"
+                  onClick={handleDownloadResume}
+                  className="gap-2 hover:scale-105 transition-transform"
+                >
+                  <DownloadSimple size={20} weight="bold" />
+                  {t.labels.downloadPDF}
+                </Button>
+                
+                <Button 
+                  size="lg"
+                  variant="ghost"
                   onClick={() => navigate('/contact')}
                   className="gap-2 hover:scale-105 transition-transform"
                 >
                   <EnvelopeSimple size={20} weight="bold" />
                   {t.hero.contactMe}
                 </Button>
-                
-                <Button 
-                  size="lg"
-                  variant="ghost"
-                  onClick={handleDownloadResume}
-                  className="gap-2 hover:scale-105 transition-transform"
-                >
-                  <DownloadSimple size={20} weight="bold" />
-                  Resume
-                </Button>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.7 }}
-                className="flex items-center gap-3 pt-4"
-              >
-                {data.contact.linkedin && (
-                  <motion.a
-                    href={data.contact.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 hover:from-primary hover:to-primary/80 text-foreground hover:text-primary-foreground flex items-center justify-center transition-all shadow-md hover:shadow-xl"
-                  >
-                    <LinkedinLogo size={24} weight="fill" />
-                  </motion.a>
-                )}
-                {data.contact.github && (
-                  <motion.a
-                    href={data.contact.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 hover:from-primary hover:to-primary/80 text-foreground hover:text-primary-foreground flex items-center justify-center transition-all shadow-md hover:shadow-xl"
-                  >
-                    <GithubLogo size={24} weight="fill" />
-                  </motion.a>
-                )}
-                {data.contact.email && (
-                  <motion.a
-                    href={`mailto:${data.contact.email}`}
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 hover:from-primary hover:to-primary/80 text-foreground hover:text-primary-foreground flex items-center justify-center transition-all shadow-md hover:shadow-xl"
-                  >
-                    <EnvelopeSimple size={24} weight="fill" />
-                  </motion.a>
-                )}
               </motion.div>
             </motion.div>
 
@@ -529,7 +538,7 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
                 {(!data.photoFrameType || data.photoFrameType === 'square') ? (
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 rounded-3xl blur-3xl" />
-                    <Avatar className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 border-8 border-card shadow-2xl relative z-10 ring-4 ring-primary/20">
+                    <Avatar className="w-64 h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 border-8 border-card shadow-2xl relative z-10 ring-4 ring-primary/20">
                       <AvatarImage src={data.photoUrl} alt={data.name} className="object-cover" />
                       <AvatarFallback className="text-6xl font-bold bg-gradient-to-br from-primary to-accent text-primary-foreground">
                         {data.name.split(' ').map((n) => n[0]).join('')}
@@ -539,7 +548,7 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
                 ) : (
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 rounded-3xl blur-3xl" />
-                    <div className="w-64 h-80 md:w-80 md:h-96 lg:w-96 lg:h-[480px] border-8 border-card shadow-2xl relative z-10 ring-4 ring-primary/20 rounded-3xl overflow-hidden bg-muted">
+                    <div className="w-64 h-80 md:w-72 md:h-[360px] lg:w-80 lg:h-[400px] border-8 border-card shadow-2xl relative z-10 ring-4 ring-primary/20 rounded-3xl overflow-hidden bg-muted">
                       {data.photoUrlPortrait ? (
                         <img src={data.photoUrlPortrait} alt={data.name} className="w-full h-full object-cover" />
                       ) : (
@@ -558,10 +567,10 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
 
           {data.stats && data.stats.length > 0 && (
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20"
+              className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12"
             >
               {data.stats.map((stat, index) => (
                 <motion.div
@@ -570,12 +579,12 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.9 + index * 0.1 }}
                   whileHover={{ y: -5, scale: 1.02 }}
-                  className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-6 text-center hover:shadow-xl transition-all hover:border-primary/30"
+                  className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-5 text-center hover:shadow-xl transition-all hover:border-primary/30"
                 >
-                  <div className="text-4xl md:text-5xl font-bold bg-gradient-to-br from-primary via-secondary to-accent bg-clip-text text-transparent mb-2">
+                  <div className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-primary via-secondary to-accent bg-clip-text text-transparent mb-1">
                     {stat.value}
                   </div>
-                  <div className="text-sm text-muted-foreground font-medium">
+                  <div className="text-xs md:text-sm text-muted-foreground font-medium">
                     {stat.translationKey ? t.stats[stat.translationKey] : stat.label}
                   </div>
                 </motion.div>
@@ -585,24 +594,24 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
         </motion.div>
       </section>
 
-      <section className="py-20 px-6 bg-card/30 backdrop-blur-sm border-y border-border/50">
+      <section className="py-12 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="text-center mb-10"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-              {t.labels.recentExperience || 'Experience Highlights'}
+            <h2 className="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+              {t.labels.recentExperience || 'Recent Experience'}
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base text-muted-foreground max-w-2xl mx-auto">
               {t.labels.experienceSubtitle || 'Key roles that shaped my professional journey'}
             </p>
           </motion.div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {data.experiences.slice(0, 3).map((exp, index) => (
               <motion.div
                 key={exp.id}
@@ -610,23 +619,23 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.15 }}
-                whileHover={{ y: -10, scale: 1.02 }}
+                whileHover={{ y: -8, scale: 1.02 }}
                 className="group"
               >
-                <Card className="p-6 h-full hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary/50 bg-card/50 backdrop-blur-sm">
-                  <div className="space-y-4">
+                <Card className="p-5 h-full hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary/50 bg-card/50 backdrop-blur-sm">
+                  <div className="space-y-3">
                     <div>
-                      <Badge className="mb-3" variant="secondary">
+                      <Badge className="mb-2" variant="secondary">
                         {exp.startDate} - {exp.endDate}
                       </Badge>
-                      <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                      <h3 className="text-lg font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
                         {exp.title}
                       </h3>
                       <p className="text-base font-semibold text-primary">{exp.company}</p>
                       {exp.companyType && (
-                        <p className="text-sm text-muted-foreground italic">{exp.companyType}</p>
+                        <p className="text-xs text-muted-foreground italic">{exp.companyType}</p>
                       )}
-                      <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
                         <MapPin size={14} weight="fill" className="text-accent" />
                         {exp.location}
                       </div>
@@ -636,7 +645,7 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
                       {exp.description}
                     </p>
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5">
                       {exp.technologies.slice(0, 5).map((tech) => (
                         <Badge key={tech} variant="outline" className="text-xs">
                           {tech}
@@ -658,51 +667,51 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-center mt-12"
+            className="text-center mt-8"
           >
             <Button size="lg" variant="outline" onClick={() => navigate('/experience')} className="gap-2 group">
-              View All Experience
+              {t.labels.viewAllExperience || 'View All Experience'}
               <ArrowRight size={18} weight="bold" className="group-hover:translate-x-1 transition-transform" />
             </Button>
           </motion.div>
         </div>
       </section>
 
-      <section className="py-20 px-6">
+      <section className="py-12 px-6 bg-gradient-to-b from-background to-muted/20">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="text-center mb-10"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">
               {t.labels.exploreMore || 'Explore More'}
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base text-muted-foreground max-w-2xl mx-auto">
               {t.labels.exploreSubtitle || 'Dive deeper into my work and expertise'}
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6">
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              whileHover={{ y: -10, scale: 1.02 }}
+              whileHover={{ y: -8, scale: 1.02 }}
               className="group cursor-pointer"
               onClick={() => navigate('/projects')}
             >
-              <Card className="p-8 h-full hover:shadow-2xl transition-all border-2 hover:border-accent/50 bg-gradient-to-br from-accent/5 to-transparent">
-                <Code size={48} weight="duotone" className="text-accent mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-2xl font-bold mb-3">{t.nav.projects}</h3>
-                <p className="text-muted-foreground mb-4">
+              <Card className="p-7 h-full hover:shadow-2xl transition-all border-2 hover:border-accent/50 bg-gradient-to-br from-accent/5 to-transparent">
+                <Code size={44} weight="duotone" className="text-accent mb-3 group-hover:scale-110 transition-transform" />
+                <h3 className="text-xl font-bold mb-2">{t.nav.projects}</h3>
+                <p className="text-sm text-muted-foreground mb-3">
                   {data.projects.length} innovative projects across various domains
                 </p>
-                <div className="flex items-center gap-2 text-accent font-medium">
-                  View Projects <ArrowRight size={18} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center gap-2 text-accent font-medium text-sm">
+                  View Projects <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
                 </div>
               </Card>
             </motion.div>
@@ -712,18 +721,18 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              whileHover={{ y: -10, scale: 1.02 }}
+              whileHover={{ y: -8, scale: 1.02 }}
               className="group cursor-pointer"
               onClick={() => navigate('/skills')}
             >
-              <Card className="p-8 h-full hover:shadow-2xl transition-all border-2 hover:border-secondary/50 bg-gradient-to-br from-secondary/5 to-transparent">
-                <GraduationCap size={48} weight="duotone" className="text-secondary mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-2xl font-bold mb-3">{t.nav.skills}</h3>
-                <p className="text-muted-foreground mb-4">
+              <Card className="p-7 h-full hover:shadow-2xl transition-all border-2 hover:border-secondary/50 bg-gradient-to-br from-secondary/5 to-transparent">
+                <Gauge size={44} weight="duotone" className="text-secondary mb-3 group-hover:scale-110 transition-transform" />
+                <h3 className="text-xl font-bold mb-2">{t.nav.skills}</h3>
+                <p className="text-sm text-muted-foreground mb-3">
                   Expertise across {data.skills ? Object.keys(data.skills).length : 0}+ technology categories
                 </p>
-                <div className="flex items-center gap-2 text-secondary font-medium">
-                  See Skills <ArrowRight size={18} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center gap-2 text-secondary font-medium text-sm">
+                  See Skills <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
                 </div>
               </Card>
             </motion.div>
@@ -733,22 +742,65 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              whileHover={{ y: -10, scale: 1.02 }}
+              whileHover={{ y: -8, scale: 1.02 }}
               className="group cursor-pointer"
               onClick={() => navigate('/contact')}
             >
-              <Card className="p-8 h-full hover:shadow-2xl transition-all border-2 hover:border-primary/50 bg-gradient-to-br from-primary/5 to-transparent">
-                <Rocket size={48} weight="duotone" className="text-primary mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-2xl font-bold mb-3">{t.nav.contact}</h3>
-                <p className="text-muted-foreground mb-4">
+              <Card className="p-7 h-full hover:shadow-2xl transition-all border-2 hover:border-primary/50 bg-gradient-to-br from-primary/5 to-transparent">
+                <Rocket size={44} weight="duotone" className="text-primary mb-3 group-hover:scale-110 transition-transform" />
+                <h3 className="text-xl font-bold mb-2">{t.nav.contact}</h3>
+                <p className="text-sm text-muted-foreground mb-3">
                   Let's discuss your next project and bring ideas to life
                 </p>
-                <div className="flex items-center gap-2 text-primary font-medium">
-                  Get in Touch <ArrowRight size={18} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center gap-2 text-primary font-medium text-sm">
+                  Get in Touch <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
                 </div>
               </Card>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      <section className="py-12 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <Card className="p-8 md:p-10 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 border-2 border-primary/20">
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-xl bg-primary/10">
+                    <Lightning size={28} weight="duotone" className="text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Fast Delivery</h3>
+                    <p className="text-sm text-muted-foreground">Agile development with quick turnaround times</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-xl bg-secondary/10">
+                    <Shield size={28} weight="duotone" className="text-secondary" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Secure & Scalable</h3>
+                    <p className="text-sm text-muted-foreground">Enterprise-grade security and scalability</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-xl bg-accent/10">
+                    <Sparkle size={28} weight="duotone" className="text-accent" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Innovation Focused</h3>
+                    <p className="text-sm text-muted-foreground">Leveraging cutting-edge technologies</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
         </div>
       </section>
     </div>
