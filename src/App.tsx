@@ -32,12 +32,12 @@ function App() {
   useEffect(() => {
     async function initialize() {
       if (!portfolioData) {
-        setPortfolioData(() => initialPortfolioData)
+        setPortfolioData(initialPortfolioData)
       }
       
       if (!adminPasswordHash) {
         const credentials = await initializeAdminCredentials()
-        setAdminPasswordHash(() => credentials.passwordHash)
+        setAdminPasswordHash(credentials.passwordHash)
       }
       
       setIsInitialized(true)
@@ -78,7 +78,7 @@ function App() {
   }
 
   const handleDataUpdate = (updatedData: PortfolioData) => {
-    setPortfolioData(() => updatedData)
+    setPortfolioData(updatedData)
   }
 
   if (!portfolioData || !isInitialized) {
