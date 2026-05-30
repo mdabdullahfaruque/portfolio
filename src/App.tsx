@@ -124,6 +124,7 @@ function App() {
                 <NewHome
                   data={portfolioData}
                   t={t}
+                  language={currentLanguage}
                   isAdmin={isAdmin}
                   onUpdate={handleDataUpdate}
                 />

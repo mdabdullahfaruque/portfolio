@@ -41,11 +41,14 @@ import {
 } from '@phosphor-icons/react'
 import { PortfolioData } from '@/lib/types'
 import { toast } from 'sonner'
-import resumePDF from '@/assets/documents/MdAbdullahFaruque_Resume.pdf'
+import { pdf } from '@react-pdf/renderer'
+import { ResumePDF } from '@/components/ResumePDF'
+import { buildResumeData, getResumeSectionLabels } from '@/lib/resumePdfData'
 
 interface HomeProps {
   data: PortfolioData
   t: any
+  language?: 'en' | 'de'
   isAdmin?: boolean
   onUpdate?: (updatedData: PortfolioData) => void
 }
@@ -166,15 +169,17 @@ function SkillsShowcase({ skills, labels }: { skills: PortfolioData['skills']; l
   )
 }
 
-export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
+export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
   const navigate = useNavigate()
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [editedData, setEditedData] = useState<PortfolioData>(data)
 
   const handleDownloadResume = async () => {
     try {
-      const response = await fetch(resumePDF)
-      const blob = await response.blob()
+      const lang = language ?? 'en'
+      const resumeData = buildResumeData(data, lang, t)
+      const labels = getResumeSectionLabels(lang)
+      const blob = await pdf(<ResumePDF data={resumeData} labels={labels} />).toBlob()
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
