@@ -27,9 +27,7 @@ import {
   Trash,
   Plus,
   Sparkle,
-  Lightning,
-  Rocket,
-  Star
+  Rocket
 } from '@phosphor-icons/react'
 import { PortfolioData } from '@/lib/types'
 import { toast } from 'sonner'
@@ -47,7 +45,6 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [editedData, setEditedData] = useState<PortfolioData>(data)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -76,12 +73,16 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
     }
   }
 
-  const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>, imageType: 'square' | 'portrait') => {
     const file = e.target.files?.[0]
     if (file) {
       const reader = new FileReader()
       reader.onloadend = () => {
-        setEditedData({ ...editedData, photoUrl: reader.result as string })
+        if (imageType === 'square') {
+          setEditedData({ ...editedData, photoUrl: reader.result as string })
+        } else {
+          setEditedData({ ...editedData, photoUrlPortrait: reader.result as string })
+        }
       }
       reader.readAsDataURL(file)
     }
@@ -92,23 +93,6 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
       onUpdate(editedData)
       toast.success('Home page updated successfully!')
       setEditDialogOpen(false)
-    }
-  }
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    setMousePosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    })
-  }
-
-  const floatingAnimation = {
-    y: [0, -20, 0],
-    transition: {
-      duration: 3,
-      repeat: Infinity as number,
-      ease: "easeInOut" as const
     }
   }
 
@@ -130,22 +114,76 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
               
               <div className="space-y-6 py-6">
                 <div>
-                  <Label className="text-base font-semibold">Profile Picture</Label>
-                  <div className="flex items-center gap-6 mt-4">
-                    <Avatar className="w-28 h-28 border-4 border-primary/20">
-                      <AvatarImage src={editedData.photoUrl} alt={editedData.name} className="object-cover" />
-                      <AvatarFallback className="text-2xl">{editedData.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleProfileImageUpload}
-                        className="mb-2"
-                        id="profile-image-upload"
-                      />
-                      <p className="text-sm text-muted-foreground">Upload a professional headshot (PNG, JPG)</p>
+                  <Label className="text-base font-semibold mb-4 block">Profile Pictures</Label>
+                  
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium text-muted-foreground">Square Frame (Default)</Label>
+                      <div className="flex flex-col items-center gap-4">
+                        <Avatar className="w-32 h-32 border-4 border-primary/20">
+                          <AvatarImage src={editedData.photoUrl} alt={editedData.name} className="object-cover" />
+                          <AvatarFallback className="text-2xl">{editedData.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                        </Avatar>
+                        <div className="w-full">
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleProfileImageUpload(e, 'square')}
+                            className="text-xs"
+                            id="profile-image-square"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">Best for square/circular photos</p>
+                        </div>
+                      </div>
                     </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium text-muted-foreground">Portrait Frame</Label>
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="w-32 h-40 border-4 border-secondary/20 rounded-2xl overflow-hidden bg-muted flex items-center justify-center">
+                          {editedData.photoUrlPortrait ? (
+                            <img src={editedData.photoUrlPortrait} alt={editedData.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-xs text-muted-foreground text-center px-2">No portrait image</span>
+                          )}
+                        </div>
+                        <div className="w-full">
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleProfileImageUpload(e, 'portrait')}
+                            className="text-xs"
+                            id="profile-image-portrait"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">Best for vertical/full body photos</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t">
+                    <Label htmlFor="frame-type" className="text-sm font-medium mb-2 block">Active Frame</Label>
+                    <div className="flex gap-3">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant={(!editedData.photoFrameType || editedData.photoFrameType === 'square') ? 'default' : 'outline'}
+                        onClick={() => setEditedData({ ...editedData, photoFrameType: 'square' })}
+                        className="flex-1"
+                      >
+                        Square Frame
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant={editedData.photoFrameType === 'portrait' ? 'default' : 'outline'}
+                        onClick={() => setEditedData({ ...editedData, photoFrameType: 'portrait' })}
+                        className="flex-1"
+                      >
+                        Portrait Frame
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">Choose which photo frame to display on the homepage</p>
                   </div>
                 </div>
 
@@ -337,28 +375,12 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
 
       <section 
         className="relative min-h-[90vh] flex items-center justify-center pt-20 pb-16 px-6 overflow-hidden"
-        onMouseMove={handleMouseMove}
       >
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full">
-            <div 
-              className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl"
-              style={{
-                transform: `translate(${mousePosition.x / 20}px, ${mousePosition.y / 20}px)`
-              }}
-            />
-            <div 
-              className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl"
-              style={{
-                transform: `translate(-${mousePosition.x / 30}px, -${mousePosition.y / 30}px)`
-              }}
-            />
-            <div 
-              className="absolute top-1/2 left-1/2 w-96 h-96 bg-secondary/10 rounded-full blur-3xl"
-              style={{
-                transform: `translate(-50%, -50%) translate(${mousePosition.x / 25}px, ${mousePosition.y / 25}px)`
-              }}
-            />
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
           </div>
           
           <div className="absolute inset-0" style={{
@@ -504,12 +526,9 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
               className="flex justify-center lg:justify-end relative"
             >
               <div className="relative">
-                <motion.div
-                  animate={floatingAnimation}
-                  className="relative z-10"
-                >
+                {(!data.photoFrameType || data.photoFrameType === 'square') ? (
                   <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-accent rounded-3xl blur-2xl opacity-30" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 rounded-3xl blur-3xl" />
                     <Avatar className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 border-8 border-card shadow-2xl relative z-10 ring-4 ring-primary/20">
                       <AvatarImage src={data.photoUrl} alt={data.name} className="object-cover" />
                       <AvatarFallback className="text-6xl font-bold bg-gradient-to-br from-primary to-accent text-primary-foreground">
@@ -517,37 +536,22 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
                       </AvatarFallback>
                     </Avatar>
                   </div>
-                </motion.div>
-                
-                <motion.div
-                  className="absolute -top-8 -right-8 bg-gradient-to-br from-accent to-accent/80 text-accent-foreground px-6 py-4 rounded-2xl shadow-2xl"
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.8 }}
-                >
-                  <div className="flex items-center gap-2">
-                    <Star size={24} weight="fill" className="text-yellow-300" />
-                    <div>
-                      <p className="text-xs opacity-90">Available for</p>
-                      <p className="font-bold">New Projects</p>
+                ) : (
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 rounded-3xl blur-3xl" />
+                    <div className="w-64 h-80 md:w-80 md:h-96 lg:w-96 lg:h-[480px] border-8 border-card shadow-2xl relative z-10 ring-4 ring-primary/20 rounded-3xl overflow-hidden bg-muted">
+                      {data.photoUrlPortrait ? (
+                        <img src={data.photoUrlPortrait} alt={data.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-accent">
+                          <span className="text-6xl font-bold text-primary-foreground">
+                            {data.name.split(' ').map((n) => n[0]).join('')}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </motion.div>
-
-                <motion.div
-                  className="absolute -bottom-8 -left-8 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground px-6 py-4 rounded-2xl shadow-2xl"
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1 }}
-                >
-                  <div className="flex items-center gap-2">
-                    <Lightning size={24} weight="fill" className="text-yellow-300" />
-                    <div>
-                      <p className="text-xs opacity-90">Response time</p>
-                      <p className="font-bold">24 hours</p>
-                    </div>
-                  </div>
-                </motion.div>
+                )}
               </div>
             </motion.div>
           </div>

@@ -83,6 +83,8 @@ export interface PortfolioData {
   title: string
   tagline: string
   photoUrl: string
+  photoUrlPortrait?: string
+  photoFrameType?: 'square' | 'portrait'
   contact: ContactInfo
   summary: string
   aboutMe: string
