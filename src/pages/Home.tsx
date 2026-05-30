@@ -344,11 +344,11 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
                 </h1>
                 
                 <h2 className="text-lg lg:text-xl font-semibold text-primary">
-                  {data.title}
+                  {t.profile.title}
                 </h2>
                 
                 <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl pt-1">
-                  {data.tagline}
+                  {t.profile.tagline}
                 </p>
               </div>
 
@@ -356,7 +356,9 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
                 {data.stats && data.stats.map((stat) => (
                   <div key={stat.id} className="bg-card border border-border rounded-lg p-3 text-center">
                     <div className="text-xl lg:text-2xl font-bold text-primary">{stat.value}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{stat.label}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">
+                      {stat.translationKey ? t.stats[stat.translationKey] : stat.label}
+                    </div>
                   </div>
                 ))}
               </div>

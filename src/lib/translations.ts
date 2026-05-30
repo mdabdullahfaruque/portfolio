@@ -98,6 +98,16 @@ export const translations = {
       optional: 'Optional',
       required: 'Required',
     },
+    stats: {
+      yearsExperience: 'Years Experience',
+      projectsCompleted: 'Projects Completed',
+      liveProducts: 'Live Products',
+      technologies: 'Technologies',
+    },
+    profile: {
+      title: 'Senior Full Stack Developer',
+      tagline: 'Building scalable, cloud-native applications with modern technologies',
+    },
   },
   de: {
     nav: {
@@ -197,6 +207,16 @@ export const translations = {
       email: 'E-Mail',
       optional: 'Optional',
       required: 'Erforderlich',
+    },
+    stats: {
+      yearsExperience: 'Jahre Erfahrung',
+      projectsCompleted: 'Projekte abgeschlossen',
+      liveProducts: 'Live-Produkte',
+      technologies: 'Technologien',
+    },
+    profile: {
+      title: 'Senior Full Stack Entwickler',
+      tagline: 'Entwicklung skalierbarer, cloud-nativer Anwendungen mit modernen Technologien',
     },
   },
 }

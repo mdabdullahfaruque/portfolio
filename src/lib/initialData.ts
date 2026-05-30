@@ -224,10 +224,10 @@ export const initialPortfolioData: PortfolioData = {
     { name: 'Bengali', proficiency: 'Native' },
   ],
   stats: [
-    { id: '1', label: 'Years Experience', value: '6+', icon: 'briefcase' },
-    { id: '2', label: 'Projects Completed', value: '15+', icon: 'code' },
-    { id: '3', label: 'Live Products', value: '2', icon: 'rocket' },
-    { id: '4', label: 'Technologies', value: '30+', icon: 'stack' },
+    { id: '1', label: 'Years Experience', value: '6+', icon: 'briefcase', translationKey: 'yearsExperience' },
+    { id: '2', label: 'Projects Completed', value: '15+', icon: 'code', translationKey: 'projectsCompleted' },
+    { id: '3', label: 'Live Products', value: '2', icon: 'rocket', translationKey: 'liveProducts' },
+    { id: '4', label: 'Technologies', value: '30+', icon: 'stack', translationKey: 'technologies' },
   ],
   highlights: [
     'Led migration of global web platforms serving millions of users across 12+ markets',

@@ -99,6 +99,7 @@ export interface StatItem {
   label: string
   value: string
   icon?: string
+  translationKey?: 'yearsExperience' | 'projectsCompleted' | 'liveProducts' | 'technologies'
 }
 
 export interface Translations {
