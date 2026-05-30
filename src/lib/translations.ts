@@ -98,6 +98,10 @@ export const translations = {
       optional: 'Optional',
       required: 'Required',
     },
+    profile: {
+      title: 'Professional Developer',
+      tagline: 'Building scalable, cloud-native applications with modern technologies',
+    },
     stats: {
       yearsExperience: 'Years Experience',
       projectsCompleted: 'Projects Completed',
@@ -203,6 +207,16 @@ export const translations = {
       email: 'E-Mail',
       optional: 'Optional',
       required: 'Erforderlich',
+    },
+    profile: {
+      title: 'Professioneller Entwickler',
+      tagline: 'Entwicklung skalierbarer, cloud-nativer Anwendungen mit modernen Technologien',
+    },
+    stats: {
+      yearsExperience: 'Jahre Erfahrung',
+      projectsCompleted: 'Abgeschlossene Projekte',
+      liveProducts: 'Live-Produkte',
+      technologies: 'Technologien',
     },
   },
 }

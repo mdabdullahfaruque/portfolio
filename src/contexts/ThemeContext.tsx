@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, ReactNode } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { useLocalStorage } from '@/hooks/use-local-storage'
 
 type Theme = 'light' | 'dark'
 
@@ -12,22 +12,20 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useKV<Theme>('portfolio-theme', 'light')
-
-  const currentTheme = theme || 'light'
+  const [theme, setTheme] = useLocalStorage<Theme>('portfolio-theme', 'light')
 
   useEffect(() => {
     const root = window.document.documentElement
     root.classList.remove('light', 'dark')
-    root.classList.add(currentTheme)
-  }, [currentTheme])
+    root.classList.add(theme || 'light')
+  }, [theme])
 
   const toggleTheme = () => {
-    setTheme((currentTheme) => ((currentTheme || 'light') === 'light' ? 'dark' : 'light'))
+    setTheme((prevTheme) => ((prevTheme || 'light') === 'light' ? 'dark' : 'light'))
   }
 
   return (
-    <ThemeContext.Provider value={{ theme: currentTheme, setTheme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme: theme || 'light', setTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   )

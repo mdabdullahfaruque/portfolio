@@ -716,7 +716,7 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
                 <GraduationCap size={48} weight="duotone" className="text-secondary mb-4 group-hover:scale-110 transition-transform" />
                 <h3 className="text-2xl font-bold mb-3">{t.nav.skills}</h3>
                 <p className="text-muted-foreground mb-4">
-                  Expertise across {Object.keys(data.skills).length}+ technology categories
+                  Expertise across {data.skills ? Object.keys(data.skills).length : 0}+ technology categories
                 </p>
                 <div className="flex items-center gap-2 text-secondary font-medium">
                   See Skills <ArrowRight size={18} weight="bold" className="group-hover:translate-x-1 transition-transform" />
