@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -12,8 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { 
   ArrowRight, 
   Briefcase, 
-  Code, 
-  GraduationCap,
+  Code,
   LinkedinLogo,
   GithubLogo,
   EnvelopeSimple,
@@ -26,11 +25,10 @@ import {
   FloppyDisk,
   Trash,
   Plus,
-  Sparkle,
-  Rocket,
-  Lightning,
-  Gauge,
-  Shield
+  Buildings,
+  CalendarBlank,
+  Stack,
+  ChartLineUp
 } from '@phosphor-icons/react'
 import { PortfolioData } from '@/lib/types'
 import { toast } from 'sonner'
@@ -45,16 +43,8 @@ interface HomeProps {
 
 export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
   const navigate = useNavigate()
-  const containerRef = useRef<HTMLDivElement>(null)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [editedData, setEditedData] = useState<PortfolioData>(data)
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  })
-
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 100])
 
   const handleDownloadResume = async () => {
     try {
@@ -98,13 +88,20 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
     }
   }
 
+  const activePhotoUrl = data.photoFrameType === 'portrait' && data.photoUrlPortrait 
+    ? data.photoUrlPortrait 
+    : data.photoUrl
+
+  const recentExperience = data.experiences.slice(0, 3)
+  const featuredProjects = data.projects.filter(p => p.status === 'live').slice(0, 2)
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5" ref={containerRef}>
+    <div className="min-h-screen bg-background">
       {isAdmin && (
         <div className="fixed bottom-6 right-6 z-50 no-print">
           <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="lg" className="gap-2 shadow-2xl hover:scale-105 transition-transform" onClick={() => setEditedData(data)}>
+              <Button size="lg" className="gap-2 shadow-2xl" onClick={() => setEditedData(data)}>
                 <PencilSimple size={20} weight="bold" />
                 Edit Home
               </Button>
@@ -375,324 +372,332 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
         </div>
       )}
 
-      <section className="relative pt-20 pb-8 px-6 overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-10 right-10 w-72 h-72 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, oklch(0.45 0.20 265 / 0.05) 1px, transparent 0)`,
-            backgroundSize: '32px 32px'
-          }} />
-        </div>
-
-        <motion.div 
-          className="max-w-7xl mx-auto w-full relative z-10"
-          style={{ y: heroY }}
-        >
-          <div className="grid lg:grid-cols-[1fr,380px] gap-8 items-start">
+      <section className="relative bg-gradient-to-b from-background via-muted/20 to-background">
+        <div className="absolute inset-0 opacity-[0.015]" style={{
+          backgroundImage: `repeating-linear-gradient(0deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 2px),
+                           repeating-linear-gradient(90deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 2px)`,
+          backgroundSize: '24px 24px'
+        }} />
+        
+        <div className="max-w-6xl mx-auto px-6 py-16 relative z-10">
+          <div className="grid lg:grid-cols-[1fr,300px] gap-12 items-start">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="space-y-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="space-y-8"
             >
-              <div className="space-y-3">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="flex items-center gap-2 flex-wrap"
-                >
-                  <Badge className="px-2.5 py-1 text-xs font-semibold bg-primary/15 text-primary border-primary/40 hover:bg-primary/20">
-                    <MapPin size={12} weight="fill" className="mr-1" />
-                    {data.contact.location}
-                  </Badge>
-                  <Badge className="px-2.5 py-1 text-xs font-semibold bg-accent/15 text-accent border-accent/40 hover:bg-accent/20">
-                    <CheckCircle size={12} weight="fill" className="mr-1" />
-                    {t.labels.availableForWork || 'Available for Work'}
-                  </Badge>
-                </motion.div>
-
-                <motion.h1 
-                  className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1]"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.25 }}
-                >
-                  {data.name}
-                </motion.h1>
+              <div className="space-y-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border text-sm font-medium">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  {t.labels.availableForWork || 'Available for Work'}
+                </div>
                 
-                <motion.h2
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-xl md:text-2xl font-semibold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent"
-                >
+                <h1 className="text-5xl lg:text-6xl font-bold text-foreground tracking-tight">
+                  {data.name}
+                </h1>
+                
+                <h2 className="text-2xl lg:text-3xl font-semibold text-foreground/70">
                   {data.title}
-                </motion.h2>
+                </h2>
 
-                <motion.p 
-                  className="text-base md:text-lg text-muted-foreground/90 leading-relaxed"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35 }}
-                >
-                  {t.profile.tagline}
-                </motion.p>
-
-                <motion.p 
-                  className="text-sm md:text-base text-muted-foreground leading-relaxed"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  {data.summary}
-                </motion.p>
+                <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                  {data.tagline}
+                </p>
               </div>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.45 }}
-                className="flex items-center gap-2.5 pt-1"
-              >
+              <div className="flex items-center gap-4 pt-2">
                 {data.contact.linkedin && (
-                  <motion.a
+                  <a
                     href={data.contact.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 hover:from-primary hover:to-primary/80 text-foreground hover:text-primary-foreground flex items-center justify-center transition-all shadow-sm hover:shadow-lg"
+                    className="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-foreground/5 hover:bg-foreground/10 text-foreground transition-colors"
                   >
-                    <LinkedinLogo size={20} weight="fill" />
-                  </motion.a>
+                    <LinkedinLogo size={22} weight="fill" />
+                  </a>
                 )}
                 {data.contact.github && (
-                  <motion.a
+                  <a
                     href={data.contact.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 hover:from-primary hover:to-primary/80 text-foreground hover:text-primary-foreground flex items-center justify-center transition-all shadow-sm hover:shadow-lg"
+                    className="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-foreground/5 hover:bg-foreground/10 text-foreground transition-colors"
                   >
-                    <GithubLogo size={20} weight="fill" />
-                  </motion.a>
+                    <GithubLogo size={22} weight="fill" />
+                  </a>
                 )}
                 {data.contact.email && (
-                  <motion.a
+                  <a
                     href={`mailto:${data.contact.email}`}
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 hover:from-primary hover:to-primary/80 text-foreground hover:text-primary-foreground flex items-center justify-center transition-all shadow-sm hover:shadow-lg"
+                    className="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-foreground/5 hover:bg-foreground/10 text-foreground transition-colors"
                   >
-                    <EnvelopeSimple size={20} weight="fill" />
-                  </motion.a>
+                    <EnvelopeSimple size={22} weight="fill" />
+                  </a>
                 )}
-                <div className="h-5 w-px bg-border mx-0.5" />
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="flex items-center gap-1.5 text-xs text-muted-foreground"
-                >
-                  <Envelope size={14} weight="fill" />
-                  <span className="font-medium">{data.contact.email}</span>
-                </motion.div>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="flex flex-wrap gap-2.5 pt-1"
-              >
+              <div className="flex flex-wrap gap-3 pt-2">
                 <Button 
-                  size="default"
-                  onClick={() => navigate('/projects')}
-                  className="gap-2 group hover:scale-105 transition-transform shadow-md"
+                  size="lg"
+                  onClick={() => navigate('/contact')}
+                  className="gap-2 font-semibold"
                 >
-                  {t.hero.viewWork}
-                  <ArrowRight size={18} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+                  {t.hero.contactMe}
+                  <ArrowRight size={18} weight="bold" />
                 </Button>
                 
                 <Button 
-                  size="default"
+                  size="lg"
                   variant="outline"
                   onClick={handleDownloadResume}
-                  className="gap-2 hover:scale-105 transition-transform"
+                  className="gap-2 font-semibold"
                 >
                   <DownloadSimple size={18} weight="bold" />
                   {t.labels.downloadPDF}
                 </Button>
-                
-                <Button 
-                  size="default"
-                  variant="ghost"
-                  onClick={() => navigate('/contact')}
-                  className="gap-2 hover:scale-105 transition-transform"
-                >
-                  <EnvelopeSimple size={18} weight="bold" />
-                  {t.hero.contactMe}
-                </Button>
-              </motion.div>
+              </div>
 
               {data.stats && data.stats.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2"
-                >
-                  {data.stats.map((stat, index) => (
-                    <motion.div
-                      key={stat.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.6 + index * 0.05 }}
-                      whileHover={{ y: -3, scale: 1.02 }}
-                      className="bg-card/60 backdrop-blur-sm border border-border/60 rounded-lg p-3 hover:shadow-lg transition-all hover:border-primary/40"
-                    >
-                      <div className="text-2xl md:text-3xl font-bold bg-gradient-to-br from-primary via-secondary to-accent bg-clip-text text-transparent mb-0.5">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
+                  {data.stats.map((stat) => (
+                    <div key={stat.id} className="space-y-1">
+                      <div className="text-3xl font-bold text-foreground">
                         {stat.value}
                       </div>
-                      <div className="text-xs text-muted-foreground font-medium">
+                      <div className="text-sm text-muted-foreground font-medium">
                         {stat.translationKey ? t.stats[stat.translationKey] : stat.label}
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
-                </motion.div>
+                </div>
               )}
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, x: 50 }}
-              animate={{ opacity: 1, scale: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
               className="flex justify-center lg:justify-end"
             >
               <div className="relative">
-                {(!data.photoFrameType || data.photoFrameType === 'square') ? (
-                  <div className="relative">
-                    <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 via-secondary/15 to-accent/20 rounded-3xl blur-2xl" />
-                    <Avatar className="w-72 h-72 md:w-80 md:h-80 border-[6px] border-background shadow-2xl relative z-10 ring-2 ring-primary/30">
-                      <AvatarImage src={data.photoUrl} alt={data.name} className="object-cover" />
-                      <AvatarFallback className="text-5xl font-bold bg-gradient-to-br from-primary to-accent text-primary-foreground">
-                        {data.name.split(' ').map((n) => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
+                {data.photoFrameType === 'portrait' && data.photoUrlPortrait ? (
+                  <div className="w-[280px] h-[350px] rounded-2xl overflow-hidden border-2 border-border shadow-2xl bg-muted">
+                    <img 
+                      src={activePhotoUrl} 
+                      alt={data.name} 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 ) : (
-                  <div className="relative">
-                    <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 via-secondary/15 to-accent/20 rounded-3xl blur-2xl" />
-                    <div className="w-72 h-[360px] md:w-80 md:h-[400px] border-[6px] border-background shadow-2xl relative z-10 ring-2 ring-primary/30 rounded-2xl overflow-hidden bg-muted">
-                      {data.photoUrlPortrait ? (
-                        <img src={data.photoUrlPortrait} alt={data.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-accent">
-                          <span className="text-5xl font-bold text-primary-foreground">
-                            {data.name.split(' ').map((n) => n[0]).join('')}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                  <div className="w-[280px] h-[280px] rounded-2xl overflow-hidden border-2 border-border shadow-2xl bg-muted">
+                    <img 
+                      src={activePhotoUrl} 
+                      alt={data.name} 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 )}
               </div>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      <section className="py-8 px-6 bg-gradient-to-b from-transparent to-muted/30">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-16 px-6 border-t bg-muted/30">
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="flex items-end justify-between mb-6"
+            className="mb-10"
           >
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                {t.labels.recentExperience || 'Recent Experience'}
-              </h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                {t.labels.experienceSubtitle || 'Key roles that shaped my professional journey'}
-              </p>
-            </div>
-            <Button size="sm" variant="ghost" onClick={() => navigate('/experience')} className="gap-1.5 group hidden md:flex">
-              {t.labels.viewAll || 'View All'}
-              <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
-            </Button>
+            <h2 className="text-3xl font-bold text-foreground mb-2">
+              {t.labels.professionalSummary || 'Professional Summary'}
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              {data.summary}
+            </p>
           </motion.div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {data.experiences.slice(0, 3).map((exp, index) => (
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+            >
+              <Card className="p-6 h-full border-2 hover:border-foreground/20 transition-colors">
+                <Briefcase size={32} weight="duotone" className="text-foreground mb-4" />
+                <h3 className="text-xl font-bold mb-2">{t.nav.experience}</h3>
+                <p className="text-muted-foreground mb-4">
+                  {data.experiences.length} positions spanning 6+ years in software development
+                </p>
+                <Button 
+                  variant="ghost" 
+                  className="gap-2 px-0 hover:bg-transparent group"
+                  onClick={() => navigate('/experience')}
+                >
+                  View Experience
+                  <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <Card className="p-6 h-full border-2 hover:border-foreground/20 transition-colors">
+                <Code size={32} weight="duotone" className="text-foreground mb-4" />
+                <h3 className="text-xl font-bold mb-2">{t.nav.projects}</h3>
+                <p className="text-muted-foreground mb-4">
+                  {data.projects.length} projects including {featuredProjects.length} live products
+                </p>
+                <Button 
+                  variant="ghost" 
+                  className="gap-2 px-0 hover:bg-transparent group"
+                  onClick={() => navigate('/projects')}
+                >
+                  View Projects
+                  <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+            >
+              <Card className="p-6 h-full border-2 hover:border-foreground/20 transition-colors">
+                <Stack size={32} weight="duotone" className="text-foreground mb-4" />
+                <h3 className="text-xl font-bold mb-2">{t.nav.skills}</h3>
+                <p className="text-muted-foreground mb-4">
+                  Expertise in {data.skills ? Object.keys(data.skills).length : 0}+ technology domains
+                </p>
+                <Button 
+                  variant="ghost" 
+                  className="gap-2 px-0 hover:bg-transparent group"
+                  onClick={() => navigate('/skills')}
+                >
+                  View Skills
+                  <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Card>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 px-6 bg-background">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-10"
+          >
+            <div className="flex items-end justify-between mb-6">
+              <div>
+                <h2 className="text-3xl font-bold text-foreground mb-2">
+                  {t.labels.recentExperience || 'Recent Experience'}
+                </h2>
+                <p className="text-muted-foreground">
+                  Latest positions in my professional journey
+                </p>
+              </div>
+              <Button 
+                variant="ghost" 
+                className="gap-2 hidden md:flex group"
+                onClick={() => navigate('/experience')}
+              >
+                {t.labels.viewAll || 'View All'}
+                <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </div>
+          </motion.div>
+
+          <div className="space-y-6">
+            {recentExperience.map((exp, index) => (
               <motion.div
                 key={exp.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -4, scale: 1.01 }}
-                className="group"
               >
-                <Card className="p-4 h-full hover:shadow-lg transition-all duration-300 border hover:border-primary/50 bg-card/70 backdrop-blur-sm">
-                  <div className="space-y-2.5">
-                    <div>
-                      <Badge className="mb-2 text-xs" variant="secondary">
-                        {exp.startDate} - {exp.endDate}
-                      </Badge>
-                      <h3 className="text-base font-bold text-foreground mb-0.5 group-hover:text-primary transition-colors leading-tight">
-                        {exp.title}
-                      </h3>
-                      <p className="text-sm font-semibold text-primary">{exp.company}</p>
-                      {exp.companyType && (
-                        <p className="text-xs text-muted-foreground italic leading-tight mt-0.5">{exp.companyType}</p>
-                      )}
-                      <div className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground">
-                        <MapPin size={12} weight="fill" className="text-accent" />
-                        {exp.location}
+                <Card className="p-6 border-2 hover:border-foreground/20 transition-colors">
+                  <div className="grid md:grid-cols-[200px,1fr] gap-6">
+                    <div className="space-y-2">
+                      <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+                        <CalendarBlank size={16} weight="fill" />
+                        <span>{exp.startDate} - {exp.endDate}</span>
+                      </div>
+                      <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+                        <MapPin size={16} weight="fill" />
+                        <span>{exp.location}</span>
                       </div>
                     </div>
 
-                    {exp.achievements && exp.achievements.length > 0 && (
-                      <ul className="space-y-1">
-                        {exp.achievements.slice(0, 2).map((achievement, i) => (
-                          <li key={i} className="text-xs text-muted-foreground leading-relaxed flex items-start gap-1.5">
-                            <CheckCircle size={12} weight="fill" className="text-accent mt-0.5 flex-shrink-0" />
-                            <span>{achievement}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                    <div className="space-y-3">
+                      <div>
+                        <h3 className="text-xl font-bold text-foreground mb-1">
+                          {exp.title}
+                        </h3>
+                        <div className="flex items-center gap-2 text-foreground/70">
+                          <Buildings size={18} weight="fill" />
+                          <span className="font-semibold">{exp.company}</span>
+                        </div>
+                        {exp.companyType && (
+                          <p className="text-sm text-muted-foreground italic mt-1">{exp.companyType}</p>
+                        )}
+                      </div>
 
-                    <div className="flex flex-wrap gap-1">
-                      {exp.technologies.slice(0, 4).map((tech) => (
-                        <Badge key={tech} variant="outline" className="text-xs py-0 px-1.5">
-                          {tech}
-                        </Badge>
-                      ))}
-                      {exp.technologies.length > 4 && (
-                        <Badge variant="outline" className="text-xs py-0 px-1.5">
-                          +{exp.technologies.length - 4}
-                        </Badge>
+                      {exp.achievements && exp.achievements.length > 0 && (
+                        <ul className="space-y-2">
+                          {exp.achievements.slice(0, 3).map((achievement, i) => (
+                            <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                              <CheckCircle size={16} weight="fill" className="text-foreground/40 mt-0.5 flex-shrink-0" />
+                              <span>{achievement}</span>
+                            </li>
+                          ))}
+                        </ul>
                       )}
+
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {exp.technologies.slice(0, 6).map((tech) => (
+                          <Badge key={tech} variant="outline" className="text-xs font-medium">
+                            {tech}
+                          </Badge>
+                        ))}
+                        {exp.technologies.length > 6 && (
+                          <Badge variant="outline" className="text-xs font-medium">
+                            +{exp.technologies.length - 6} more
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </Card>
               </motion.div>
             ))}
           </div>
-          
+
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-center mt-5 md:hidden"
+            className="text-center mt-8"
           >
-            <Button size="default" variant="outline" onClick={() => navigate('/experience')} className="gap-2 group">
+            <Button 
+              variant="outline" 
+              className="gap-2 group"
+              onClick={() => navigate('/experience')}
+            >
               {t.labels.viewAllExperience || 'View All Experience'}
               <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
             </Button>
@@ -700,127 +705,141 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
         </div>
       </section>
 
-      <section className="py-8 px-6">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="mb-6"
-          >
-            <h2 className="text-2xl md:text-3xl font-bold mb-1">
-              {t.labels.exploreMore || 'Explore More'}
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              {t.labels.exploreSubtitle || 'Dive deeper into my work and expertise'}
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-4">
-            <motion.div 
+      {featuredProjects.length > 0 && (
+        <section className="py-16 px-6 bg-muted/30 border-t">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.05 }}
-              whileHover={{ y: -4, scale: 1.01 }}
-              className="group cursor-pointer"
-              onClick={() => navigate('/projects')}
+              className="mb-10"
             >
-              <Card className="p-5 h-full hover:shadow-lg transition-all border hover:border-accent/50 bg-gradient-to-br from-accent/5 to-transparent">
-                <Code size={36} weight="duotone" className="text-accent mb-2.5 group-hover:scale-110 transition-transform" />
-                <h3 className="text-lg font-bold mb-1.5">{t.nav.projects}</h3>
-                <p className="text-sm text-muted-foreground mb-2.5 leading-relaxed">
-                  {data.projects.length} innovative projects across various domains
-                </p>
-                <div className="flex items-center gap-1.5 text-accent font-medium text-sm">
-                  View Projects <ArrowRight size={14} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+              <div className="flex items-end justify-between mb-6">
+                <div>
+                  <h2 className="text-3xl font-bold text-foreground mb-2">
+                    {t.labels.featuredProjects || 'Featured Projects'}
+                  </h2>
+                  <p className="text-muted-foreground">
+                    Live products making an impact
+                  </p>
                 </div>
-              </Card>
+                <Button 
+                  variant="ghost" 
+                  className="gap-2 hidden md:flex group"
+                  onClick={() => navigate('/projects')}
+                >
+                  {t.labels.viewAll || 'View All'}
+                  <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </div>
             </motion.div>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              whileHover={{ y: -4, scale: 1.01 }}
-              className="group cursor-pointer"
-              onClick={() => navigate('/skills')}
-            >
-              <Card className="p-5 h-full hover:shadow-lg transition-all border hover:border-secondary/50 bg-gradient-to-br from-secondary/5 to-transparent">
-                <Gauge size={36} weight="duotone" className="text-secondary mb-2.5 group-hover:scale-110 transition-transform" />
-                <h3 className="text-lg font-bold mb-1.5">{t.nav.skills}</h3>
-                <p className="text-sm text-muted-foreground mb-2.5 leading-relaxed">
-                  Expertise across {data.skills ? Object.keys(data.skills).length : 0}+ technology categories
-                </p>
-                <div className="flex items-center gap-1.5 text-secondary font-medium text-sm">
-                  See Skills <ArrowRight size={14} weight="bold" className="group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Card>
-            </motion.div>
+            <div className="grid md:grid-cols-2 gap-6">
+              {featuredProjects.map((project, index) => (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className="p-6 h-full border-2 hover:border-foreground/20 transition-colors">
+                    <div className="space-y-4">
+                      <div>
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="text-xl font-bold text-foreground">
+                            {project.name}
+                          </h3>
+                          <Badge variant="outline" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
+                            <ChartLineUp size={12} weight="bold" className="mr-1" />
+                            Live
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {project.description}
+                        </p>
+                      </div>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+                      {project.technologies && project.technologies.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {project.technologies.map((tech) => (
+                            <Badge key={tech} variant="secondary" className="text-xs">
+                              {tech}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+
+                      {project.url && (
+                        <div className="pt-2">
+                          <a
+                            href={project.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 text-sm font-medium hover:underline"
+                          >
+                            Visit Website
+                            <ArrowRight size={14} weight="bold" />
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.15 }}
-              whileHover={{ y: -4, scale: 1.01 }}
-              className="group cursor-pointer"
-              onClick={() => navigate('/contact')}
+              className="text-center mt-8"
             >
-              <Card className="p-5 h-full hover:shadow-lg transition-all border hover:border-primary/50 bg-gradient-to-br from-primary/5 to-transparent">
-                <Rocket size={36} weight="duotone" className="text-primary mb-2.5 group-hover:scale-110 transition-transform" />
-                <h3 className="text-lg font-bold mb-1.5">{t.nav.contact}</h3>
-                <p className="text-sm text-muted-foreground mb-2.5 leading-relaxed">
-                  Let's discuss your next project and bring ideas to life
-                </p>
-                <div className="flex items-center gap-1.5 text-primary font-medium text-sm">
-                  Get in Touch <ArrowRight size={14} weight="bold" className="group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Card>
+              <Button 
+                variant="outline" 
+                className="gap-2 group"
+                onClick={() => navigate('/projects')}
+              >
+                {t.labels.viewAllProjects || 'View All Projects'}
+                <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+              </Button>
             </motion.div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className="py-8 px-6 bg-gradient-to-b from-transparent to-muted/30">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-16 px-6 bg-foreground/[0.02] border-t">
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
           >
-            <Card className="p-6 md:p-8 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 border border-primary/20">
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="flex items-start gap-3">
-                  <div className="p-2.5 rounded-xl bg-primary/10 flex-shrink-0">
-                    <Lightning size={24} weight="duotone" className="text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-base mb-1">Fast Delivery</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Agile development with quick turnaround times</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="p-2.5 rounded-xl bg-secondary/10 flex-shrink-0">
-                    <Shield size={24} weight="duotone" className="text-secondary" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-base mb-1">Secure & Scalable</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Enterprise-grade security and scalability</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="p-2.5 rounded-xl bg-accent/10 flex-shrink-0">
-                    <Sparkle size={24} weight="duotone" className="text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-base mb-1">Innovation Focused</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Leveraging cutting-edge technologies</p>
-                  </div>
-                </div>
+            <Card className="p-8 md:p-12 border-2 text-center bg-card">
+              <h2 className="text-3xl font-bold text-foreground mb-4">
+                {t.hero.letsWorkTogether || "Let's Work Together"}
+              </h2>
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+                {t.hero.ctaDescription || 'Ready to bring your next project to life? Get in touch and let\'s discuss how I can help.'}
+              </p>
+              <div className="flex flex-wrap gap-3 justify-center">
+                <Button 
+                  size="lg"
+                  onClick={() => navigate('/contact')}
+                  className="gap-2 font-semibold"
+                >
+                  {t.hero.contactMe}
+                  <ArrowRight size={18} weight="bold" />
+                </Button>
+                <Button 
+                  size="lg"
+                  variant="outline"
+                  onClick={handleDownloadResume}
+                  className="gap-2 font-semibold"
+                >
+                  <DownloadSimple size={18} weight="bold" />
+                  {t.labels.downloadPDF}
+                </Button>
               </div>
             </Card>
           </motion.div>
