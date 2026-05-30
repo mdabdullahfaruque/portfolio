@@ -57,6 +57,27 @@ export interface Skill {
   yearsOfExperience?: number
 }
 
+export interface CustomSection {
+  id: string
+  title: string
+  slug: string
+  content: string
+  order: number
+  visible: boolean
+  icon?: string
+  showInNav: boolean
+}
+
+export interface NavMenuItem {
+  id: string
+  label: string
+  path: string
+  order: number
+  visible: boolean
+  isCustom: boolean
+  icon?: string
+}
+
 export interface PortfolioData {
   name: string
   title: string
@@ -83,6 +104,8 @@ export interface PortfolioData {
   testimonials?: Testimonial[]
   stats?: StatItem[]
   highlights?: string[]
+  customSections?: CustomSection[]
+  navMenuItems?: NavMenuItem[]
 }
 
 export interface Testimonial {

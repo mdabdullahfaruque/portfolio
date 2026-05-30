@@ -3,7 +3,8 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { Globe, List, SignOut, User } from '@phosphor-icons/react'
+import { Globe, List, SignOut, User, Moon, Sun } from '@phosphor-icons/react'
+import { useTheme } from '@/contexts/ThemeContext'
 
 interface NavbarProps {
   language: string
@@ -16,6 +17,7 @@ interface NavbarProps {
 export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false)
   const location = useLocation()
+  const { theme, toggleTheme } = useTheme()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,6 +70,16 @@ export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: Nav
           </div>
 
           <div className="flex items-center gap-1.5">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={toggleTheme} 
+              className="gap-1.5 h-9 w-9 p-0"
+              title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            >
+              {theme === 'light' ? <Moon size={18} weight="fill" /> : <Sun size={18} weight="fill" />}
+            </Button>
+
             <Button 
               variant="ghost" 
               size="sm" 

@@ -3,7 +3,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom'
 import { useLocalStorage } from '@/hooks/use-local-storage'
 import { Toaster } from '@/components/ui/sonner'
 import { Navbar } from '@/components/Navbar'
-import { Home } from '@/pages/Home'
+import { NewHome } from '@/pages/NewHome'
 import { ExperiencePage } from '@/pages/ExperiencePage'
 import { ProjectsPage } from '@/pages/ProjectsPage'
 import { SkillsPage } from '@/pages/SkillsPage'
@@ -14,6 +14,7 @@ import { PortfolioData } from '@/lib/types'
 import { translations } from '@/lib/translations'
 import { initialPortfolioData } from '@/lib/initialData'
 import { initializeAdminCredentials, validateAdminLogin } from '@/lib/auth'
+import { ThemeProvider } from '@/contexts/ThemeContext'
 import { toast } from 'sonner'
 
 type Language = 'en' | 'de'
@@ -92,89 +93,91 @@ function App() {
   }
 
   return (
-    <HashRouter>
-      <div className="min-h-screen bg-background">
-        <Navbar
-          language={currentLanguage}
-          onLanguageToggle={toggleLanguage}
-          t={t}
-          isAdmin={isAdmin}
-          onLogout={handleLogout}
-        />
+    <ThemeProvider>
+      <HashRouter>
+        <div className="min-h-screen bg-background">
+          <Navbar
+            language={currentLanguage}
+            onLanguageToggle={toggleLanguage}
+            t={t}
+            isAdmin={isAdmin}
+            onLogout={handleLogout}
+          />
 
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home
-                data={portfolioData}
-                t={t}
-                isAdmin={isAdmin}
-                onUpdate={handleDataUpdate}
-              />
-            }
-          />
-          <Route
-            path="/experience"
-            element={
-              <ExperiencePage
-                data={portfolioData}
-                t={t}
-                isAdmin={isAdmin}
-                onUpdate={handleDataUpdate}
-              />
-            }
-          />
-          <Route
-            path="/projects"
-            element={
-              <ProjectsPage
-                data={portfolioData}
-                t={t}
-                isAdmin={isAdmin}
-                onUpdate={handleDataUpdate}
-              />
-            }
-          />
-          <Route
-            path="/skills"
-            element={
-              <SkillsPage
-                data={portfolioData}
-                t={t}
-                isAdmin={isAdmin}
-                onUpdate={handleDataUpdate}
-              />
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <ContactPage
-                data={portfolioData}
-                t={t}
-              />
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              isAdmin ? (
-                <AdminDashboard
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <NewHome
                   data={portfolioData}
+                  t={t}
+                  isAdmin={isAdmin}
                   onUpdate={handleDataUpdate}
-                  onLogout={handleLogout}
                 />
-              ) : (
-                <AdminLogin onLogin={handleLogin} />
-              )
-            }
-          />
-        </Routes>
+              }
+            />
+            <Route
+              path="/experience"
+              element={
+                <ExperiencePage
+                  data={portfolioData}
+                  t={t}
+                  isAdmin={isAdmin}
+                  onUpdate={handleDataUpdate}
+                />
+              }
+            />
+            <Route
+              path="/projects"
+              element={
+                <ProjectsPage
+                  data={portfolioData}
+                  t={t}
+                  isAdmin={isAdmin}
+                  onUpdate={handleDataUpdate}
+                />
+              }
+            />
+            <Route
+              path="/skills"
+              element={
+                <SkillsPage
+                  data={portfolioData}
+                  t={t}
+                  isAdmin={isAdmin}
+                  onUpdate={handleDataUpdate}
+                />
+              }
+            />
+            <Route
+              path="/contact"
+              element={
+                <ContactPage
+                  data={portfolioData}
+                  t={t}
+                />
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                isAdmin ? (
+                  <AdminDashboard
+                    data={portfolioData}
+                    onUpdate={handleDataUpdate}
+                    onLogout={handleLogout}
+                  />
+                ) : (
+                  <AdminLogin onLogin={handleLogin} />
+                )
+              }
+            />
+          </Routes>
 
-        <Toaster />
-      </div>
-    </HashRouter>
+          <Toaster />
+        </div>
+      </HashRouter>
+    </ThemeProvider>
   )
 }
 
