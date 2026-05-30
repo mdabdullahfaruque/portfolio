@@ -324,36 +324,36 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
         </div>
       )}
 
-      <section className="min-h-screen flex items-center justify-center relative pt-24 pb-16 px-6">
+      <section className="min-h-screen flex items-center justify-center relative pt-20 pb-8 px-6">
         <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-background to-background" />
         
         <motion.div 
           className="max-w-6xl mx-auto w-full relative z-10"
           style={{ opacity }}
         >
-          <div className="grid lg:grid-cols-[2fr_1fr] gap-12 items-center">
+          <div className="grid lg:grid-cols-[2fr_1fr] gap-8 items-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-6"
+              className="space-y-5"
             >
-              <div className="space-y-4">
-                <h1 className="text-5xl lg:text-6xl font-bold text-foreground leading-tight">
+              <div className="space-y-3">
+                <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
                   {data.name}
                 </h1>
                 
-                <h2 className="text-2xl lg:text-3xl font-semibold text-primary">
+                <h2 className="text-xl lg:text-2xl font-semibold text-primary">
                   {data.title}
                 </h2>
                 
-                <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                <p className="text-base text-muted-foreground leading-relaxed max-w-2xl">
                   {data.tagline}
                 </p>
 
-                <div className="flex flex-wrap gap-3 pt-2">
+                <div className="flex flex-wrap gap-2 pt-1">
                   {data.stats && data.stats.slice(0, 2).map((stat) => (
-                    <Badge key={stat.id} variant="secondary" className="px-4 py-2 text-sm">
+                    <Badge key={stat.id} variant="secondary" className="px-3 py-1.5 text-sm">
                       {stat.value} {stat.label}
                     </Badge>
                   ))}
@@ -390,7 +390,7 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
                 </Button>
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-3 pt-3">
                 {data.contact.linkedin && (
                   <motion.a
                     href={data.contact.linkedin}
@@ -434,7 +434,7 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="flex justify-center lg:justify-end"
             >
-              <Avatar className="w-64 h-64 lg:w-80 lg:h-80 border-4 border-card shadow-xl">
+              <Avatar className="w-56 h-56 lg:w-72 lg:h-72 border-4 border-card shadow-xl">
                 <AvatarImage src={data.photoUrl} alt={data.name} className="object-contain" />
                 <AvatarFallback className="text-4xl font-bold bg-muted text-foreground">
                   {data.name.split(' ').map((n) => n[0]).join('')}
@@ -443,9 +443,24 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
             </motion.div>
           </div>
         </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 1, repeat: Infinity, repeatType: "reverse" }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground"
+        >
+          <span className="text-xs font-medium uppercase tracking-wider">Scroll to explore</span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ArrowRight size={20} weight="bold" className="rotate-90" />
+          </motion.div>
+        </motion.div>
       </section>
 
-      <section className="py-16 px-6 bg-muted/30">
+      <section className="py-12 px-6 bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -453,10 +468,10 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl font-bold mb-6 text-foreground">About Me</h2>
-            <div className="grid md:grid-cols-2 gap-8">
+            <h2 className="text-3xl font-bold mb-5 text-foreground">{t.labels.aboutMe}</h2>
+            <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <p className="text-muted-foreground leading-relaxed mb-6">
+                <p className="text-muted-foreground leading-relaxed mb-5">
                   {data.summary}
                 </p>
                 <div className="space-y-3">
@@ -479,7 +494,7 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-foreground">Key Highlights</h3>
+                <h3 className="text-lg font-semibold mb-3 text-foreground">{t.labels.keyAchievements}</h3>
                 <div className="space-y-2">
                   {data.highlights && data.highlights.slice(0, 6).map((highlight, index) => (
                     <motion.div
@@ -502,14 +517,14 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
       </section>
 
       {data.stats && data.stats.length > 0 && (
-        <section className="py-16 px-6 bg-background">
+        <section className="py-12 px-6 bg-background">
           <div className="max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="grid grid-cols-2 lg:grid-cols-4 gap-6"
+              className="grid grid-cols-2 lg:grid-cols-4 gap-4"
             >
               {data.stats.map((stat, index) => (
                 <motion.div
@@ -519,9 +534,9 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1, duration: 0.5 }}
                 >
-                  <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-                    <div className="text-4xl font-bold text-primary mb-2">{stat.value}</div>
-                    <div className="text-sm text-muted-foreground uppercase tracking-wide">{stat.label}</div>
+                  <Card className="p-5 text-center hover:shadow-lg transition-shadow">
+                    <div className="text-3xl font-bold text-primary mb-1">{stat.value}</div>
+                    <div className="text-xs text-muted-foreground uppercase tracking-wide">{stat.label}</div>
                   </Card>
                 </motion.div>
               ))}
@@ -530,7 +545,7 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
         </section>
       )}
 
-      <section className="py-20 px-6 bg-muted/30">
+      <section className="py-12 px-6 bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -538,12 +553,12 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-3 text-foreground">Recent Experience</h2>
-              <p className="text-muted-foreground text-lg">Key roles that shaped my professional journey</p>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold mb-2 text-foreground">{t.labels.recentExperience || 'Recent Experience'}</h2>
+              <p className="text-muted-foreground">{t.labels.experienceSubtitle || 'Key roles that shaped my professional journey'}</p>
             </div>
             
-            <div className="space-y-8">
+            <div className="space-y-6">
               {data.experiences.slice(0, 3).map((exp, index) => (
                 <motion.div
                   key={exp.id}
@@ -552,45 +567,45 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="p-8 hover:shadow-xl transition-all duration-300 hover:border-accent/50 border-2">
-                    <div className="flex flex-col lg:flex-row gap-6">
+                  <Card className="p-6 hover:shadow-xl transition-all duration-300 hover:border-accent/50 border-2">
+                    <div className="flex flex-col lg:flex-row gap-4">
                       <div className="flex-1">
-                        <div className="flex flex-col md:flex-row md:items-start justify-between mb-4 gap-3">
+                        <div className="flex flex-col md:flex-row md:items-start justify-between mb-3 gap-2">
                           <div>
-                            <h3 className="text-2xl font-bold text-foreground mb-2">{exp.title}</h3>
+                            <h3 className="text-xl font-bold text-foreground mb-1.5">{exp.title}</h3>
                             <div className="flex items-center gap-2 flex-wrap">
-                              <p className="text-lg text-primary font-semibold">{exp.company}</p>
+                              <p className="text-base text-primary font-semibold">{exp.company}</p>
                               {exp.companyType && (
                                 <>
                                   <span className="text-muted-foreground">•</span>
-                                  <p className="text-sm text-muted-foreground italic">{exp.companyType}</p>
+                                  <p className="text-xs text-muted-foreground italic">{exp.companyType}</p>
                                 </>
                               )}
                             </div>
-                            <div className="flex items-center gap-3 mt-2 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground flex-wrap">
                               <div className="flex items-center gap-1">
-                                <MapPin size={16} weight="fill" className="text-accent" />
+                                <MapPin size={14} weight="fill" className="text-accent" />
                                 {exp.location}
                               </div>
                               <span>•</span>
                               <div className="flex items-center gap-1">
-                                <Briefcase size={16} weight="fill" className="text-accent" />
+                                <Briefcase size={14} weight="fill" className="text-accent" />
                                 {exp.startDate} - {exp.endDate}
                               </div>
                             </div>
                           </div>
                         </div>
 
-                        <p className="text-foreground/90 mb-4 leading-relaxed">{exp.description}</p>
+                        <p className="text-foreground/90 mb-3 leading-relaxed text-sm">{exp.description}</p>
 
                         {exp.achievements && exp.achievements.length > 0 && (
-                          <div className="mb-4">
-                            <h4 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">Key Achievements:</h4>
-                            <div className="space-y-2">
-                              {exp.achievements.slice(0, 4).map((achievement, idx) => (
+                          <div className="mb-3">
+                            <h4 className="text-xs font-semibold text-foreground mb-2 uppercase tracking-wide">{t.labels.keyAchievements}:</h4>
+                            <div className="space-y-1.5">
+                              {exp.achievements.slice(0, 3).map((achievement, idx) => (
                                 <div key={idx} className="flex items-start gap-2">
-                                  <CheckCircle size={18} weight="fill" className="text-accent mt-0.5 flex-shrink-0" />
-                                  <p className="text-sm text-muted-foreground leading-relaxed">{achievement}</p>
+                                  <CheckCircle size={16} weight="fill" className="text-accent mt-0.5 flex-shrink-0" />
+                                  <p className="text-xs text-muted-foreground leading-relaxed">{achievement}</p>
                                 </div>
                               ))}
                             </div>
@@ -598,10 +613,10 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
                         )}
 
                         <div>
-                          <h4 className="text-sm font-semibold text-foreground mb-2 uppercase tracking-wide">Technologies:</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {exp.technologies.map((tech) => (
-                              <Badge key={tech} variant="secondary" className="text-xs font-medium px-3 py-1">
+                          <h4 className="text-xs font-semibold text-foreground mb-2 uppercase tracking-wide">{t.labels.technologies}:</h4>
+                          <div className="flex flex-wrap gap-1.5">
+                            {exp.technologies.slice(0, 8).map((tech) => (
+                              <Badge key={tech} variant="secondary" className="text-xs font-medium px-2 py-0.5">
                                 {tech}
                               </Badge>
                             ))}
@@ -614,28 +629,28 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
               ))}
             </div>
             
-            <div className="text-center mt-10">
-              <Button size="lg" variant="outline" onClick={() => navigate('/experience')} className="gap-2">
-                View All Experience 
-                <ArrowRight size={20} weight="bold" />
+            <div className="text-center mt-8">
+              <Button size="default" variant="outline" onClick={() => navigate('/experience')} className="gap-2">
+                {t.labels.viewAllExperience || 'View All Experience'}
+                <ArrowRight size={18} weight="bold" />
               </Button>
             </div>
           </motion.div>
         </div>
       </section>
 
-      <section className="py-16 px-6 bg-background">
+      <section className="py-12 px-6 bg-background">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            className="text-center mb-8"
           >
-            <h2 className="text-3xl font-bold mb-4 text-foreground">Explore More</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Dive deeper into my professional journey, projects, and technical expertise
+            <h2 className="text-3xl font-bold mb-2 text-foreground">{t.labels.exploreMore || 'Explore More'}</h2>
+            <p className="text-muted-foreground text-sm max-w-2xl mx-auto">
+              {t.labels.exploreSubtitle || 'Dive deeper into my professional journey, projects, and technical expertise'}
             </p>
           </motion.div>
 
@@ -644,43 +659,43 @@ export function Home({ data, t, isAdmin, onUpdate }: HomeProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="grid md:grid-cols-3 gap-6"
+            className="grid md:grid-cols-3 gap-4"
           >
             <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }}>
-              <Card className="p-8 hover:shadow-lg transition-all cursor-pointer h-full" onClick={() => navigate('/experience')}>
-                <Briefcase size={40} weight="duotone" className="text-primary mb-4" />
-                <h3 className="text-xl font-semibold mb-3 text-foreground">{t.nav.experience}</h3>
-                <p className="text-muted-foreground text-sm mb-4">
-                  {data.experiences.length} positions across leading companies
+              <Card className="p-6 hover:shadow-lg transition-all cursor-pointer h-full" onClick={() => navigate('/experience')}>
+                <Briefcase size={32} weight="duotone" className="text-primary mb-3" />
+                <h3 className="text-lg font-semibold mb-2 text-foreground">{t.nav.experience}</h3>
+                <p className="text-muted-foreground text-xs mb-3">
+                  {data.experiences.length} {t.labels.positionsAcrossCompanies || 'positions across leading companies'}
                 </p>
-                <div className="flex items-center gap-2 text-primary text-sm font-medium">
-                  Explore <ArrowRight size={16} weight="bold" />
+                <div className="flex items-center gap-2 text-primary text-xs font-medium">
+                  {t.labels.explore || 'Explore'} <ArrowRight size={14} weight="bold" />
                 </div>
               </Card>
             </motion.div>
 
             <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }}>
-              <Card className="p-8 hover:shadow-lg transition-all cursor-pointer h-full" onClick={() => navigate('/projects')}>
-                <Code size={40} weight="duotone" className="text-primary mb-4" />
-                <h3 className="text-xl font-semibold mb-3 text-foreground">{t.nav.projects}</h3>
-                <p className="text-muted-foreground text-sm mb-4">
-                  {data.projects.length} projects for global markets
+              <Card className="p-6 hover:shadow-lg transition-all cursor-pointer h-full" onClick={() => navigate('/projects')}>
+                <Code size={32} weight="duotone" className="text-primary mb-3" />
+                <h3 className="text-lg font-semibold mb-2 text-foreground">{t.nav.projects}</h3>
+                <p className="text-muted-foreground text-xs mb-3">
+                  {data.projects.length} {t.labels.projectsForMarkets || 'projects for global markets'}
                 </p>
-                <div className="flex items-center gap-2 text-primary text-sm font-medium">
-                  View Projects <ArrowRight size={16} weight="bold" />
+                <div className="flex items-center gap-2 text-primary text-xs font-medium">
+                  {t.labels.viewProjects || 'View Projects'} <ArrowRight size={14} weight="bold" />
                 </div>
               </Card>
             </motion.div>
 
             <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }}>
-              <Card className="p-8 hover:shadow-lg transition-all cursor-pointer h-full" onClick={() => navigate('/skills')}>
-                <GraduationCap size={40} weight="duotone" className="text-primary mb-4" />
-                <h3 className="text-xl font-semibold mb-3 text-foreground">{t.nav.skills}</h3>
-                <p className="text-muted-foreground text-sm mb-4">
-                  Expertise in {Object.keys(data.skills).length} technology categories
+              <Card className="p-6 hover:shadow-lg transition-all cursor-pointer h-full" onClick={() => navigate('/skills')}>
+                <GraduationCap size={32} weight="duotone" className="text-primary mb-3" />
+                <h3 className="text-lg font-semibold mb-2 text-foreground">{t.nav.skills}</h3>
+                <p className="text-muted-foreground text-xs mb-3">
+                  {t.labels.expertiseInCategories || 'Expertise in'} {Object.keys(data.skills).length} {t.labels.technologyCategories || 'technology categories'}
                 </p>
-                <div className="flex items-center gap-2 text-primary text-sm font-medium">
-                  See Skills <ArrowRight size={16} weight="bold" />
+                <div className="flex items-center gap-2 text-primary text-xs font-medium">
+                  {t.labels.seeSkills || 'See Skills'} <ArrowRight size={14} weight="bold" />
                 </div>
               </Card>
             </motion.div>

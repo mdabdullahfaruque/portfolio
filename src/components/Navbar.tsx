@@ -35,23 +35,17 @@ export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: Nav
   ]
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
       isScrolled 
-        ? 'bg-background/95 backdrop-blur-md shadow-sm border-b border-border' 
-        : 'bg-background/80 backdrop-blur-sm'
+        ? 'bg-card/95 backdrop-blur-md shadow-sm border-b border-border/50' 
+        : 'bg-card/70 backdrop-blur-sm'
     }`}>
-      <div className="max-w-6xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex items-center justify-between h-16">
           <Link to="/">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="font-bold text-xl lg:text-2xl cursor-pointer text-foreground"
-            >
+            <div className="font-semibold text-lg text-foreground hover:text-primary transition-colors">
               Portfolio
-            </motion.div>
+            </div>
           </Link>
 
           <div className="hidden md:flex items-center gap-1">
@@ -60,40 +54,38 @@ export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: Nav
                 key={item.to}
                 to={item.to}
               >
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                <div
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                     location.pathname === item.to 
-                      ? 'text-primary-foreground bg-primary' 
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                      ? 'text-primary bg-primary/10' 
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                   }`}
                 >
                   {item.label}
-                </motion.div>
+                </div>
               </Link>
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={onLanguageToggle} 
-              className="gap-2"
+              className="gap-1.5 h-9"
             >
-              <Globe size={18} />
-              <span className="text-xs font-medium">{language.toUpperCase()}</span>
+              <Globe size={16} />
+              <span className="text-xs font-medium uppercase">{language}</span>
             </Button>
 
             {isAdmin && (
               <Button 
-                variant="outline" 
+                variant="ghost" 
                 size="sm" 
                 onClick={onLogout} 
-                className="gap-2"
+                className="gap-1.5 h-9"
               >
-                <SignOut size={18} />
+                <SignOut size={16} />
                 <span className="hidden sm:inline text-xs">Logout</span>
               </Button>
             )}
@@ -103,9 +95,9 @@ export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: Nav
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="gap-2"
+                  className="gap-1.5 h-9"
                 >
-                  <User size={18} />
+                  <User size={16} />
                   <span className="hidden sm:inline text-xs">Admin</span>
                 </Button>
               </Link>
@@ -113,28 +105,26 @@ export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: Nav
 
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="sm" className="md:hidden">
-                  <List size={24} />
+                <Button variant="ghost" size="sm" className="md:hidden h-9 w-9 p-0">
+                  <List size={20} />
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-80">
-                <div className="flex flex-col gap-3 mt-12">
+              <SheetContent className="w-72">
+                <div className="flex flex-col gap-2 mt-8">
                   {navItems.map((item) => (
                     <Link
                       key={item.to}
                       to={item.to}
                     >
-                      <motion.div
-                        whileHover={{ x: 4 }}
-                        whileTap={{ scale: 0.98 }}
-                        className={`text-left p-3 rounded-md text-base font-medium transition-all ${
+                      <div
+                        className={`text-left px-4 py-2.5 rounded-md text-sm font-medium transition-colors ${
                           location.pathname === item.to
-                            ? 'text-primary-foreground bg-primary'
-                            : 'text-foreground hover:bg-muted'
+                            ? 'text-primary bg-primary/10'
+                            : 'text-foreground hover:bg-muted/50'
                         }`}
                       >
                         {item.label}
-                      </motion.div>
+                      </div>
                     </Link>
                   ))}
                 </div>
