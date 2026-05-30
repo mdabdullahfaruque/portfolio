@@ -56,7 +56,7 @@ export function ExperiencePage({ data, t, isAdmin, onUpdate }: ExperiencePagePro
             <div>
               <h1 className="text-5xl font-bold mb-4">{t.nav.experience}</h1>
               <p className="text-xl text-muted-foreground">
-                Professional journey spanning {data.experiences.length} roles
+                {t.labels.experienceJourney} {data.experiences.length} {t.labels.experienceJourneyRoles}
               </p>
             </div>
             
@@ -79,7 +79,7 @@ export function ExperiencePage({ data, t, isAdmin, onUpdate }: ExperiencePagePro
                 className="gap-2"
               >
                 <Plus size={20} weight="bold" />
-                Add Experience
+                {t.labels.addExperience}
               </Button>
             )}
           </div>

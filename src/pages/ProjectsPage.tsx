@@ -70,29 +70,28 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                   className="inline-flex items-center gap-2 bg-accent/10 px-4 py-2 rounded-full mb-4"
                 >
                   <RocketLaunch size={20} weight="fill" className="text-accent" />
-                  <span className="text-sm font-semibold text-accent">Portfolio Showcase</span>
+                  <span className="text-sm font-semibold text-accent">{t.labels.portfolioShowcase}</span>
                 </motion.div>
                 
                 <h1 className="text-4xl lg:text-6xl font-bold mb-4 text-foreground leading-tight">
-                  My Projects & Products
+                  {t.labels.projectsPageTitle}
                 </h1>
                 
                 <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl leading-relaxed">
-                  Building innovative SaaS solutions and enterprise applications for global markets. 
-                  Each project represents a unique challenge and a step forward in digital transformation.
+                  {t.labels.projectsPageDescription}
                 </p>
                 
                 <div className="flex items-center gap-6 mt-6">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
                     <span className="text-sm text-muted-foreground">
-                      <span className="font-bold text-foreground">{data.projects.length}</span> Total Projects
+                      <span className="font-bold text-foreground">{data.projects.length}</span> {t.labels.totalProjects}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <TrendUp size={16} weight="bold" className="text-accent" />
                     <span className="text-sm text-muted-foreground">
-                      <span className="font-bold text-foreground">{data.projects.filter(p => p.status?.toLowerCase() === 'live' || p.status?.toLowerCase() === 'active').length}</span> Live Products
+                      <span className="font-bold text-foreground">{data.projects.filter(p => p.status?.toLowerCase() === 'live' || p.status?.toLowerCase() === 'active').length}</span> {t.labels.liveProductsCount}
                     </span>
                   </div>
                 </div>
@@ -116,7 +115,7 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                   className="gap-2 shadow-lg no-print"
                 >
                   <Plus size={20} weight="bold" />
-                  Add Project
+                  {t.labels.addProject}
                 </Button>
               )}
             </div>
@@ -131,7 +130,7 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                     onClick={() => setFilter(market)}
                     className="capitalize"
                   >
-                    {market === 'all' ? 'All Markets' : market}
+                    {market === 'all' ? t.labels.allMarkets : market}
                   </Button>
                 ))}
               </div>
@@ -206,7 +205,7 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
 
                     {project.features && project.features.length > 0 && (
                       <div className="mb-6">
-                        <h4 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">Key Features:</h4>
+                        <h4 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">{t.labels.keyFeatures}:</h4>
                         <div className="space-y-2">
                           {project.features.slice(0, 3).map((feature, idx) => (
                             <div key={idx} className="flex items-start gap-2">
@@ -220,7 +219,7 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
 
                     {project.technologies && project.technologies.length > 0 && (
                       <div className="mb-6">
-                        <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Tech Stack</h4>
+                        <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">{t.labels.technicalStack}</h4>
                         <div className="flex flex-wrap gap-2">
                           {project.technologies.map((tech) => (
                             <Badge 
@@ -243,7 +242,7 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                       >
                         <a href={project.url} target="_blank" rel="noopener noreferrer">
                           <Globe size={18} weight="bold" />
-                          <span>Visit Live Site</span>
+                          <span>{t.labels.visitLiveSite}</span>
                           <ArrowRight size={18} weight="bold" className="group-hover/btn:translate-x-1 transition-transform" />
                         </a>
                       </Button>
@@ -256,7 +255,7 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
 
           {filteredProjects.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-muted-foreground text-lg">No projects found for this filter.</p>
+              <p className="text-muted-foreground text-lg">{t.labels.noProjectsFound}</p>
             </div>
           )}
         </motion.div>

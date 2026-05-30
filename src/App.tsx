@@ -33,6 +33,32 @@ function App() {
     async function initialize() {
       if (!portfolioData) {
         setPortfolioData(initialPortfolioData)
+      } else {
+        // Migrate: backfill fields added after initial release
+        let updated = { ...portfolioData }
+        let dirty = false
+
+        if (!updated.heroSkills) {
+          updated.heroSkills = initialPortfolioData.heroSkills
+          dirty = true
+        }
+
+        // Always sync experience technologies from initialData (source of truth)
+        const techSynced = updated.experiences.map(exp => {
+          const canonical = initialPortfolioData.experiences.find(e => e.id === exp.id)
+          if (canonical && JSON.stringify(exp.technologies) !== JSON.stringify(canonical.technologies)) {
+            return { ...exp, technologies: canonical.technologies }
+          }
+          return exp
+        })
+        if (JSON.stringify(techSynced) !== JSON.stringify(updated.experiences)) {
+          updated.experiences = techSynced
+          dirty = true
+        }
+
+        if (dirty) {
+          setPortfolioData(updated)
+        }
       }
       
       if (!adminPasswordHash) {

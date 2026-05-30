@@ -12,7 +12,6 @@ export const initialPortfolioData: PortfolioData = {
     location: 'Kuala Lumpur, Malaysia',
     phone: '+60175165646',
     github: 'https://github.com/mdabdullahfaruque',
-    website: 'https://www.ahsanmalik.com/',
   },
   summary:
     'Senior Full Stack .NET Developer with 6 years of experience in C#, .NET, and cloud architecture using AWS and Azure. Skilled in Angular, React, Blazor WebAssembly, and jQuery. Proficient in full-stack development, cloud-native applications, and AI-driven development. Experienced team lead focused on building scalable, high-performance systems.',
@@ -228,6 +227,15 @@ export const initialPortfolioData: PortfolioData = {
     { id: '2', label: 'Projects Completed', value: '15+', icon: 'code', translationKey: 'projectsCompleted' },
     { id: '3', label: 'Live Products', value: '2', icon: 'rocket', translationKey: 'liveProducts' },
     { id: '4', label: 'Technologies', value: '30+', icon: 'stack', translationKey: 'technologies' },
+  ],
+  heroSkills: [
+    'C#',
+    '.NET 8/10',
+    '.NET Core',
+    'Angular',
+    'React',
+    'Azure',
+    'AWS Lambda',
   ],
   highlights: [
     'Led migration of global web platforms serving millions of users across 12+ markets',

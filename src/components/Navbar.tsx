@@ -98,7 +98,7 @@ export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: Nav
                 className="gap-1.5 h-9"
               >
                 <SignOut size={16} />
-                <span className="hidden sm:inline text-xs">Logout</span>
+                <span className="hidden sm:inline text-xs">{t.labels.logout || 'Logout'}</span>
               </Button>
             )}
 
@@ -110,7 +110,7 @@ export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: Nav
                   className="gap-1.5 h-9"
                 >
                   <User size={16} />
-                  <span className="hidden sm:inline text-xs">Admin</span>
+                  <span className="hidden sm:inline text-xs">{t.labels.admin || 'Admin'}</span>
                 </Button>
               </Link>
             )}

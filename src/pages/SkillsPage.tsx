@@ -140,7 +140,7 @@ export function SkillsPage({ data, t, isAdmin, onUpdate }: SkillsPageProps) {
           <div className="mb-10">
             <h1 className="text-4xl font-bold mb-3 text-foreground">{t.nav.skills}</h1>
             <p className="text-base text-muted-foreground max-w-2xl">
-              Technical expertise across multiple domains with hands-on experience.
+              {t.labels.skillsPageSubtitle}
             </p>
           </div>
 

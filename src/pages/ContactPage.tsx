@@ -18,16 +18,16 @@ export function ContactPage({ data, t }: ContactPageProps) {
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <h1 className="text-5xl font-bold mb-6">Get In Touch</h1>
+          <h1 className="text-5xl font-bold mb-6">{t.labels.contactPageTitle}</h1>
           <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
-            I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+            {t.labels.contactPageDescription}
           </p>
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             {data.contact.email && (
               <Card className="p-8 hover:shadow-xl transition-all">
                 <EnvelopeSimple size={40} weight="duotone" className="text-accent mx-auto mb-4" />
-                <p className="text-sm text-muted-foreground mb-2">Email</p>
+                <p className="text-sm text-muted-foreground mb-2">{t.labels.email}</p>
                 <a
                   href={`mailto:${data.contact.email}`}
                   className="text-foreground hover:text-accent transition-colors font-medium break-all"
@@ -40,7 +40,7 @@ export function ContactPage({ data, t }: ContactPageProps) {
             {data.contact.phone && (
               <Card className="p-8 hover:shadow-xl transition-all">
                 <Phone size={40} weight="duotone" className="text-accent mx-auto mb-4" />
-                <p className="text-sm text-muted-foreground mb-2">Phone</p>
+                <p className="text-sm text-muted-foreground mb-2">{t.labels.phone}</p>
                 <a
                   href={`tel:${data.contact.phone}`}
                   className="text-foreground hover:text-accent transition-colors font-medium"
@@ -53,7 +53,7 @@ export function ContactPage({ data, t }: ContactPageProps) {
             {data.contact.location && (
               <Card className="p-8 hover:shadow-xl transition-all">
                 <MapPin size={40} weight="duotone" className="text-accent mx-auto mb-4" />
-                <p className="text-sm text-muted-foreground mb-2">Location</p>
+                <p className="text-sm text-muted-foreground mb-2">{t.labels.location}</p>
                 <p className="text-foreground font-medium">{data.contact.location}</p>
               </Card>
             )}

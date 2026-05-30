@@ -106,6 +106,7 @@ export interface PortfolioData {
   testimonials?: Testimonial[]
   stats?: StatItem[]
   highlights?: string[]
+  heroSkills?: string[]
   customSections?: CustomSection[]
   navMenuItems?: NavMenuItem[]
 }
