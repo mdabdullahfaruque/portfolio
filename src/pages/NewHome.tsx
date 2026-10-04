@@ -199,10 +199,9 @@ export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
   const activePhotoUrl = isPortrait ? data.photoUrlPortrait : data.photoUrl
 
   const recentExperience = data.experiences
-  // Featured: my own live products only (employer work is under Key Projects).
-  const featuredProjects = data.projects
-    .filter((p) => p.category !== 'professional' && (p.status || '').toLowerCase() === 'live')
-    .slice(0, 2)
+  // My own SaaS products and the work I built for employers are never mixed.
+  const ownProducts = data.projects.filter((p) => p.category !== 'professional')
+  const professionalProjects = data.projects.filter((p) => p.category === 'professional')
   const currentRole = data.experiences[0]
   const careerHighlights = data.highlights && data.highlights.length > 0 ? data.highlights.slice(0, 6) : []
 
@@ -962,8 +961,8 @@ export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
 
 
 
-      {/* ===== FEATURED PROJECTS ===== */}
-      {featuredProjects.length > 0 && (
+      {/* ===== MY SAAS PRODUCTS (owned) ===== */}
+      {ownProducts.length > 0 && (
         <section className="border-t border-border/60 bg-muted/30 px-6 py-20">
           <div className="mx-auto max-w-6xl">
             <motion.div
@@ -973,92 +972,131 @@ export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
               className="mb-10 flex items-end justify-between"
             >
               <div>
-                <h2 className="mb-2 text-3xl font-bold text-foreground">
-                  {t.labels.featuredProjects || 'Featured Projects'}
-                </h2>
-                <p className="text-muted-foreground">
-                  {t.labels.featuredProjectsSubtitle || 'Production platforms serving real users'}
-                </p>
+                <h2 className="mb-2 text-3xl font-bold text-foreground">{t.labels.productsPageTitle}</h2>
+                <p className="text-muted-foreground">{t.labels.productsPageDescription}</p>
               </div>
-              <Button
-                variant="ghost"
-                className="group hidden gap-2 md:flex"
-                onClick={() => navigate('/products')}
-              >
+              <Button variant="ghost" className="group hidden gap-2 md:flex" onClick={() => navigate('/products')}>
                 {t.labels.viewProducts}
                 <ArrowRight size={16} weight="bold" className="transition-transform group-hover:translate-x-1" />
               </Button>
             </motion.div>
 
+            <div className="grid gap-6 md:grid-cols-3">
+              {ownProducts.map((project, index) => {
+                const live = (project.status || '').toLowerCase() === 'live'
+                return (
+                  <motion.div
+                    key={project.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ y: -6 }}
+                  >
+                    <Card className="flex h-full flex-col border-2 p-6 transition-colors hover:border-primary/40">
+                      <div className="mb-2 flex items-start justify-between gap-3">
+                        <h3 className="text-xl font-bold text-foreground">{project.name}</h3>
+                        <Badge
+                          variant="outline"
+                          className={live
+                            ? 'shrink-0 border-green-500/20 bg-green-500/10 text-green-700 dark:text-green-400'
+                            : 'shrink-0 border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400'}
+                        >
+                          <ChartLineUp size={12} weight="bold" className="mr-1" />
+                          {project.status}
+                        </Badge>
+                      </div>
+                      {project.market && (
+                        <p className="mb-3 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                          <MapPin size={12} weight="fill" />
+                          {project.market}
+                        </p>
+                      )}
+                      <p className="mb-4 flex-grow text-sm leading-relaxed text-muted-foreground">{project.description}</p>
+                      {project.technologies && project.technologies.length > 0 && (
+                        <div className="mb-4 flex flex-wrap gap-2">
+                          {project.technologies.map((tech) => (
+                            <Badge key={tech} variant="secondary" className="text-xs">{tech}</Badge>
+                          ))}
+                        </div>
+                      )}
+                      {project.url && (
+                        <a
+                          href={project.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
+                        >
+                          {t.labels.visitWebsite}
+                          <ArrowUpRight size={15} weight="bold" />
+                        </a>
+                      )}
+                    </Card>
+                  </motion.div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ===== PROFESSIONAL PROJECTS (built for employers, not owned) ===== */}
+      {professionalProjects.length > 0 && (
+        <section className="border-t border-border/60 bg-background px-6 py-20">
+          <div className="mx-auto max-w-6xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-10 flex items-end justify-between"
+            >
+              <div>
+                <h2 className="mb-2 text-3xl font-bold text-foreground">{t.labels.professionalPageTitle}</h2>
+                <p className="text-muted-foreground">{t.labels.professionalPageDescription}</p>
+              </div>
+              <Button variant="ghost" className="group hidden gap-2 md:flex" onClick={() => navigate('/projects')}>
+                {t.labels.viewProfessionalProjects}
+                <ArrowRight size={16} weight="bold" className="transition-transform group-hover:translate-x-1" />
+              </Button>
+            </motion.div>
+
             <div className="grid gap-6 md:grid-cols-2">
-              {featuredProjects.map((project, index) => (
+              {professionalProjects.map((project, index) => (
                 <motion.div
                   key={project.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -6 }}
                 >
-                  <Card className="h-full border-2 p-6 transition-colors hover:border-primary/40">
-                    <div className="space-y-4">
-                      <div>
-                        <div className="mb-2 flex items-start justify-between gap-3">
-                          <h3 className="text-xl font-bold text-foreground">{project.name}</h3>
-                          <Badge variant="outline" className="shrink-0 border-green-500/20 bg-green-500/10 text-green-700 dark:text-green-400">
-                            <ChartLineUp size={12} weight="bold" className="mr-1" />
-                            {t.labels.live || 'Live'}
-                          </Badge>
-                        </div>
-                        <p className="text-sm leading-relaxed text-muted-foreground">
-                          {project.description}
-                        </p>
-                      </div>
-
-                      {project.technologies && project.technologies.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                          {project.technologies.map((tech) => (
-                            <Badge key={tech} variant="secondary" className="text-xs">
-                              {tech}
-                            </Badge>
-                          ))}
-                        </div>
+                  <Card className="h-full border p-6 transition-colors hover:border-primary/40">
+                    <h3 className="mb-2 text-lg font-bold text-foreground">{project.name}</h3>
+                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                      {project.organization && (
+                        <span className="inline-flex items-center gap-1 font-semibold text-primary">
+                          <Buildings size={13} weight="fill" />
+                          {project.organization}
+                        </span>
                       )}
-
-                      {project.url && (
-                        <div className="pt-2">
-                          <a
-                            href={project.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
-                          >
-                            {t.labels.visitWebsite || 'Visit Website'}
-                            <ArrowUpRight size={15} weight="bold" />
-                          </a>
-                        </div>
+                      {project.period && (
+                        <span className="inline-flex items-center gap-1">
+                          <CalendarBlank size={13} weight="fill" />
+                          {project.period}
+                        </span>
                       )}
                     </div>
+                    <p className="text-sm leading-relaxed text-muted-foreground">{project.description}</p>
                   </Card>
                 </motion.div>
               ))}
             </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="mt-8 text-center"
-            >
-              <Button
-                variant="outline"
-                className="group gap-2"
-                onClick={() => navigate('/products')}
-              >
-                {t.labels.viewProducts}
+            <div className="mt-8 text-center md:hidden">
+              <Button variant="outline" className="group gap-2" onClick={() => navigate('/projects')}>
+                {t.labels.viewProfessionalProjects}
                 <ArrowRight size={16} weight="bold" className="transition-transform group-hover:translate-x-1" />
               </Button>
-            </motion.div>
+            </div>
           </div>
         </section>
       )}
