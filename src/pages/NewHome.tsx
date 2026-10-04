@@ -983,9 +983,9 @@ export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
               <Button
                 variant="ghost"
                 className="group hidden gap-2 md:flex"
-                onClick={() => navigate('/projects')}
+                onClick={() => navigate('/products')}
               >
-                {t.labels.viewProjects || 'View All'}
+                {t.labels.viewProducts}
                 <ArrowRight size={16} weight="bold" className="transition-transform group-hover:translate-x-1" />
               </Button>
             </motion.div>
@@ -1053,9 +1053,9 @@ export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
               <Button
                 variant="outline"
                 className="group gap-2"
-                onClick={() => navigate('/projects')}
+                onClick={() => navigate('/products')}
               >
-                {t.labels.viewProjects || 'View All Projects'}
+                {t.labels.viewProducts}
                 <ArrowRight size={16} weight="bold" className="transition-transform group-hover:translate-x-1" />
               </Button>
             </motion.div>

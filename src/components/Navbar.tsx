@@ -32,6 +32,7 @@ export function Navbar({ language, onLanguageToggle, t, isAdmin, onLogout }: Nav
     { to: '/', label: t.nav.home },
     { to: '/experience', label: t.nav.experience },
     { to: '/projects', label: t.nav.projects },
+    { to: '/products', label: t.nav.products },
     { to: '/skills', label: t.nav.skills },
     { to: '/contact', label: t.nav.contact },
   ]

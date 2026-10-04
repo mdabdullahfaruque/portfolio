@@ -154,6 +154,21 @@ function App() {
               path="/projects"
               element={
                 <ProjectsPage
+                  key="professional"
+                  category="professional"
+                  data={viewData}
+                  t={t}
+                  isAdmin={isAdmin}
+                  onUpdate={handleDataUpdate}
+                />
+              }
+            />
+            <Route
+              path="/products"
+              element={
+                <ProjectsPage
+                  key="product"
+                  category="product"
                   data={viewData}
                   t={t}
                   isAdmin={isAdmin}

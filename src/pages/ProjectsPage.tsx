@@ -15,11 +15,13 @@ interface ProjectsPageProps {
   t: any
   isAdmin: boolean
   onUpdate: (data: PortfolioData) => void
+  /** 'product': my own SaaS products (Products menu). 'professional': built for employers (Projects menu). */
+  category: 'product' | 'professional'
 }
 
 const isLive = (project: Project) => ['live', 'active'].includes(project.status?.toLowerCase())
 
-export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) {
+export function ProjectsPage({ data, t, isAdmin, onUpdate, category }: ProjectsPageProps) {
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [filter, setFilter] = useState<string>('all')
@@ -47,14 +49,15 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
     toast.success('Project deleted')
   }
 
-  // Own products and work built for employers are listed separately.
-  const products = data.projects.filter(p => p.category !== 'professional')
-  const keyProjects = data.projects.filter(p => p.category === 'professional')
+  // Own products and work built for employers live on separate pages.
+  const isProductPage = category === 'product'
+  const items = data.projects.filter(p => (p.category === 'professional') === !isProductPage)
+  const companies = new Set(items.map(p => p.organization).filter(Boolean)).size
 
-  const markets = ['all', ...Array.from(new Set(products.map(p => p.market).filter(Boolean)))] as string[]
-  const filteredProducts = filter === 'all'
-    ? products
-    : products.filter(p => p.market === filter)
+  const markets = ['all', ...Array.from(new Set(items.map(p => p.market).filter(Boolean)))] as string[]
+  const filteredItems = !isProductPage || filter === 'all'
+    ? items
+    : items.filter(p => p.market === filter)
 
   const renderCard = (project: Project, index: number) => {
     const professional = project.category === 'professional'
@@ -215,28 +218,35 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                   className="inline-flex items-center gap-2 bg-accent/10 px-4 py-2 rounded-full mb-4"
                 >
                   <RocketLaunch size={20} weight="fill" className="text-accent" />
-                  <span className="text-sm font-semibold text-accent">{t.labels.portfolioShowcase}</span>
+                  <span className="text-sm font-semibold text-accent">
+                    {isProductPage ? t.labels.productsPageBadge : t.labels.professionalPageBadge}
+                  </span>
                 </motion.div>
 
                 <h1 className="text-4xl lg:text-6xl font-bold mb-4 text-foreground leading-tight">
-                  {t.labels.projectsPageTitle}
+                  {isProductPage ? t.labels.productsPageTitle : t.labels.professionalPageTitle}
                 </h1>
 
                 <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl leading-relaxed">
-                  {t.labels.projectsPageDescription}
+                  {isProductPage ? t.labels.productsPageDescription : t.labels.professionalPageDescription}
                 </p>
 
                 <div className="flex items-center gap-6 mt-6">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
                     <span className="text-sm text-muted-foreground">
-                      <span className="font-bold text-foreground">{data.projects.length}</span> {t.labels.totalProjects}
+                      <span className="font-bold text-foreground">{items.length}</span>{' '}
+                      {isProductPage ? t.labels.productsCount : t.labels.totalProjects}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <TrendUp size={16} weight="bold" className="text-accent" />
                     <span className="text-sm text-muted-foreground">
-                      <span className="font-bold text-foreground">{products.filter(isLive).length}</span> {t.labels.liveProductsCount}
+                      {isProductPage ? (
+                        <><span className="font-bold text-foreground">{items.filter(isLive).length}</span> {t.labels.liveProductsCount}</>
+                      ) : (
+                        <><span className="font-bold text-foreground">{companies}</span> {t.labels.companiesCount}</>
+                      )}
                     </span>
                   </div>
                 </div>
@@ -253,7 +263,7 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                       status: 'Active',
                       technologies: [],
                       market: '',
-                      category: 'product',
+                      category,
                     })
                     setIsDialogOpen(true)
                   }}
@@ -267,52 +277,30 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
             </div>
           </div>
 
-          {/* Own products */}
-          <section className="mb-20">
-            <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h2 className="text-3xl font-bold text-foreground mb-2">{t.labels.productsSectionTitle}</h2>
-                <p className="text-muted-foreground">{t.labels.productsSectionSubtitle}</p>
-              </div>
-              {markets.length > 1 && (
-                <div className="flex flex-wrap gap-2">
-                  {markets.map((market) => (
-                    <Button
-                      key={market}
-                      variant={filter === market ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setFilter(market)}
-                      className="capitalize"
-                    >
-                      {market === 'all' ? t.labels.allMarkets : market}
-                    </Button>
-                  ))}
-                </div>
-              )}
+          {isProductPage && markets.length > 1 && (
+            <div className="mb-8 flex flex-wrap gap-2">
+              {markets.map((market) => (
+                <Button
+                  key={market}
+                  variant={filter === market ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setFilter(market)}
+                  className="capitalize"
+                >
+                  {market === 'all' ? t.labels.allMarkets : market}
+                </Button>
+              ))}
             </div>
+          )}
 
-            <div className="grid md:grid-cols-2 gap-8">
-              {filteredProducts.map(renderCard)}
+          <div className="grid md:grid-cols-2 gap-8">
+            {filteredItems.map(renderCard)}
+          </div>
+
+          {filteredItems.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground text-lg">{t.labels.noProjectsFound}</p>
             </div>
-
-            {filteredProducts.length === 0 && (
-              <div className="text-center py-20">
-                <p className="text-muted-foreground text-lg">{t.labels.noProjectsFound}</p>
-              </div>
-            )}
-          </section>
-
-          {/* Work built for employers */}
-          {keyProjects.length > 0 && (
-            <section>
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold text-foreground mb-2">{t.labels.keyProjectsTitle}</h2>
-                <p className="text-muted-foreground">{t.labels.keyProjectsSubtitle}</p>
-              </div>
-              <div className="grid md:grid-cols-2 gap-8">
-                {keyProjects.map(renderCard)}
-              </div>
-            </section>
           )}
         </motion.div>
       </div>
