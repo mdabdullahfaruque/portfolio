@@ -1,4 +1,4 @@
-import { Fragment, createContext, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import { scaleStyles, type ResumeData, type ResumeLanguage } from '@/lib/resumeData';
 import { Document, Page, Text as PdfText, View, StyleSheet, Link, Image } from '@react-pdf/renderer';
 
@@ -73,6 +73,18 @@ const baseStyles = StyleSheet.create({
     height: 64,
     objectFit: 'cover',
     borderRadius: 3,
+  },
+  contactRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 4,
+  },
+  // Items never shrink: a detail that does not fit moves to the next line whole.
+  contactItem: {
+    flexShrink: 0,
+    fontSize: 9,
+    lineHeight: 1.3,
+    color: COLORS.muted,
   },
   headerRule: {
     borderBottom: `1.5 solid ${COLORS.accent}`,
@@ -321,14 +333,15 @@ export const DetailedResumePDF = ({ data, language = 'en', scale = 1 }: Detailed
           <View style={styles.headerText}>
             <Text style={styles.name}>{data.name.toUpperCase()}</Text>
             <Text style={styles.headline}>{data.title}</Text>
-            <Text style={styles.contactLine}>
+            {/* One text item per contact detail, so a long line wraps between items. */}
+            <View style={styles.contactRow}>
               {contactParts.map((part, i) => (
-                <Fragment key={i}>
-                  {i > 0 && '   |   '}
+                <Text key={i} style={styles.contactItem}>
                   {part}
-                </Fragment>
+                  {i < contactParts.length - 1 && '   |   '}
+                </Text>
               ))}
-            </Text>
+            </View>
           </View>
           {data.photo ? <Image src={data.photo} style={styles.photo} /> : null}
         </View>

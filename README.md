@@ -85,6 +85,11 @@ A modern, responsive portfolio website with comprehensive admin capabilities for
    - Site content lives in `src/lib/initialData.ts`. After editing it, bump
      `PORTFOLIO_DATA_VERSION` so returning visitors (who keep a copy in localStorage) see the change.
      Admin-panel edits are saved in that browser only.
+   - German: `src/lib/contentDe.ts` holds the German version of the content (matched by id).
+     The site and the German resume downloads use it when the language is German; update it
+     whenever the English content in `initialData.ts` changes.
+   - Resume photo: `public/resume/Photo_Md_Abdullah_Faruque.JPG` by default; Admin → Profile can
+     upload a separate resume photo or switch it off per resume.
 
 ## 📁 Documentation
 

@@ -13,6 +13,7 @@ import { AdminDashboard } from '@/pages/AdminDashboard'
 import { PortfolioData } from '@/lib/types'
 import { translations } from '@/lib/translations'
 import { initialPortfolioData, PORTFOLIO_DATA_VERSION } from '@/lib/initialData'
+import { localizeData } from '@/lib/contentDe'
 import { initializeAdminCredentials, validateAdminLogin } from '@/lib/auth'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import { toast } from 'sonner'
@@ -109,6 +110,10 @@ function App() {
     )
   }
 
+  // Content in the site language. Admins see the stored English data, because the
+  // pages' edit forms save whatever they display.
+  const viewData = isAdmin ? portfolioData : localizeData(portfolioData, currentLanguage)
+
   return (
     <ThemeProvider>
       <HashRouter>
@@ -126,7 +131,7 @@ function App() {
               path="/"
               element={
                 <NewHome
-                  data={portfolioData}
+                  data={viewData}
                   t={t}
                   language={currentLanguage}
                   isAdmin={isAdmin}
@@ -138,7 +143,7 @@ function App() {
               path="/experience"
               element={
                 <ExperiencePage
-                  data={portfolioData}
+                  data={viewData}
                   t={t}
                   isAdmin={isAdmin}
                   onUpdate={handleDataUpdate}
@@ -149,7 +154,7 @@ function App() {
               path="/projects"
               element={
                 <ProjectsPage
-                  data={portfolioData}
+                  data={viewData}
                   t={t}
                   isAdmin={isAdmin}
                   onUpdate={handleDataUpdate}
@@ -160,7 +165,7 @@ function App() {
               path="/skills"
               element={
                 <SkillsPage
-                  data={portfolioData}
+                  data={viewData}
                   t={t}
                   isAdmin={isAdmin}
                   onUpdate={handleDataUpdate}
@@ -171,7 +176,7 @@ function App() {
               path="/contact"
               element={
                 <ContactPage
-                  data={portfolioData}
+                  data={viewData}
                   t={t}
                 />
               }

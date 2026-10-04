@@ -1,5 +1,6 @@
 import { pdf } from '@react-pdf/renderer'
 import type { PortfolioData } from './types'
+import { localizeData } from './contentDe'
 import { buildResumeData, type ResumeContentLimits, type ResumeKind, type ResumeLanguage } from './resumeData'
 import { OnePageResumePDF } from '@/components/resume/OnePageResumePDF'
 import { DetailedResumePDF } from '@/components/resume/DetailedResumePDF'
@@ -80,6 +81,8 @@ export async function generateResumePdf(
   language: ResumeLanguage,
   t: any,
 ): Promise<{ blob: Blob; photoFailed: boolean }> {
+  // German downloads use the German content, whatever the page shows.
+  data = localizeData(data, language)
   let withPhoto = true
   let photoFailed = false
 
