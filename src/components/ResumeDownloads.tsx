@@ -3,21 +3,21 @@ import { pdf } from '@react-pdf/renderer'
 import { toast } from 'sonner'
 import { CircleNotch, DownloadSimple } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
-import { loadResumeMarkdown } from '@/lib/resumeMarkdown'
+import { loadResumeMarkdown, type ResumeLanguage } from '@/lib/resumeMarkdown'
 import { OnePageResumePDF } from '@/components/resume/OnePageResumePDF'
 import { DetailedResumePDF } from '@/components/resume/DetailedResumePDF'
 
-// Both resumes come from public/resume/*.md, the same files (and layouts) as the
-// ResumeBuilder repo, so the downloads stay exactly 1 and 2 pages.
+// Both resumes come from public/resume/*.md (English) and *.de.md (German). Each
+// version is tuned to come out at exactly 1 and 2 pages.
 const RESUMES = {
   onePage: {
-    file: 'resume-data.md',
-    fileName: 'MdAbdullahFaruque_Resume.pdf',
+    file: 'resume-data',
+    fileName: { en: 'MdAbdullahFaruque_Resume.pdf', de: 'MdAbdullahFaruque_Lebenslauf.pdf' },
     Document: OnePageResumePDF,
   },
   detailed: {
-    file: 'resume-data-detailed.md',
-    fileName: 'MdAbdullahFaruque_Resume_Detailed.pdf',
+    file: 'resume-data-detailed',
+    fileName: { en: 'MdAbdullahFaruque_Resume_Detailed.pdf', de: 'MdAbdullahFaruque_Lebenslauf_Ausfuehrlich.pdf' },
     Document: DetailedResumePDF,
   },
 } as const
@@ -26,18 +26,20 @@ type ResumeKind = keyof typeof RESUMES
 
 interface ResumeDownloadsProps {
   t: any
+  language?: ResumeLanguage
 }
 
 /** The two resume download buttons; renders a fragment so it fits any button row. */
-export function ResumeDownloads({ t }: ResumeDownloadsProps) {
+export function ResumeDownloads({ t, language = 'en' }: ResumeDownloadsProps) {
   const [busy, setBusy] = useState<ResumeKind | null>(null)
 
   const download = async (kind: ResumeKind) => {
-    const { file, fileName, Document } = RESUMES[kind]
+    const { file, Document } = RESUMES[kind]
+    const fileName = RESUMES[kind].fileName[language]
     setBusy(kind)
     try {
-      const data = await loadResumeMarkdown(file)
-      const blob = await pdf(<Document data={data} />).toBlob()
+      const data = await loadResumeMarkdown(file, language)
+      const blob = await pdf(<Document data={data} language={language} />).toBlob()
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url

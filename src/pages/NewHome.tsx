@@ -166,7 +166,7 @@ function SkillsShowcase({ skills, labels }: { skills: PortfolioData['skills']; l
   )
 }
 
-export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
+export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
   const navigate = useNavigate()
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [editedData, setEditedData] = useState<PortfolioData>(data)
@@ -685,7 +685,7 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
                   {t.hero.contactMe}
                   <ArrowRight size={18} weight="bold" />
                 </Button>
-                <ResumeDownloads t={t} />
+                <ResumeDownloads t={t} language={language} />
               </div>
 
               <div className="flex items-center gap-2.5 pt-1">
@@ -1088,7 +1088,7 @@ export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
                     {t.hero.contactMe}
                     <ArrowRight size={18} weight="bold" />
                   </Button>
-                  <ResumeDownloads t={t} />
+                  <ResumeDownloads t={t} language={language} />
                 </div>
               </div>
             </Card>

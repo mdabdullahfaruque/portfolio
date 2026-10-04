@@ -2,6 +2,8 @@
 // ResumeBuilder repo (resume-pdf-generator/src/resumeParser.js); keep both in sync
 // so the downloads here match the PDFs tuned there (exactly 1 and 2 pages).
 
+export type ResumeLanguage = 'en' | 'de'
+
 export interface ResumeJob {
   title: string
   company: string
@@ -298,14 +300,19 @@ export const parseResumeMarkdown = (markdown: string): ResumeMarkdownData => {
 };
 
 /**
- * Load and parse one of the resume files served from public/resume/.
+ * Load and parse one of the resume files served from public/resume/ in the given language.
  * A root-relative photo path ("/Photo.JPG") is resolved inside that folder.
  */
-export async function loadResumeMarkdown(file: 'resume-data.md' | 'resume-data-detailed.md'): Promise<ResumeMarkdownData> {
+export async function loadResumeMarkdown(
+  file: 'resume-data' | 'resume-data-detailed',
+  language: ResumeLanguage = 'en',
+): Promise<ResumeMarkdownData> {
+  // German files sit next to the English ones: resume-data.de.md, resume-data-detailed.de.md
+  const fileName = `${file}${language === 'de' ? '.de' : ''}.md`
   const base = `${import.meta.env.BASE_URL}resume/`
-  const response = await fetch(`${base}${file}`)
+  const response = await fetch(`${base}${fileName}`)
   if (!response.ok) {
-    throw new Error(`Failed to load ${file} (${response.status})`)
+    throw new Error(`Failed to load ${fileName} (${response.status})`)
   }
   const data = parseResumeMarkdown(await response.text())
   if (data.photo.startsWith('/')) {

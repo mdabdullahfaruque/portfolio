@@ -4,7 +4,7 @@ import profilePhoto from '@/assets/images/PHOTO-PS-MD_ABDULLAH_FARUQUE.JPG'
 // Visitors keep a copy of this data in localStorage. Bump the version whenever
 // this file changes so returning visitors get the update (App.tsx replaces any
 // stored copy with an older version).
-export const PORTFOLIO_DATA_VERSION = 2
+export const PORTFOLIO_DATA_VERSION = 3
 
 export const initialPortfolioData: PortfolioData = {
   name: 'MD Abdullah Faruque',
@@ -167,6 +167,9 @@ export const initialPortfolioData: PortfolioData = {
       { name: 'ASP.NET MVC', proficiency: 90, yearsOfExperience: 6 },
       { name: 'Web API', proficiency: 95, yearsOfExperience: 6 },
       { name: 'Entity Framework Core', proficiency: 90, yearsOfExperience: 5 },
+      { name: 'Quartz.NET', proficiency: 80, yearsOfExperience: 1 },
+      { name: 'Stripe', proficiency: 80, yearsOfExperience: 1 },
+      { name: '2C2P', proficiency: 78, yearsOfExperience: 1 },
     ],
     frontend: [
       { name: 'Angular', proficiency: 85, yearsOfExperience: 4 },
@@ -176,6 +179,7 @@ export const initialPortfolioData: PortfolioData = {
       { name: 'TypeScript', proficiency: 90, yearsOfExperience: 5 },
       { name: 'HTML5', proficiency: 95, yearsOfExperience: 6 },
       { name: 'CSS3', proficiency: 90, yearsOfExperience: 6 },
+      { name: 'MudBlazor', proficiency: 80, yearsOfExperience: 1 },
     ],
     cloud: [
       { name: 'AWS Lambda', proficiency: 85, yearsOfExperience: 4 },
@@ -188,6 +192,8 @@ export const initialPortfolioData: PortfolioData = {
       { name: 'Azure Functions', proficiency: 82, yearsOfExperience: 3 },
       { name: 'Azure DevOps', proficiency: 80, yearsOfExperience: 3 },
       { name: 'App Insights', proficiency: 75, yearsOfExperience: 2 },
+      { name: 'Entra ID', proficiency: 82, yearsOfExperience: 1 },
+      { name: 'Azure Service Bus', proficiency: 78, yearsOfExperience: 1 },
     ],
     databases: [
       { name: 'SQL Server', proficiency: 92, yearsOfExperience: 6 },
@@ -207,6 +213,9 @@ export const initialPortfolioData: PortfolioData = {
     ],
     tools: [
       { name: 'Visual Studio', proficiency: 95, yearsOfExperience: 6 },
+      { name: 'SEO', proficiency: 75, yearsOfExperience: 1 },
+      { name: 'GEO (AI Search Optimization)', proficiency: 70, yearsOfExperience: 1 },
+      { name: 'Google Analytics 4 (GA4)', proficiency: 72, yearsOfExperience: 1 },
       { name: 'VS Code', proficiency: 92, yearsOfExperience: 6 },
       { name: 'GitHub Copilot', proficiency: 88, yearsOfExperience: 2 },
       { name: 'Cursor', proficiency: 85, yearsOfExperience: 1 },
@@ -223,6 +232,7 @@ export const initialPortfolioData: PortfolioData = {
       { name: 'MCP Server', proficiency: 78, yearsOfExperience: 1 },
       { name: 'Agent Instructions', proficiency: 75, yearsOfExperience: 1 },
       { name: 'Agentic Workflows', proficiency: 75, yearsOfExperience: 1 },
+      { name: 'Claude Code', proficiency: 88, yearsOfExperience: 1 },
     ],
   },
   projects: [

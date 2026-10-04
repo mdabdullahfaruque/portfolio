@@ -1,5 +1,6 @@
-import type { ResumeMarkdownData } from '@/lib/resumeMarkdown';
-import { Document, Page, Text, View, StyleSheet, Font, Link, Svg, Path, Circle, Image } from '@react-pdf/renderer';
+import { createContext, useContext } from 'react';
+import type { ResumeLanguage, ResumeMarkdownData } from '@/lib/resumeMarkdown';
+import { Document, Page, Text as PdfText, View, StyleSheet, Font, Link, Svg, Path, Circle, Image } from '@react-pdf/renderer';
 
 // Register fonts
 Font.register({
@@ -247,10 +248,24 @@ const styles = StyleSheet.create({
 });
 
 // Ported from ResumeBuilder resume-pdf-generator/src/ResumePDF.js (one page).
-export const OnePageResumePDF = ({ data }: { data: ResumeMarkdownData | null }) => {
+// English hyphenation patterns split German words wrongly ("Cloud-na-tiven"), so German
+// text is never hyphenated. English keeps react-pdf's default (undefined = default).
+const HyphenationContext = createContext<((word: string) => string[]) | undefined>(undefined);
+const noHyphenation = (word: string) => [word];
+const Text = (props: any) => <PdfText hyphenationCallback={useContext(HyphenationContext)} {...props} />;
+
+// Section headings per language; the Markdown files carry the translated content.
+const LABELS = {
+  en: { summary: 'SUMMARY', experience: 'EXPERIENCE', education: 'EDUCATION', skills: 'SKILLS', certifications: 'CERTIFICATIONS' },
+  de: { summary: 'ZUSAMMENFASSUNG', experience: 'BERUFSERFAHRUNG', education: 'AUSBILDUNG', skills: 'KENNTNISSE', certifications: 'ZERTIFIZIERUNGEN' },
+};
+
+export const OnePageResumePDF = ({ data, language = 'en' }: { data: ResumeMarkdownData | null; language?: ResumeLanguage }) => {
   if (!data) return null;
+  const labels = LABELS[language] || LABELS.en;
 
   return (
+    <HyphenationContext.Provider value={language === 'de' ? noHyphenation : undefined}>
     <Document>
       <Page size="A4" style={styles.page}>
         {/* Header */}
@@ -304,7 +319,7 @@ export const OnePageResumePDF = ({ data }: { data: ResumeMarkdownData | null }) 
             {/* Summary */}
             {data.summary?.text && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>SUMMARY</Text>
+                <Text style={styles.sectionTitle}>{labels.summary}</Text>
                 <Text style={styles.summaryText}>{data.summary.text}</Text>
               </View>
             )}
@@ -312,7 +327,7 @@ export const OnePageResumePDF = ({ data }: { data: ResumeMarkdownData | null }) 
             {/* Experience */}
             {data.experience && data.experience.length > 0 && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>EXPERIENCE</Text>
+                <Text style={styles.sectionTitle}>{labels.experience}</Text>
                 {data.experience.map((job, index) => (
                   <View key={index} style={styles.experienceBlock}>
                     <Text style={styles.jobTitle}>{job.title}</Text>
@@ -360,7 +375,7 @@ export const OnePageResumePDF = ({ data }: { data: ResumeMarkdownData | null }) 
             {/* Education */}
             {data.education && data.education.length > 0 && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>EDUCATION</Text>
+                <Text style={styles.sectionTitle}>{labels.education}</Text>
                 {data.education.map((edu, index) => (
                   <View key={index} style={styles.educationBlock}>
                     <Text style={styles.degree}>{edu.degree}</Text>
@@ -385,7 +400,7 @@ export const OnePageResumePDF = ({ data }: { data: ResumeMarkdownData | null }) 
             {/* Skills */}
             {data.skills && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>SKILLS</Text>
+                <Text style={styles.sectionTitle}>{labels.skills}</Text>
                 {Object.entries(data.skills).map(([category, skills], index) => (
                   <View key={index} style={styles.skillCategory}>
                     <Text style={styles.skillTitle}>{category}</Text>
@@ -404,7 +419,7 @@ export const OnePageResumePDF = ({ data }: { data: ResumeMarkdownData | null }) 
             {/* Certifications */}
             {data.certifications && data.certifications.length > 0 && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>CERTIFICATIONS</Text>
+                <Text style={styles.sectionTitle}>{labels.certifications}</Text>
                 {data.certifications.map((cert, index) => (
                   <View key={index} style={{marginBottom: 3}}>
                     {cert.url ? (
@@ -431,6 +446,7 @@ export const OnePageResumePDF = ({ data }: { data: ResumeMarkdownData | null }) 
         </View>
       </Page>
     </Document>
+    </HyphenationContext.Provider>
   );
 };
 

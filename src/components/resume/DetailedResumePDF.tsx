@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import type { ResumeMarkdownData } from '@/lib/resumeMarkdown';
+import type { ResumeLanguage, ResumeMarkdownData } from '@/lib/resumeMarkdown';
 import { Document, Page, Text as PdfText, View, StyleSheet, Link } from '@react-pdf/renderer';
 
 // ATS-friendly layout: one column, standard section headings, real text only.
@@ -179,7 +179,21 @@ const styles = StyleSheet.create({
   },
 });
 
-const MONTHS = /\b(January|February|March|April|May|June|July|August|September|October|November|December)\b/g;
+const MONTHS = /\b(January|February|March|April|May|June|July|August|September|October|November|December|Januar|Februar|März|Juni|Juli|Oktober|Dezember)\b/g;
+
+// Section headings per language; the Markdown files carry the translated content.
+const LABELS = {
+  en: {
+    summary: 'Professional Summary', keyAchievements: 'Key Achievements', skills: 'Technical Skills',
+    experience: 'Professional Experience', projects: 'Key Projects', education: 'Education',
+    certifications: 'Certifications', languages: 'Languages', tech: 'Tech: ', resume: 'Resume', resumeOf: 'Resume of',
+  },
+  de: {
+    summary: 'Berufliches Profil', keyAchievements: 'Wichtigste Erfolge', skills: 'Technische Kenntnisse',
+    experience: 'Berufserfahrung', projects: 'Ausgewählte Projekte', education: 'Ausbildung',
+    certifications: 'Zertifizierungen', languages: 'Sprachen', tech: 'Tech: ', resume: 'Lebenslauf', resumeOf: 'Lebenslauf von',
+  },
+};
 
 // "January 2026 - Present" -> "Jan 2026 – Present"
 const formatPeriod = (period = '') =>
@@ -222,16 +236,17 @@ const EntryHeader = ({ title, org, period }: { title: string; org?: string; peri
   </View>
 );
 
-const TechLine = ({ text }) => (
+const TechLine = ({ text, label }: { text: string; label: string }) => (
   <Text style={styles.techLine}>
-    <Text style={styles.techLabel}>Tech: </Text>
+    <Text style={styles.techLabel}>{label}</Text>
     {text}
   </Text>
 );
 
 // Ported from ResumeBuilder resume-pdf-generator/src/ResumeDetailedPDF.js (two pages, ATS).
-export const DetailedResumePDF = ({ data }: { data: ResumeMarkdownData | null }) => {
+export const DetailedResumePDF = ({ data, language = 'en' }: { data: ResumeMarkdownData | null; language?: ResumeLanguage }) => {
   if (!data) return null;
+  const labels = LABELS[language] || LABELS.en;
 
   const contact = data.contact || {};
   const skills = Object.entries(data.skills || {}).filter(([, list]) => list.length > 0);
@@ -254,9 +269,9 @@ export const DetailedResumePDF = ({ data }: { data: ResumeMarkdownData | null })
 
   return (
     <Document
-      title={`${data.name} - ${data.title} - Resume`}
+      title={`${data.name} - ${data.title} - ${labels.resume}`}
       author={data.name}
-      subject={`Resume of ${data.name}, ${data.title}`}
+      subject={`${labels.resumeOf} ${data.name}, ${data.title}`}
       creator={data.name}
       producer={data.name}
     >
@@ -275,13 +290,13 @@ export const DetailedResumePDF = ({ data }: { data: ResumeMarkdownData | null })
         <View style={styles.headerRule} />
 
         {data.summary?.text && (
-          <Section title="Professional Summary">
+          <Section title={labels.summary}>
             <Text style={styles.paragraph}><Rich text={data.summary.text} /></Text>
           </Section>
         )}
 
         {achievements.length > 0 && (
-          <Section title="Key Achievements">
+          <Section title={labels.keyAchievements}>
             {achievements.map((item, idx) => (
               <Bullet key={idx} text={item} />
             ))}
@@ -289,7 +304,7 @@ export const DetailedResumePDF = ({ data }: { data: ResumeMarkdownData | null })
         )}
 
         {skills.length > 0 && (
-          <Section title="Technical Skills">
+          <Section title={labels.skills}>
             {skills.map(([category, list]) => (
               <View key={category} style={styles.skillRow} wrap={false}>
                 <Text style={styles.skillLabel}>{category}</Text>
@@ -300,7 +315,7 @@ export const DetailedResumePDF = ({ data }: { data: ResumeMarkdownData | null })
         )}
 
         {data.experience?.length > 0 && (
-          <Section title="Professional Experience">
+          <Section title={labels.experience}>
             {data.experience.map((job, index) => (
               <View key={index} style={entryStyle(index, data.experience)} wrap={false}>
                 <EntryHeader title={job.title.trim()} org={job.company} period={job.period} />
@@ -310,14 +325,14 @@ export const DetailedResumePDF = ({ data }: { data: ResumeMarkdownData | null })
                 {job.achievements.map((item, idx) => (
                   <Bullet key={idx} text={item} />
                 ))}
-                {job.technologies && <TechLine text={job.technologies} />}
+                {job.technologies && <TechLine text={job.technologies} label={labels.tech} />}
               </View>
             ))}
           </Section>
         )}
 
         {data.projects?.length > 0 && (
-          <Section title="Key Projects">
+          <Section title={labels.projects}>
             {data.projects.map((project, index) => (
               <View key={index} style={entryStyle(index, data.projects)} wrap={false}>
                 <EntryHeader title={project.name} org={project.organization} period={project.period} />
@@ -334,14 +349,14 @@ export const DetailedResumePDF = ({ data }: { data: ResumeMarkdownData | null })
                 {project.highlights.map((item, idx) => (
                   <Bullet key={idx} text={item} />
                 ))}
-                {project.technologies && <TechLine text={project.technologies} />}
+                {project.technologies && <TechLine text={project.technologies} label={labels.tech} />}
               </View>
             ))}
           </Section>
         )}
 
         {data.education?.length > 0 && (
-          <Section title="Education">
+          <Section title={labels.education}>
             {data.education.map((edu, index) => (
               <View key={index} style={entryStyle(index, data.education)} wrap={false}>
                 <EntryHeader title={edu.degree} period={edu.period} />
@@ -354,7 +369,7 @@ export const DetailedResumePDF = ({ data }: { data: ResumeMarkdownData | null })
         )}
 
         {data.certifications?.length > 0 && (
-          <Section title="Certifications">
+          <Section title={labels.certifications}>
             {data.certifications.map((cert, index) => (
               <View key={index} style={styles.bulletRow}>
                 <Text style={styles.bullet}>•</Text>
@@ -372,7 +387,7 @@ export const DetailedResumePDF = ({ data }: { data: ResumeMarkdownData | null })
         )}
 
         {data.languages?.length > 0 && (
-          <Section title="Languages">
+          <Section title={labels.languages}>
             <Text style={styles.paragraph}>
               {data.languages
                 .filter((lang) => !isPlaceholder(lang.proficiency))
