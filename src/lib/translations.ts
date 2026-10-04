@@ -18,6 +18,11 @@ export const translations = {
     },
     labels: {
       downloadPDF: 'Download Resume',
+      downloadResumeOnePage: 'Resume (1 page)',
+      downloadResumeDetailed: 'Detailed Resume (2 pages)',
+      preparingPdf: 'Preparing PDF…',
+      resumeDownloaded: 'Resume downloaded',
+      resumeDownloadFailed: 'The PDF could not be created. Please try again.',
       adminPanel: 'Admin Panel',
       editMode: 'Edit Mode',
       present: 'Present',
@@ -165,6 +170,11 @@ export const translations = {
     },
     labels: {
       downloadPDF: 'Lebenslauf herunterladen',
+      downloadResumeOnePage: 'Lebenslauf (1 Seite)',
+      downloadResumeDetailed: 'Ausführlicher Lebenslauf (2 Seiten)',
+      preparingPdf: 'PDF wird erstellt…',
+      resumeDownloaded: 'Lebenslauf heruntergeladen',
+      resumeDownloadFailed: 'Das PDF konnte nicht erstellt werden. Bitte versuchen Sie es erneut.',
       adminPanel: 'Admin-Panel',
       editMode: 'Bearbeitungsmodus',
       present: 'Heute',

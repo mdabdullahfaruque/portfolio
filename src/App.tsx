@@ -12,7 +12,7 @@ import { AdminLogin } from '@/pages/AdminLogin'
 import { AdminDashboard } from '@/pages/AdminDashboard'
 import { PortfolioData } from '@/lib/types'
 import { translations } from '@/lib/translations'
-import { initialPortfolioData } from '@/lib/initialData'
+import { initialPortfolioData, PORTFOLIO_DATA_VERSION } from '@/lib/initialData'
 import { initializeAdminCredentials, validateAdminLogin } from '@/lib/auth'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import { toast } from 'sonner'
@@ -22,6 +22,7 @@ type Language = 'en' | 'de'
 function App() {
   const [language, setLanguage] = useLocalStorage<Language>('portfolio-language', 'en')
   const [portfolioData, setPortfolioData] = useLocalStorage<PortfolioData | null>('portfolio-data', null)
+  const [dataVersion, setDataVersion] = useLocalStorage<number>('portfolio-data-version', 0)
   const [adminPasswordHash, setAdminPasswordHash] = useLocalStorage<string>('admin-password-hash', '')
   const [isAdmin, setIsAdmin] = useState(false)
   const [isInitialized, setIsInitialized] = useState(false)
@@ -31,8 +32,11 @@ function App() {
 
   useEffect(() => {
     async function initialize() {
-      if (!portfolioData) {
+      if (!portfolioData || dataVersion !== PORTFOLIO_DATA_VERSION) {
+        // First visit, or a stored copy older than the current content: use the
+        // shipped data (this also replaces earlier local admin edits).
         setPortfolioData(initialPortfolioData)
+        setDataVersion(PORTFOLIO_DATA_VERSION)
       } else {
         // Migrate: backfill fields added after initial release
         let updated = { ...portfolioData }

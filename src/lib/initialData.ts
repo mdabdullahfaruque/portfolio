@@ -1,9 +1,14 @@
 import { PortfolioData } from './types'
 import profilePhoto from '@/assets/images/PHOTO-PS-MD_ABDULLAH_FARUQUE.JPG'
 
+// Visitors keep a copy of this data in localStorage. Bump the version whenever
+// this file changes so returning visitors get the update (App.tsx replaces any
+// stored copy with an older version).
+export const PORTFOLIO_DATA_VERSION = 2
+
 export const initialPortfolioData: PortfolioData = {
   name: 'MD Abdullah Faruque',
-  title: 'Senior Full Stack Developer',
+  title: 'Senior Full Stack .NET Developer',
   tagline: 'Building scalable, cloud-native applications with modern technologies',
   photoUrl: profilePhoto,
   contact: {
@@ -14,7 +19,7 @@ export const initialPortfolioData: PortfolioData = {
     github: 'https://github.com/mdabdullahfaruque',
   },
   summary:
-    'Senior Full Stack .NET Developer with 6 years of experience in C#, .NET, and cloud architecture using AWS and Azure. Skilled in Angular, React, Blazor WebAssembly, and jQuery. Proficient in full-stack development, cloud-native applications, and AI-driven development. Experienced team lead focused on building scalable, high-performance systems.',
+    'Senior Full Stack .NET Developer with 6+ years of experience building cloud-native systems in C#, .NET, Azure and AWS. Currently leading development of a production multi-tenant SaaS marketplace, covering payments, recurring billing, SSO and Microsoft Marketplace integration. Skilled in Blazor WebAssembly, Angular, React and jQuery, and in agentic AI development with Claude Code, GitHub Copilot, Cursor and MCP. Experienced team lead focused on building scalable, high-performance systems.',
   aboutMe:
     'Passionate software engineer with a proven track record of delivering enterprise-scale applications across multiple industries including fintech, e-commerce, and technology. I thrive in collaborative environments and am committed to writing clean, maintainable code while staying at the forefront of technological innovation.',
   experiences: [
@@ -25,15 +30,34 @@ export const initialPortfolioData: PortfolioData = {
       location: 'Kuala Lumpur, Malaysia',
       startDate: 'January 2026',
       endDate: 'Present',
-      description: 'Multinational Technology company delivering innovative software solutions',
+      description: 'Multinational technology company delivering innovative software solutions',
       companyType: 'Technology Company',
       achievements: [
-        'Leading team to develop internal products, managing end-to-end development process and ensuring timely delivery',
-        'Architecting and implementing AI-driven features including sentiment analysis and RAG (Retrieval-Augmented Generation)',
-        'Leveraging agentic AI tools (GitHub Copilot, Cursor, Claude) with MCP server, instructions, agent skills, and hooks',
-        'Driving modern development practices across the team',
+        'Leading the team building AG ONE, a million-dollar multi-tenant SaaS marketplace; own architecture, estimation, delivery reporting and developer performance reviews',
+        'Managing the team and driving rapid, AI-driven software development with Claude Code, GitHub Copilot and MCP',
+        'Built multi-gateway payments (Stripe, 2C2P) and a Quartz.NET recurring billing engine',
+        'Integrated Microsoft Marketplace SaaS fulfillment and Pax8 Microsoft 365 licensing',
+        'Designed Entra ID SSO and 3-level RBAC for multi-tenant access control',
+        'Building AI features with RAG and sentiment analysis',
       ],
-      technologies: ['.NET', 'SQL Server', 'Azure', 'Blazor WebAssembly', 'Web API', 'RAG', 'Sentiment Analysis'],
+      technologies: [
+        '.NET 8',
+        'C#',
+        'Blazor WebAssembly',
+        'MudBlazor',
+        'ASP.NET Core Web API',
+        'Entity Framework Core',
+        'SQL Server',
+        'Azure',
+        'Service Bus',
+        'Entra ID',
+        'Microsoft Graph',
+        'Stripe',
+        '2C2P',
+        'Quartz.NET',
+        'Azure DevOps',
+        'RAG',
+      ],
     },
     {
       id: '2',
@@ -50,7 +74,7 @@ export const initialPortfolioData: PortfolioData = {
         'Collaborated with a multinational agile team, improving release cycles, system reliability, and cross-market consistency',
         'Leveraged AI tools (GitHub Copilot, MCP Servers) and automated E2E testing with Playwright',
       ],
-      technologies: ['.NET 8', 'Umbraco', 'C#', 'Azure', 'MCP Servers', 'Playwright', 'Agile'],
+      technologies: ['.NET 8', 'C#', 'Azure', 'CI/CD', 'Playwright', 'Agile'],
     },
     {
       id: '3',
@@ -65,33 +89,60 @@ export const initialPortfolioData: PortfolioData = {
         'Led legacy banking software migration to .NET 8, implementing modular monolith architectures and seamless data integration with Microsoft SQL Server',
         'Developed and enhanced high-performance on-premise banking applications serving millions of users using .NET Framework MVC, C#, jQuery, and SQL Server',
       ],
-      technologies: ['.NET 8', '.NET Framework MVC', 'C#', 'SQL Server', 'jQuery'],
+      technologies: ['.NET 8', '.NET Framework MVC', 'C#', 'SQL Server', 'jQuery', 'Modular Monolith Architecture'],
     },
     {
       id: '4',
       title: 'Software Engineer',
       company: 'Kaz Software',
       location: 'Dhaka, Bangladesh',
-      startDate: 'July 2020',
+      startDate: 'March 2023',
       endDate: 'July 2024',
       description: 'Software development company with a focus on innovative IT solutions',
       companyType: 'Software Company',
       achievements: [
-        'Led development of .NET 8/6, Angular, and React applications with scalable WebAPI, MVC, and real-time communication via SignalR, AWS WebSocket, and Twilio SDK',
-        'Developed serverless applications using AWS Lambda, API Gateway, EventBridge, and Step Functions',
-        'Implemented hybrid database solutions combining EF Core with MySQL and AWS DynamoDB',
+        'Led development of .NET 8/6, Angular, and React applications, implementing scalable WebAPI and MVC architectures',
+        'Designed and developed cross-platform real-time communication solutions integrating SignalR, AWS WebSocket, and Twilio SDK',
+        'Implemented microservices architecture patterns',
+        'Mentored junior developers on best practices',
       ],
       technologies: [
-        '.NET 8/6',
-        '.NET Core 3.1',
+        '.NET 8',
+        '.NET 6',
         'Angular',
         'React',
         'WebAPI',
+        'MVC',
         'SignalR',
+        'AWS WebSocket',
+        'Twilio SDK',
+        'Amazon Cognito',
+      ],
+    },
+    {
+      id: '5',
+      title: 'Associate Software Engineer',
+      company: 'Kaz Software',
+      location: 'Dhaka, Bangladesh',
+      startDate: 'July 2020',
+      endDate: 'February 2023',
+      description: 'Software development company with a focus on innovative IT solutions',
+      companyType: 'Software Company',
+      achievements: [
+        'Developed serverless applications using AWS API Gateway and Lambda Functions with C#, .NET 6/.NET Core 3.1',
+        'Implemented hybrid database solutions by combining EF Core code-first with MySQL and AWS DynamoDB to support diverse storage needs',
+        'Orchestrated event-driven workflows with AWS EventBridge and Step Functions, improving automation and system scalability',
+      ],
+      technologies: [
         'AWS Lambda',
+        'API Gateway',
         'DynamoDB',
         'EventBridge',
+        'Step Functions',
+        '.NET 6',
+        '.NET Core 3.1',
         'EF Core',
+        'MySQL',
       ],
     },
   ],
@@ -176,6 +227,22 @@ export const initialPortfolioData: PortfolioData = {
   },
   projects: [
     {
+      id: 'ag-one',
+      name: 'AG ONE',
+      url: 'https://www.ag-one.aventragroup.com/',
+      description:
+        'Production multi-tenant SaaS marketplace where companies browse a product catalog, buy subscriptions and launch into AG ONE products (Work, Learn, Safe, Hire).',
+      status: 'Live',
+      technologies: ['.NET 8', 'Blazor WebAssembly', 'SQL Server', 'Azure', 'Entra ID', 'Stripe', '2C2P', 'Quartz.NET'],
+      features: [
+        'Lead developer and top contributor with 250+ merged pull requests',
+        'Provider-agnostic payment layer with currency-based routing across Stripe and 2C2P',
+        'Recurring billing with dunning and idempotent retries',
+        'Microsoft Marketplace SaaS fulfillment and Pax8 Microsoft 365 licensing',
+        'Entra ID SSO and 3-level RBAC across tenants',
+      ],
+    },
+    {
       id: '1',
       name: 'MyPropertyMart',
       url: 'https://mypropertymart.com/',
@@ -208,6 +275,44 @@ export const initialPortfolioData: PortfolioData = {
         'Future: Clinics, Diagnostic Centers, Pharmacies, Telemedicine',
       ],
     },
+    {
+      id: 'dominos-migration',
+      name: "Domino's Global Web Platform Migration",
+      url: 'https://www.dominos.com.au/',
+      description:
+        'Customer-facing web platforms serving millions of users across 12 markets in Europe, Australia and Southeast Asia, migrated from .NET Framework 4.8 to .NET 8.',
+      status: 'Live',
+      market: 'Europe, Australia & Southeast Asia',
+      technologies: ['.NET 8', '.NET Framework 4.8', 'C#', 'Azure', 'CI/CD', 'Playwright'],
+      features: [
+        'Migration from .NET Framework 4.8 to .NET 8',
+        'Automated Playwright end-to-end tests protecting cross-market releases',
+        'Stable releases for millions of users in 12 markets',
+      ],
+    },
+    {
+      id: 'web-evv',
+      name: 'Web EVV',
+      url: '',
+      description:
+        'Web platform with a mobile app that simplifies electronic visit verification (EVV) for home care agencies, integrating scheduling, documentation and billing in collaboration with health insurers.',
+      status: 'Jan 2023 – Jul 2024',
+      technologies: ['C#', 'Amazon DynamoDB'],
+    },
+    {
+      id: 'gateway-to-access',
+      name: 'Gateway to Access',
+      url: '',
+      description:
+        'Web, desktop and mobile apps where doctors and lawyers work with interpreters to talk to patients and clients in their native language, remotely (audio/video) or face to face, in real time or by scheduled meeting.',
+      status: 'May 2021 – Jan 2023',
+      technologies: ['C#', '.NET 6', '.NET Core', 'AWS', 'React'],
+      features: [
+        'R&D and core features across multiple server-side projects in C# (.NET 6)',
+        'Configured and managed AWS cloud services and designed database schemas',
+        'Developed the web UI in React',
+      ],
+    },
   ],
   certifications: [
     {
@@ -238,11 +343,11 @@ export const initialPortfolioData: PortfolioData = {
     'AWS Lambda',
   ],
   highlights: [
+    'Leading the team building AG ONE, a million-dollar software marketplace',
+    'Driving rapid, AI-driven software development while managing the team',
     'Led migration of global web platforms serving millions of users across 12+ markets',
-    'Architected and implemented AI-driven features including RAG and Sentiment Analysis',
-    'Developed serverless applications using AWS Lambda, reducing infrastructure costs by 30%',
-    'Optimized database queries reducing response time by 60%',
-    'Implemented secure banking applications with 99.9% uptime',
-    'Mentored junior developers and led technical teams in architecture decisions'
+    'Migrated critical systems to .NET 8, improving performance by 40%',
+    'Supported 12+ markets with multi-language, multi-currency systems designed for 99.9% uptime',
+    'Mentored junior developers and led technical teams in architecture decisions',
   ],
 }

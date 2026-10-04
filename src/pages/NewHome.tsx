@@ -15,8 +15,7 @@ import {
   Code,
   LinkedinLogo,
   GithubLogo,
-  EnvelopeSimple,
-  DownloadSimple,
+  EnvelopeSimple,
   CheckCircle,
   MapPin,
   Globe,
@@ -41,9 +40,7 @@ import {
 } from '@phosphor-icons/react'
 import { PortfolioData } from '@/lib/types'
 import { toast } from 'sonner'
-import { pdf } from '@react-pdf/renderer'
-import { ResumePDF } from '@/components/ResumePDF'
-import { buildResumeData, getResumeSectionLabels } from '@/lib/resumePdfData'
+import { ResumeDownloads } from '@/components/ResumeDownloads'
 
 interface HomeProps {
   data: PortfolioData
@@ -169,31 +166,10 @@ function SkillsShowcase({ skills, labels }: { skills: PortfolioData['skills']; l
   )
 }
 
-export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
+export function NewHome({ data, t, isAdmin, onUpdate }: HomeProps) {
   const navigate = useNavigate()
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [editedData, setEditedData] = useState<PortfolioData>(data)
-
-  const handleDownloadResume = async () => {
-    try {
-      const lang = language ?? 'en'
-      const resumeData = buildResumeData(data, lang, t)
-      const labels = getResumeSectionLabels(lang)
-      const blob = await pdf(<ResumePDF data={resumeData} labels={labels} />).toBlob()
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = 'MdAbdullahFaruque_Resume.pdf'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
-      toast.success('Resume downloaded successfully!')
-    } catch (error) {
-      toast.error('Failed to download resume. Please try again.')
-      console.error('Resume download error:', error)
-    }
-  }
 
   const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>, imageType: 'square' | 'portrait') => {
     const file = e.target.files?.[0]
@@ -709,15 +685,7 @@ export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
                   {t.hero.contactMe}
                   <ArrowRight size={18} weight="bold" />
                 </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  onClick={handleDownloadResume}
-                  className="gap-2 font-semibold"
-                >
-                  <DownloadSimple size={18} weight="bold" />
-                  {t.labels.downloadPDF}
-                </Button>
+                <ResumeDownloads t={t} />
               </div>
 
               <div className="flex items-center gap-2.5 pt-1">
@@ -1120,15 +1088,7 @@ export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
                     {t.hero.contactMe}
                     <ArrowRight size={18} weight="bold" />
                   </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onClick={handleDownloadResume}
-                    className="gap-2 font-semibold"
-                  >
-                    <DownloadSimple size={18} weight="bold" />
-                    {t.labels.downloadPDF}
-                  </Button>
+                  <ResumeDownloads t={t} />
                 </div>
               </div>
             </Card>
