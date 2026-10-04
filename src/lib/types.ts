@@ -117,6 +117,8 @@ export interface PortfolioData {
   resume?: {
     photoOnePage: boolean
     photoDetailed: boolean
+    /** Resume photo (data URL). Empty: the default public/resume/Photo_Md_Abdullah_Faruque.JPG. */
+    photoUrl?: string
   }
 }
 

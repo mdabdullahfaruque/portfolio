@@ -69,8 +69,8 @@ const baseStyles = StyleSheet.create({
     paddingRight: 12,
   },
   photo: {
-    width: 56,
-    height: 70,
+    width: 64,
+    height: 64,
     objectFit: 'cover',
     borderRadius: 3,
   },

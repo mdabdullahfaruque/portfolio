@@ -23,7 +23,7 @@ import {
 } from '@phosphor-icons/react'
 import { PortfolioData, Experience, Project, Skill, Education, Certification, StatItem } from '@/lib/types'
 import { Switch } from '@/components/ui/switch'
-import { DEFAULT_RESUME_SETTINGS } from '@/lib/resumeData'
+import { DEFAULT_RESUME_PHOTO, DEFAULT_RESUME_SETTINGS } from '@/lib/resumeData'
 import { toast } from 'sonner'
 
 interface AdminDashboardProps {
@@ -55,7 +55,22 @@ export function AdminDashboard({ data, onUpdate, onLogout }: AdminDashboardProps
     }
   }
 
-  const updateBasicInfo = (field: keyof PortfolioData, value: any) => {
+  // Separate photo for the resume PDFs; the site profile picture is unchanged.
+  const handleResumePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setEditedData({
+          ...editedData,
+          resume: { ...DEFAULT_RESUME_SETTINGS, ...editedData.resume, photoUrl: reader.result as string },
+        })
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const updateBasicInfo =(field: keyof PortfolioData, value: any) => {
     setEditedData({ ...editedData, [field]: value })
   }
 
@@ -357,7 +372,42 @@ export function AdminDashboard({ data, onUpdate, onLogout }: AdminDashboardProps
                   </div>
 
                   <div className="rounded-lg border p-4 space-y-3">
-                    <Label>Photo on downloadable resumes</Label>
+                    <Label>Resume photo</Label>
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={editedData.resume?.photoUrl || DEFAULT_RESUME_PHOTO}
+                        alt="Resume photo"
+                        className="h-20 w-20 rounded object-cover border"
+                      />
+                      <div className="space-y-2">
+                        <Input
+                          type="file"
+                          accept="image/png,image/jpeg"
+                          onChange={handleResumePhotoUpload}
+                        />
+                        <div className="flex items-center gap-3">
+                          <p className="text-xs text-muted-foreground">
+                            {editedData.resume?.photoUrl ? 'Separate resume photo' : 'Default resume photo'} (PNG or JPG, square works best)
+                          </p>
+                          {editedData.resume?.photoUrl && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                setEditedData({
+                                  ...editedData,
+                                  resume: { ...DEFAULT_RESUME_SETTINGS, ...editedData.resume, photoUrl: '' },
+                                })
+                              }
+                            >
+                              Use default photo
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <Label>Show the photo on</Label>
                     {([
                       ['photoOnePage', 'One-page resume'],
                       ['photoDetailed', 'Two-page resume (ATS)'],

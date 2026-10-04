@@ -61,10 +61,10 @@ const baseStyles = StyleSheet.create({
   headerText: {
     flex: 1,
   },
-  // 4:5 portrait frame, the shape of the profile photo; other photos are cropped to fit.
+  // Square frame like the default resume photo; other photos are center-cropped to fit.
   profileImage: {
-    width: 72,
-    height: 90,
+    width: 80,
+    height: 80,
     objectFit: 'cover',
     borderRadius: 3,
   },

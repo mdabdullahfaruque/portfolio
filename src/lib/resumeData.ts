@@ -64,6 +64,9 @@ export interface ResumeContentLimits {
 
 export const DEFAULT_RESUME_SETTINGS = { photoOnePage: true, photoDetailed: false }
 
+/** Resume photo unless one is uploaded in Admin; separate from the site profile photo. */
+export const DEFAULT_RESUME_PHOTO = `${import.meta.env.BASE_URL}resume/Photo_Md_Abdullah_Faruque.JPG`
+
 /** "https://www.linkedin.com/in/x/" -> "linkedin.com/in/x" */
 const displayUrl = (url?: string) =>
   (url || '').replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '')
@@ -98,7 +101,7 @@ export function buildResumeData(
   return {
     name: data.name,
     title: data.title,
-    photo: showPhoto ? data.photoUrl || '' : '',
+    photo: showPhoto ? settings.photoUrl || DEFAULT_RESUME_PHOTO : '',
     contact: {
       email: data.contact.email,
       phone: data.contact.phone,
