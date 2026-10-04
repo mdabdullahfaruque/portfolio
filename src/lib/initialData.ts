@@ -4,7 +4,7 @@ import profilePhoto from '@/assets/images/PHOTO-PS-MD_ABDULLAH_FARUQUE.JPG'
 // Visitors keep a copy of this data in localStorage. Bump the version whenever
 // this file changes so returning visitors get the update (App.tsx replaces any
 // stored copy with an older version).
-export const PORTFOLIO_DATA_VERSION = 5
+export const PORTFOLIO_DATA_VERSION = 6
 
 export const initialPortfolioData: PortfolioData = {
   name: 'MD Abdullah Faruque',
@@ -331,7 +331,7 @@ export const initialPortfolioData: PortfolioData = {
       organization: 'Kaz Software',
       period: 'January 2023 - July 2024',
       name: 'Web EVV',
-      url: '',
+      url: 'https://webevv.com/',
       description:
         'Web platform with a mobile app that simplifies electronic visit verification (EVV) for home care agencies, integrating scheduling, documentation and billing in collaboration with health insurers.',
       status: 'Jan 2023 – Jul 2024',
@@ -343,7 +343,7 @@ export const initialPortfolioData: PortfolioData = {
       organization: 'Kaz Software',
       period: 'May 2021 - January 2023',
       name: 'Gateway to Access',
-      url: '',
+      url: 'https://gatewaytoaccess.com/',
       description:
         'Web, desktop and mobile apps where doctors and lawyers work with interpreters to talk to patients and clients in their native language, remotely (audio/video) or face to face, in real time or by scheduled meeting.',
       status: 'May 2021 – Jan 2023',

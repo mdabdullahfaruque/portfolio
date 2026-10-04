@@ -1086,6 +1086,17 @@ export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
                       )}
                     </div>
                     <p className="text-sm leading-relaxed text-muted-foreground">{project.description}</p>
+                    {project.url && (
+                      <a
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
+                      >
+                        {t.labels.visitWebsite}
+                        <ArrowUpRight size={15} weight="bold" />
+                      </a>
+                    )}
                   </Card>
                 </motion.div>
               ))}
