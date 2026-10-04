@@ -76,13 +76,15 @@ A modern, responsive portfolio website with comprehensive admin capabilities for
    - Switch between English and German
 
 4. **Download Resume:**
-   - Click "Resume (1 page)" or "Detailed Resume (2 pages)"; the PDF is generated in the browser
-   - Content comes from `public/resume/resume-data.md` and `resume-data-detailed.md`, the same
-     files as the ResumeBuilder repo. German versions are the `.de.md` files next to them
-     (used when the site language is German). Copy updated files from there, and check that the PDFs
-     still come out at 1 and 2 pages.
+   - Click "Download Resume" and choose **One page** or **Two pages** (detailed, ATS-friendly)
+   - Both PDFs are generated in the browser from the portfolio data at the moment of download
+     (`src/lib/resumeData.ts`, `src/lib/resumePdf.tsx`), so every saved change, including the photo,
+     is in the next download. Admin → Profile has a switch for the photo on each resume.
+   - The generator fits the content to exactly one or two pages: it shrinks type slightly and
+     shows fewer bullets on older roles when needed, then adds content back while it still fits.
    - Site content lives in `src/lib/initialData.ts`. After editing it, bump
      `PORTFOLIO_DATA_VERSION` so returning visitors (who keep a copy in localStorage) see the change.
+     Admin-panel edits are saved in that browser only.
 
 ## 📁 Documentation
 

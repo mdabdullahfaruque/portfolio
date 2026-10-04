@@ -685,7 +685,7 @@ export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
                   {t.hero.contactMe}
                   <ArrowRight size={18} weight="bold" />
                 </Button>
-                <ResumeDownloads t={t} language={language} />
+                <ResumeDownloads data={data} t={t} language={language} />
               </div>
 
               <div className="flex items-center gap-2.5 pt-1">
@@ -1088,7 +1088,7 @@ export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
                     {t.hero.contactMe}
                     <ArrowRight size={18} weight="bold" />
                   </Button>
-                  <ResumeDownloads t={t} language={language} />
+                  <ResumeDownloads data={data} t={t} language={language} />
                 </div>
               </div>
             </Card>

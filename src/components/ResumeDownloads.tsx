@@ -1,87 +1,87 @@
 import { useState } from 'react'
-import { pdf } from '@react-pdf/renderer'
 import { toast } from 'sonner'
-import { CircleNotch, DownloadSimple } from '@phosphor-icons/react'
+import { CircleNotch, DownloadSimple, FileText, Files } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
-import { loadResumeMarkdown, type ResumeLanguage } from '@/lib/resumeMarkdown'
-import { OnePageResumePDF } from '@/components/resume/OnePageResumePDF'
-import { DetailedResumePDF } from '@/components/resume/DetailedResumePDF'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import type { PortfolioData } from '@/lib/types'
+import type { ResumeKind, ResumeLanguage } from '@/lib/resumeData'
+import { generateResumePdf } from '@/lib/resumePdf'
 
-// Both resumes come from public/resume/*.md (English) and *.de.md (German). Each
-// version is tuned to come out at exactly 1 and 2 pages.
-const RESUMES = {
-  onePage: {
-    file: 'resume-data',
-    fileName: { en: 'MdAbdullahFaruque_Resume.pdf', de: 'MdAbdullahFaruque_Lebenslauf.pdf' },
-    Document: OnePageResumePDF,
-  },
-  detailed: {
-    file: 'resume-data-detailed',
-    fileName: { en: 'MdAbdullahFaruque_Resume_Detailed.pdf', de: 'MdAbdullahFaruque_Lebenslauf_Ausfuehrlich.pdf' },
-    Document: DetailedResumePDF,
-  },
-} as const
-
-type ResumeKind = keyof typeof RESUMES
+const FILE_NAMES: Record<ResumeKind, Record<ResumeLanguage, string>> = {
+  onePage: { en: 'MdAbdullahFaruque_Resume.pdf', de: 'MdAbdullahFaruque_Lebenslauf.pdf' },
+  detailed: { en: 'MdAbdullahFaruque_Resume_Detailed.pdf', de: 'MdAbdullahFaruque_Lebenslauf_Ausfuehrlich.pdf' },
+}
 
 interface ResumeDownloadsProps {
+  data: PortfolioData
   t: any
   language?: ResumeLanguage
 }
 
-/** The two resume download buttons; renders a fragment so it fits any button row. */
-export function ResumeDownloads({ t, language = 'en' }: ResumeDownloadsProps) {
-  const [busy, setBusy] = useState<ResumeKind | null>(null)
+/**
+ * "Download Resume" button with a choice of one page or two pages. The PDF is
+ * generated from the current portfolio data when clicked, so it always matches
+ * what the site shows.
+ */
+export function ResumeDownloads({ data, t, language = 'en' }: ResumeDownloadsProps) {
+  const [busy, setBusy] = useState(false)
 
   const download = async (kind: ResumeKind) => {
-    const { file, Document } = RESUMES[kind]
-    const fileName = RESUMES[kind].fileName[language]
-    setBusy(kind)
+    setBusy(true)
     try {
-      const data = await loadResumeMarkdown(file, language)
-      const blob = await pdf(<Document data={data} language={language} />).toBlob()
+      const { blob, photoFailed } = await generateResumePdf(kind, data, language, t)
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
-      link.download = fileName
+      link.download = FILE_NAMES[kind][language]
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
+      if (photoFailed) toast.warning(t.labels.resumePhotoSkipped)
       toast.success(t.labels.resumeDownloaded)
     } catch (error) {
       toast.error(t.labels.resumeDownloadFailed)
       console.error('Resume download error:', error)
     } finally {
-      setBusy(null)
+      setBusy(false)
     }
   }
 
-  const labels: Record<ResumeKind, string> = {
-    onePage: t.labels.downloadResumeOnePage,
-    detailed: t.labels.downloadResumeDetailed,
-  }
+  const options: { kind: ResumeKind; icon: typeof FileText; label: string; hint: string }[] = [
+    { kind: 'onePage', icon: FileText, label: t.labels.downloadResumeOnePage, hint: t.labels.downloadResumeOnePageHint },
+    { kind: 'detailed', icon: Files, label: t.labels.downloadResumeDetailed, hint: t.labels.downloadResumeDetailedHint },
+  ]
 
   return (
-    <>
-      {(Object.keys(RESUMES) as ResumeKind[]).map((kind) => (
-        <Button
-          key={kind}
-          size="lg"
-          variant="outline"
-          onClick={() => download(kind)}
-          disabled={busy !== null}
-          data-resume={kind}
-          className="gap-2 font-semibold"
-        >
-          {busy === kind ? (
-            <CircleNotch size={18} weight="bold" className="animate-spin" />
-          ) : (
-            <DownloadSimple size={18} weight="bold" />
-          )}
-          {busy === kind ? t.labels.preparingPdf : labels[kind]}
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button size="lg" variant="outline" disabled={busy} className="gap-2 font-semibold" data-resume-menu>
+          {busy ? <CircleNotch size={18} weight="bold" className="animate-spin" /> : <DownloadSimple size={18} weight="bold" />}
+          {busy ? t.labels.preparingPdf : t.labels.downloadPDF}
         </Button>
-      ))}
-    </>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-72">
+        {options.map(({ kind, icon: Icon, label, hint }) => (
+          <DropdownMenuItem
+            key={kind}
+            onSelect={() => download(kind)}
+            data-resume={kind}
+            className="flex cursor-pointer items-start gap-3 py-2.5"
+          >
+            <Icon size={20} className="mt-0.5 shrink-0 text-primary" />
+            <span className="flex flex-col">
+              <span className="font-semibold">{label}</span>
+              <span className="text-xs text-muted-foreground">{hint}</span>
+            </span>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }

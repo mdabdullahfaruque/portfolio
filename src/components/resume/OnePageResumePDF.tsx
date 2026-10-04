@@ -1,5 +1,4 @@
-import { createContext, useContext } from 'react';
-import type { ResumeLanguage, ResumeMarkdownData } from '@/lib/resumeMarkdown';
+import { scaleStyles, type ResumeData, type ResumeLanguage } from '@/lib/resumeData';
 import { Document, Page, Text as PdfText, View, StyleSheet, Font, Link, Svg, Path, Circle, Image } from '@react-pdf/renderer';
 
 // Register fonts
@@ -46,7 +45,7 @@ const MapPinIcon = () => (
   </Svg>
 );
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   page: {
     padding: 35,
     backgroundColor: '#ffffff',
@@ -62,9 +61,10 @@ const styles = StyleSheet.create({
   headerText: {
     flex: 1,
   },
+  // 4:5 portrait frame, the shape of the profile photo; other photos are cropped to fit.
   profileImage: {
-    width: 80,
-    height: 80,
+    width: 72,
+    height: 90,
     objectFit: 'cover',
     borderRadius: 3,
   },
@@ -247,25 +247,31 @@ const styles = StyleSheet.create({
   },
 });
 
-// Ported from ResumeBuilder resume-pdf-generator/src/ResumePDF.js (one page).
-// English hyphenation patterns split German words wrongly ("Cloud-na-tiven"), so German
-// text is never hyphenated. English keeps react-pdf's default (undefined = default).
-const HyphenationContext = createContext<((word: string) => string[]) | undefined>(undefined);
+// Never split words across lines: hyphenated words look unpolished and an ATS
+// reads 'devel-opment' as two tokens.
 const noHyphenation = (word: string) => [word];
-const Text = (props: any) => <PdfText hyphenationCallback={useContext(HyphenationContext)} {...props} />;
+const Text = (props: any) => <PdfText hyphenationCallback={noHyphenation} {...props} />;
 
-// Section headings per language; the Markdown files carry the translated content.
+// Section headings per language (the content itself comes from the portfolio data).
 const LABELS = {
   en: { summary: 'SUMMARY', experience: 'EXPERIENCE', education: 'EDUCATION', skills: 'SKILLS', certifications: 'CERTIFICATIONS' },
   de: { summary: 'ZUSAMMENFASSUNG', experience: 'BERUFSERFAHRUNG', education: 'AUSBILDUNG', skills: 'KENNTNISSE', certifications: 'ZERTIFIZIERUNGEN' },
 };
 
-export const OnePageResumePDF = ({ data, language = 'en' }: { data: ResumeMarkdownData | null; language?: ResumeLanguage }) => {
+interface OnePageResumePDFProps {
+  data: ResumeData | null
+  language?: ResumeLanguage
+  /** Font size and spacing factor; the download shrinks it until everything fits one page. */
+  scale?: number
+}
+
+// One page, two columns, optional photo. Built from the portfolio data at download time.
+export const OnePageResumePDF = ({ data, language = 'en', scale = 1 }: OnePageResumePDFProps) => {
   if (!data) return null;
   const labels = LABELS[language] || LABELS.en;
+  const styles = scaleStyles(baseStyles, scale);
 
   return (
-    <HyphenationContext.Provider value={language === 'de' ? noHyphenation : undefined}>
     <Document>
       <Page size="A4" style={styles.page}>
         {/* Header */}
@@ -446,7 +452,6 @@ export const OnePageResumePDF = ({ data, language = 'en' }: { data: ResumeMarkdo
         </View>
       </Page>
     </Document>
-    </HyphenationContext.Provider>
   );
 };
 

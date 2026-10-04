@@ -4,7 +4,7 @@ import profilePhoto from '@/assets/images/PHOTO-PS-MD_ABDULLAH_FARUQUE.JPG'
 // Visitors keep a copy of this data in localStorage. Bump the version whenever
 // this file changes so returning visitors get the update (App.tsx replaces any
 // stored copy with an older version).
-export const PORTFOLIO_DATA_VERSION = 3
+export const PORTFOLIO_DATA_VERSION = 4
 
 export const initialPortfolioData: PortfolioData = {
   name: 'MD Abdullah Faruque',
@@ -180,6 +180,9 @@ export const initialPortfolioData: PortfolioData = {
       { name: 'HTML5', proficiency: 95, yearsOfExperience: 6 },
       { name: 'CSS3', proficiency: 90, yearsOfExperience: 6 },
       { name: 'MudBlazor', proficiency: 80, yearsOfExperience: 1 },
+      { name: 'SEO', proficiency: 75, yearsOfExperience: 1 },
+      { name: 'GEO (AI Search Optimization)', proficiency: 70, yearsOfExperience: 1 },
+      { name: 'Google Analytics 4 (GA4)', proficiency: 72, yearsOfExperience: 1 },
     ],
     cloud: [
       { name: 'AWS Lambda', proficiency: 85, yearsOfExperience: 4 },
@@ -213,9 +216,6 @@ export const initialPortfolioData: PortfolioData = {
     ],
     tools: [
       { name: 'Visual Studio', proficiency: 95, yearsOfExperience: 6 },
-      { name: 'SEO', proficiency: 75, yearsOfExperience: 1 },
-      { name: 'GEO (AI Search Optimization)', proficiency: 70, yearsOfExperience: 1 },
-      { name: 'Google Analytics 4 (GA4)', proficiency: 72, yearsOfExperience: 1 },
       { name: 'VS Code', proficiency: 92, yearsOfExperience: 6 },
       { name: 'GitHub Copilot', proficiency: 88, yearsOfExperience: 2 },
       { name: 'Cursor', proficiency: 85, yearsOfExperience: 1 },
@@ -238,6 +238,8 @@ export const initialPortfolioData: PortfolioData = {
   projects: [
     {
       id: 'ag-one',
+      organization: 'Aventra Group',
+      period: 'January 2026 - Present',
       name: 'AG ONE',
       url: 'https://www.ag-one.aventragroup.com/',
       description:
@@ -287,6 +289,8 @@ export const initialPortfolioData: PortfolioData = {
     },
     {
       id: 'dominos-migration',
+      organization: "Domino's Pizza Enterprises",
+      period: 'January 2025 - December 2025',
       name: "Domino's Global Web Platform Migration",
       url: 'https://www.dominos.com.au/',
       description:
@@ -302,6 +306,8 @@ export const initialPortfolioData: PortfolioData = {
     },
     {
       id: 'web-evv',
+      organization: 'Kaz Software',
+      period: 'January 2023 - July 2024',
       name: 'Web EVV',
       url: '',
       description:
@@ -311,6 +317,8 @@ export const initialPortfolioData: PortfolioData = {
     },
     {
       id: 'gateway-to-access',
+      organization: 'Kaz Software',
+      period: 'May 2021 - January 2023',
       name: 'Gateway to Access',
       url: '',
       description:
@@ -352,6 +360,7 @@ export const initialPortfolioData: PortfolioData = {
     'Azure',
     'AWS Lambda',
   ],
+  resume: { photoOnePage: true, photoDetailed: false },
   highlights: [
     'Leading the team building AG ONE, a million-dollar software marketplace',
     'Driving rapid, AI-driven software development while managing the team',

@@ -22,6 +22,8 @@ import {
   Image as ImageIcon
 } from '@phosphor-icons/react'
 import { PortfolioData, Experience, Project, Skill, Education, Certification, StatItem } from '@/lib/types'
+import { Switch } from '@/components/ui/switch'
+import { DEFAULT_RESUME_SETTINGS } from '@/lib/resumeData'
 import { toast } from 'sonner'
 
 interface AdminDashboardProps {
@@ -349,9 +351,33 @@ export function AdminDashboard({ data, onUpdate, onLogout }: AdminDashboardProps
                           onChange={handleProfileImageUpload}
                           className="mb-2"
                         />
-                        <p className="text-xs text-muted-foreground">Upload a new profile picture (PNG, JPG, or GIF)</p>
+                        <p className="text-xs text-muted-foreground">Upload a new profile picture (PNG or JPG; other formats are left out of the resume PDFs)</p>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="rounded-lg border p-4 space-y-3">
+                    <Label>Photo on downloadable resumes</Label>
+                    {([
+                      ['photoOnePage', 'One-page resume'],
+                      ['photoDetailed', 'Two-page resume (ATS)'],
+                    ] as const).map(([key, label]) => (
+                      <div key={key} className="flex items-center justify-between gap-4">
+                        <span className="text-sm">{label}</span>
+                        <Switch
+                          checked={{ ...DEFAULT_RESUME_SETTINGS, ...editedData.resume }[key]}
+                          onCheckedChange={(checked) =>
+                            setEditedData({
+                              ...editedData,
+                              resume: { ...DEFAULT_RESUME_SETTINGS, ...editedData.resume, [key]: checked },
+                            })
+                          }
+                        />
+                      </div>
+                    ))}
+                    <p className="text-xs text-muted-foreground">
+                      Resumes are generated from this data, so every saved change is in the next download.
+                    </p>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
@@ -690,6 +716,25 @@ export function AdminDashboard({ data, onUpdate, onLogout }: AdminDashboardProps
                           value={project.market || ''}
                           onChange={(e) => updateProject(project.id, 'market', e.target.value)}
                           placeholder="e.g., Bangladesh, Malaysia"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label>Organization (shown on resume)</Label>
+                        <Input
+                          value={project.organization || ''}
+                          onChange={(e) => updateProject(project.id, 'organization', e.target.value)}
+                          placeholder="e.g., Aventra Group"
+                        />
+                      </div>
+                      <div>
+                        <Label>Period (shown on resume)</Label>
+                        <Input
+                          value={project.period || ''}
+                          onChange={(e) => updateProject(project.id, 'period', e.target.value)}
+                          placeholder="e.g., January 2026 - Present"
                         />
                       </div>
                     </div>

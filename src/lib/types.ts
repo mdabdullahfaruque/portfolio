@@ -41,6 +41,10 @@ export interface Project {
   image?: string
   technologies?: string[]
   market?: string
+  /** Shown on the resume next to the project name, e.g. the employer. */
+  organization?: string
+  /** Shown on the resume, e.g. "January 2026 - Present". */
+  period?: string
 }
 
 export interface Certification {
@@ -109,6 +113,11 @@ export interface PortfolioData {
   heroSkills?: string[]
   customSections?: CustomSection[]
   navMenuItems?: NavMenuItem[]
+  /** Resume download options (photo on each version). */
+  resume?: {
+    photoOnePage: boolean
+    photoDetailed: boolean
+  }
 }
 
 export interface Testimonial {

@@ -1,20 +1,20 @@
-import { Fragment } from 'react';
-import type { ResumeLanguage, ResumeMarkdownData } from '@/lib/resumeMarkdown';
-import { Document, Page, Text as PdfText, View, StyleSheet, Link } from '@react-pdf/renderer';
+import { Fragment, createContext, useContext } from 'react';
+import { scaleStyles, type ResumeData, type ResumeLanguage } from '@/lib/resumeData';
+import { Document, Page, Text as PdfText, View, StyleSheet, Link, Image } from '@react-pdf/renderer';
 
 // ATS-friendly layout: one column, standard section headings, real text only.
-// No photo, icons, badges, tables or multi-column flow — applicant tracking
-// systems read those out of order or drop them. Helvetica is a built-in PDF
+// No icons, badges, tables or multi-column flow — applicant tracking systems read
+// those out of order or drop them. The photo is optional (off by default). Helvetica is a built-in PDF
 // font, so extracted text maps cleanly without embedding a web font.
 //
 // For the human reader, hierarchy comes from size, weight and colour only:
-// name > headline > section > role > body > meta. `**bold**` in the markdown
+// name > headline > section > role > body > meta. `**bold**` in the data
 // marks the few phrases a recruiter should catch on a 6-second scan.
 
 // Never split words across lines: an ATS reads 'devel-opment' as two tokens and
-// misses the keyword. Scoped to this document so the one-page layout is unchanged.
-const noHyphenation = (word) => [word];
-const Text = (props) => <PdfText hyphenationCallback={noHyphenation} {...props} />;
+// misses the keyword.
+const noHyphenation = (word: string) => [word];
+const Text = (props: any) => <PdfText hyphenationCallback={noHyphenation} {...props} />;
 
 const COLORS = {
   ink: '#1a1a1a',
@@ -29,7 +29,7 @@ const COLORS = {
 //
 // Every text style sets its own lineHeight: react-pdf inherits it as an
 // absolute height, which collapses lines when the font size changes.
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   page: {
     paddingTop: 32,
     paddingBottom: 32,
@@ -59,6 +59,20 @@ const styles = StyleSheet.create({
     lineHeight: 1.3,
     color: COLORS.muted,
     marginTop: 4,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerText: {
+    flex: 1,
+    paddingRight: 12,
+  },
+  photo: {
+    width: 56,
+    height: 70,
+    objectFit: 'cover',
+    borderRadius: 3,
   },
   headerRule: {
     borderBottom: `1.5 solid ${COLORS.accent}`,
@@ -98,7 +112,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   skillLabel: {
-    width: 100,
+    width: 136,
     fontSize: 9,
     lineHeight: 1.35,
     fontFamily: 'Helvetica-Bold',
@@ -181,7 +195,10 @@ const styles = StyleSheet.create({
 
 const MONTHS = /\b(January|February|March|April|May|June|July|August|September|October|November|December|Januar|Februar|März|Juni|Juli|Oktober|Dezember)\b/g;
 
-// Section headings per language; the Markdown files carry the translated content.
+// Scaled styles for the current render, shared with the small components below.
+const StylesContext = createContext(baseStyles);
+
+// Section headings per language (the content itself comes from the portfolio data).
 const LABELS = {
   en: {
     summary: 'Professional Summary', keyAchievements: 'Key Achievements', skills: 'Technical Skills',
@@ -199,34 +216,44 @@ const LABELS = {
 const formatPeriod = (period = '') =>
   period.replace(MONTHS, (m) => m.slice(0, 3)).replace(/\s+-\s+/, ' – ');
 
-const entryStyle = (index, list) =>
+const entryStyle = (styles: typeof baseStyles, index: number, list: unknown[]) =>
   index === list.length - 1 ? [styles.entry, styles.entryLast] : styles.entry;
 
 const isPlaceholder = (value) => !value || value.trim().startsWith('[');
 
 // Renders `**phrase**` as bold inline text.
-const Rich = ({ text }) =>
-  text.split(/(\*\*[^*]+\*\*)/).filter(Boolean).map((part, i) =>
+const Rich = ({ text }: { text: string }) => {
+  const styles = useContext(StylesContext);
+  return text.split(/(\*\*[^*]+\*\*)/).filter(Boolean).map((part, i) =>
     part.startsWith('**') && part.endsWith('**')
       ? <Text key={i} style={styles.strong}>{part.slice(2, -2)}</Text>
       : part
   );
+};
 
-const Bullet = ({ text }) => (
+const Bullet = ({ text }: { text: string }) => {
+  const styles = useContext(StylesContext);
+  return (
   <View style={styles.bulletRow} wrap={false}>
     <Text style={styles.bullet}>•</Text>
     <Text style={styles.bulletText}><Rich text={text} /></Text>
   </View>
-);
+  );
+};
 
-const Section = ({ title, children }) => (
+const Section = ({ title, children }: { title: string; children: any }) => {
+  const styles = useContext(StylesContext);
+  return (
   <View style={styles.section}>
     <Text style={styles.sectionTitle} minPresenceAhead={40}>{title}</Text>
     {children}
   </View>
-);
+  );
+};
 
-const EntryHeader = ({ title, org, period }: { title: string; org?: string; period?: string }) => (
+const EntryHeader = ({ title, org, period }: { title: string; org?: string; period?: string }) => {
+  const styles = useContext(StylesContext);
+  return (
   <View style={styles.entryHeader}>
     <Text style={styles.entryTitle}>
       {title}
@@ -234,19 +261,31 @@ const EntryHeader = ({ title, org, period }: { title: string; org?: string; peri
     </Text>
     {period ? <Text style={styles.entryDate}>{formatPeriod(period)}</Text> : null}
   </View>
-);
+  );
+};
 
-const TechLine = ({ text, label }: { text: string; label: string }) => (
+const TechLine = ({ text, label }: { text: string; label: string }) => {
+  const styles = useContext(StylesContext);
+  return (
   <Text style={styles.techLine}>
     <Text style={styles.techLabel}>{label}</Text>
     {text}
   </Text>
-);
+  );
+};
 
-// Ported from ResumeBuilder resume-pdf-generator/src/ResumeDetailedPDF.js (two pages, ATS).
-export const DetailedResumePDF = ({ data, language = 'en' }: { data: ResumeMarkdownData | null; language?: ResumeLanguage }) => {
+interface DetailedResumePDFProps {
+  data: ResumeData | null
+  language?: ResumeLanguage
+  /** Font size and spacing factor; the download shrinks it until everything fits two pages. */
+  scale?: number
+}
+
+// Two pages, single column, ATS-friendly. Built from the portfolio data at download time.
+export const DetailedResumePDF = ({ data, language = 'en', scale = 1 }: DetailedResumePDFProps) => {
   if (!data) return null;
   const labels = LABELS[language] || LABELS.en;
+  const styles = scaleStyles(baseStyles, scale);
 
   const contact = data.contact || {};
   const skills = Object.entries(data.skills || {}).filter(([, list]) => list.length > 0);
@@ -268,6 +307,7 @@ export const DetailedResumePDF = ({ data, language = 'en' }: { data: ResumeMarkd
   ].filter(Boolean);
 
   return (
+    <StylesContext.Provider value={styles}>
     <Document
       title={`${data.name} - ${data.title} - ${labels.resume}`}
       author={data.name}
@@ -277,16 +317,21 @@ export const DetailedResumePDF = ({ data, language = 'en' }: { data: ResumeMarkd
     >
       <Page size="A4" style={styles.page}>
         {/* Header: plain text in the page body, not a PDF header region */}
-        <Text style={styles.name}>{data.name.toUpperCase()}</Text>
-        <Text style={styles.headline}>{data.title}</Text>
-        <Text style={styles.contactLine}>
-          {contactParts.map((part, i) => (
-            <Fragment key={i}>
-              {i > 0 && '   |   '}
-              {part}
-            </Fragment>
-          ))}
-        </Text>
+        <View style={styles.headerRow}>
+          <View style={styles.headerText}>
+            <Text style={styles.name}>{data.name.toUpperCase()}</Text>
+            <Text style={styles.headline}>{data.title}</Text>
+            <Text style={styles.contactLine}>
+              {contactParts.map((part, i) => (
+                <Fragment key={i}>
+                  {i > 0 && '   |   '}
+                  {part}
+                </Fragment>
+              ))}
+            </Text>
+          </View>
+          {data.photo ? <Image src={data.photo} style={styles.photo} /> : null}
+        </View>
         <View style={styles.headerRule} />
 
         {data.summary?.text && (
@@ -317,7 +362,7 @@ export const DetailedResumePDF = ({ data, language = 'en' }: { data: ResumeMarkd
         {data.experience?.length > 0 && (
           <Section title={labels.experience}>
             {data.experience.map((job, index) => (
-              <View key={index} style={entryStyle(index, data.experience)} wrap={false}>
+              <View key={index} style={entryStyle(styles, index, data.experience)} wrap={false}>
                 <EntryHeader title={job.title.trim()} org={job.company} period={job.period} />
                 <Text style={styles.entryMeta}>
                   {[job.location, job.description].filter(Boolean).join('  ·  ')}
@@ -334,7 +379,7 @@ export const DetailedResumePDF = ({ data, language = 'en' }: { data: ResumeMarkd
         {data.projects?.length > 0 && (
           <Section title={labels.projects}>
             {data.projects.map((project, index) => (
-              <View key={index} style={entryStyle(index, data.projects)} wrap={false}>
+              <View key={index} style={entryStyle(styles, index, data.projects)} wrap={false}>
                 <EntryHeader title={project.name} org={project.organization} period={project.period} />
                 {project.link ? (
                   <Text style={styles.entryMeta}>
@@ -358,7 +403,7 @@ export const DetailedResumePDF = ({ data, language = 'en' }: { data: ResumeMarkd
         {data.education?.length > 0 && (
           <Section title={labels.education}>
             {data.education.map((edu, index) => (
-              <View key={index} style={entryStyle(index, data.education)} wrap={false}>
+              <View key={index} style={entryStyle(styles, index, data.education)} wrap={false}>
                 <EntryHeader title={edu.degree} period={edu.period} />
                 <Text style={styles.entryMeta}>
                   {[edu.school, edu.location].filter(Boolean).join(', ')}
@@ -398,6 +443,7 @@ export const DetailedResumePDF = ({ data, language = 'en' }: { data: ResumeMarkd
         )}
       </Page>
     </Document>
+    </StylesContext.Provider>
   );
 };
 
