@@ -4,7 +4,7 @@ import profilePhoto from '@/assets/images/PHOTO-PS-MD_ABDULLAH_FARUQUE.JPG'
 // Visitors keep a copy of this data in localStorage. Bump the version whenever
 // this file changes so returning visitors get the update (App.tsx replaces any
 // stored copy with an older version).
-export const PORTFOLIO_DATA_VERSION = 4
+export const PORTFOLIO_DATA_VERSION = 5
 
 export const initialPortfolioData: PortfolioData = {
   name: 'MD Abdullah Faruque',
@@ -237,7 +237,60 @@ export const initialPortfolioData: PortfolioData = {
   },
   projects: [
     {
+      id: '1',
+      category: 'product',
+      name: 'MyPropertyMart',
+      url: 'https://mypropertymart.com/',
+      description:
+        'All-in-one platform connecting buyers, sellers, housing construction companies, and trusted materials suppliers.',
+      status: 'Live',
+      market: 'Bangladesh & Malaysia',
+      technologies: ['.NET', 'Angular', 'SQL Server', 'Azure'],
+      features: [
+        'Property listing and search',
+        'Construction company directory',
+        'Materials supplier marketplace',
+        'Multi-language support',
+      ],
+    },
+    {
+      id: '2',
+      category: 'product',
+      name: 'SasthoSeba',
+      url: 'https://sasthoseba.com/',
+      description:
+        'A comprehensive healthcare solution currently focusing on digital prescription writing, patient management, and chamber management for doctors.',
+      status: 'Live',
+      market: 'Bangladesh',
+      technologies: ['.NET', 'React', 'SQL Server', 'Azure'],
+      features: [
+        'Digital prescription writing',
+        'Patient management system',
+        'Doctor chamber management',
+        'Appointment scheduling',
+        'Future: Clinics, Diagnostic Centers, Pharmacies, Telemedicine',
+      ],
+    },
+    {
+      id: 'mylifestylemart',
+      category: 'product',
+      name: 'MyLifestyleMart',
+      url: 'https://mylifestylemart.com/',
+      description:
+        'Multi-vendor lifestyle marketplace for clothing, bags, footwear and accessories. Shoppers browse local shops and order straight from the seller on WhatsApp, while each vendor gets its own branded storefront.',
+      status: 'In Development',
+      market: 'Bangladesh, Malaysia & Italy',
+      technologies: ['.NET 10', 'EF Core 10', 'PostgreSQL', 'Angular 20', 'Redis', 'S3 / MinIO'],
+      features: [
+        'Shared marketplace across many vendors',
+        'Branded vendor storefronts on their own subdomain, with optional custom domain',
+        'Order straight from the seller on WhatsApp',
+        'One codebase, one deployment per country',
+      ],
+    },
+    {
       id: 'ag-one',
+      category: 'professional',
       organization: 'Aventra Group',
       period: 'January 2026 - Present',
       name: 'AG ONE',
@@ -255,40 +308,8 @@ export const initialPortfolioData: PortfolioData = {
       ],
     },
     {
-      id: '1',
-      name: 'MyPropertyMart',
-      url: 'https://mypropertymart.com/',
-      description:
-        'All-in-one platform connecting buyers, sellers, housing construction companies, and trusted materials suppliers.',
-      status: 'Live',
-      market: 'Bangladesh & Malaysia',
-      technologies: ['.NET', 'Angular', 'SQL Server', 'Azure'],
-      features: [
-        'Property listing and search',
-        'Construction company directory',
-        'Materials supplier marketplace',
-        'Multi-language support',
-      ],
-    },
-    {
-      id: '2',
-      name: 'SasthoSeba',
-      url: 'https://sasthoseba.com/',
-      description:
-        'A comprehensive healthcare solution currently focusing on digital prescription writing, patient management, and chamber management for doctors.',
-      status: 'Live',
-      market: 'Bangladesh',
-      technologies: ['.NET', 'React', 'SQL Server', 'Azure'],
-      features: [
-        'Digital prescription writing',
-        'Patient management system',
-        'Doctor chamber management',
-        'Appointment scheduling',
-        'Future: Clinics, Diagnostic Centers, Pharmacies, Telemedicine',
-      ],
-    },
-    {
       id: 'dominos-migration',
+      category: 'professional',
       organization: "Domino's Pizza Enterprises",
       period: 'January 2025 - December 2025',
       name: "Domino's Global Web Platform Migration",
@@ -306,6 +327,7 @@ export const initialPortfolioData: PortfolioData = {
     },
     {
       id: 'web-evv',
+      category: 'professional',
       organization: 'Kaz Software',
       period: 'January 2023 - July 2024',
       name: 'Web EVV',
@@ -317,6 +339,7 @@ export const initialPortfolioData: PortfolioData = {
     },
     {
       id: 'gateway-to-access',
+      category: 'professional',
       organization: 'Kaz Software',
       period: 'May 2021 - January 2023',
       name: 'Gateway to Access',

@@ -41,6 +41,11 @@ export interface Project {
   image?: string
   technologies?: string[]
   market?: string
+  /**
+   * 'product': my own product (Live Products). 'professional': built for an employer
+   * (Key Projects, also on the two-page resume). Missing means 'product'.
+   */
+  category?: 'product' | 'professional'
   /** Shown on the resume next to the project name, e.g. the employer. */
   organization?: string
   /** Shown on the resume, e.g. "January 2026 - Present". */

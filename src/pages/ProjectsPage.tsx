@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { ArrowRight, Plus, Trash, Pencil, Globe, RocketLaunch, MapPin, CheckCircle, TrendUp } from '@phosphor-icons/react'
+import { ArrowRight, Plus, Trash, Pencil, Globe, RocketLaunch, MapPin, CheckCircle, TrendUp, Briefcase, CalendarBlank, Hammer } from '@phosphor-icons/react'
 import { PortfolioData, Project } from '@/lib/types'
 import { toast } from 'sonner'
 
@@ -17,6 +17,8 @@ interface ProjectsPageProps {
   onUpdate: (data: PortfolioData) => void
 }
 
+const isLive = (project: Project) => ['live', 'active'].includes(project.status?.toLowerCase())
+
 export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) {
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -25,13 +27,13 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
   const handleSave = (project: Project) => {
     const updated = { ...data }
     const index = updated.projects.findIndex(p => p.id === project.id)
-    
+
     if (index >= 0) {
       updated.projects[index] = project
     } else {
       updated.projects.push({ ...project, id: Date.now().toString() })
     }
-    
+
     onUpdate(updated)
     setIsDialogOpen(false)
     setEditingProject(null)
@@ -45,15 +47,158 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
     toast.success('Project deleted')
   }
 
-  const markets = ['all', ...Array.from(new Set(data.projects.map(p => p.market).filter(Boolean)))] as string[]
-  const filteredProjects = filter === 'all' 
-    ? data.projects 
-    : data.projects.filter(p => p.market === filter)
+  // Own products and work built for employers are listed separately.
+  const products = data.projects.filter(p => p.category !== 'professional')
+  const keyProjects = data.projects.filter(p => p.category === 'professional')
+
+  const markets = ['all', ...Array.from(new Set(products.map(p => p.market).filter(Boolean)))] as string[]
+  const filteredProducts = filter === 'all'
+    ? products
+    : products.filter(p => p.market === filter)
+
+  const renderCard = (project: Project, index: number) => {
+    const professional = project.category === 'professional'
+    return (
+      <motion.div
+        key={project.id}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: index * 0.1 }}
+      >
+        <Card className="group relative h-full flex flex-col bg-card hover:shadow-2xl transition-all duration-500 border-2 border-border hover:border-accent/40 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full blur-3xl -translate-y-32 translate-x-32 group-hover:translate-y-0 group-hover:translate-x-0 transition-transform duration-700" />
+
+          {isAdmin && (
+            <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-20 no-print">
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => {
+                  setEditingProject(project)
+                  setIsDialogOpen(true)
+                }}
+                className="shadow-lg h-8 w-8 p-0"
+              >
+                <Pencil size={14} weight="bold" />
+              </Button>
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => handleDelete(project.id)}
+                className="shadow-lg h-8 w-8 p-0"
+              >
+                <Trash size={14} weight="bold" />
+              </Button>
+            </div>
+          )}
+
+          <div className="p-8 flex flex-col h-full relative z-10">
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors leading-tight">
+                  {project.name}
+                </h3>
+
+                <div className="flex items-center gap-2 flex-wrap">
+                  {professional ? (
+                    <>
+                      {project.organization && (
+                        <Badge variant="default" className="text-xs font-semibold gap-1">
+                          <Briefcase size={12} weight="fill" />
+                          {project.organization}
+                        </Badge>
+                      )}
+                      {project.period && (
+                        <Badge variant="outline" className="text-xs font-medium gap-1">
+                          <CalendarBlank size={12} weight="fill" />
+                          {project.period}
+                        </Badge>
+                      )}
+                    </>
+                  ) : (
+                    <Badge
+                      variant={isLive(project) ? 'default' : 'secondary'}
+                      className="text-xs font-semibold"
+                    >
+                      {isLive(project)
+                        ? <CheckCircle size={12} weight="fill" className="mr-1" />
+                        : <Hammer size={12} weight="fill" className="mr-1" />}
+                      {project.status}
+                    </Badge>
+                  )}
+
+                  {project.market && (
+                    <Badge variant="outline" className="text-xs font-medium gap-1">
+                      <MapPin size={12} weight="fill" />
+                      {project.market}
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <p className="text-foreground/80 leading-relaxed mb-6 flex-grow text-[15px]">
+              {project.description}
+            </p>
+
+            {project.features && project.features.length > 0 && (
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">
+                  {professional ? t.labels.keyContributions : t.labels.keyFeatures}:
+                </h4>
+                <div className="space-y-2">
+                  {project.features.slice(0, professional ? 5 : 4).map((feature, idx) => (
+                    <div key={idx} className="flex items-start gap-2">
+                      <CheckCircle size={16} weight="fill" className="text-accent mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {project.technologies && project.technologies.length > 0 && (
+              <div className="mb-6">
+                <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">{t.labels.technicalStack}</h4>
+                <div className="flex flex-wrap gap-2">
+                  {project.technologies.map((tech) => (
+                    <Badge
+                      key={tech}
+                      variant="secondary"
+                      className="text-xs font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+                    >
+                      {tech}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {project.url && (
+              <Button
+                asChild
+                className="w-full mt-auto gap-2 h-11 shadow-md hover:shadow-lg transition-all group/btn"
+                size="lg"
+                variant={professional ? 'outline' : 'default'}
+              >
+                <a href={project.url} target="_blank" rel="noopener noreferrer">
+                  <Globe size={18} weight="bold" />
+                  <span>{professional || !isLive(project) ? t.labels.visitWebsite : t.labels.visitLiveSite}</span>
+                  <ArrowRight size={18} weight="bold" className="group-hover/btn:translate-x-1 transition-transform" />
+                </a>
+              </Button>
+            )}
+          </div>
+        </Card>
+      </motion.div>
+    )
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-20 px-6 bg-background relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,oklch(0.38_0.10_250_/_0.08),transparent_50%),radial-gradient(circle_at_70%_60%,oklch(0.45_0.08_250_/_0.06),transparent_50%)]" />
-      
+
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -72,15 +217,15 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                   <RocketLaunch size={20} weight="fill" className="text-accent" />
                   <span className="text-sm font-semibold text-accent">{t.labels.portfolioShowcase}</span>
                 </motion.div>
-                
+
                 <h1 className="text-4xl lg:text-6xl font-bold mb-4 text-foreground leading-tight">
                   {t.labels.projectsPageTitle}
                 </h1>
-                
+
                 <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl leading-relaxed">
                   {t.labels.projectsPageDescription}
                 </p>
-                
+
                 <div className="flex items-center gap-6 mt-6">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
@@ -91,12 +236,12 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                   <div className="flex items-center gap-2">
                     <TrendUp size={16} weight="bold" className="text-accent" />
                     <span className="text-sm text-muted-foreground">
-                      <span className="font-bold text-foreground">{data.projects.filter(p => p.status?.toLowerCase() === 'live' || p.status?.toLowerCase() === 'active').length}</span> {t.labels.liveProductsCount}
+                      <span className="font-bold text-foreground">{products.filter(isLive).length}</span> {t.labels.liveProductsCount}
                     </span>
                   </div>
                 </div>
               </div>
-              
+
               {isAdmin && (
                 <Button
                   onClick={() => {
@@ -108,6 +253,7 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                       status: 'Active',
                       technologies: [],
                       market: '',
+                      category: 'product',
                     })
                     setIsDialogOpen(true)
                   }}
@@ -119,144 +265,54 @@ export function ProjectsPage({ data, t, isAdmin, onUpdate }: ProjectsPageProps) 
                 </Button>
               )}
             </div>
+          </div>
 
-            {markets.length > 1 && (
-              <div className="flex flex-wrap gap-2">
-                {markets.map((market) => (
-                  <Button
-                    key={market}
-                    variant={filter === market ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setFilter(market)}
-                    className="capitalize"
-                  >
-                    {market === 'all' ? t.labels.allMarkets : market}
-                  </Button>
-                ))}
+          {/* Own products */}
+          <section className="mb-20">
+            <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h2 className="text-3xl font-bold text-foreground mb-2">{t.labels.productsSectionTitle}</h2>
+                <p className="text-muted-foreground">{t.labels.productsSectionSubtitle}</p>
+              </div>
+              {markets.length > 1 && (
+                <div className="flex flex-wrap gap-2">
+                  {markets.map((market) => (
+                    <Button
+                      key={market}
+                      variant={filter === market ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setFilter(market)}
+                      className="capitalize"
+                    >
+                      {market === 'all' ? t.labels.allMarkets : market}
+                    </Button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {filteredProducts.map(renderCard)}
+            </div>
+
+            {filteredProducts.length === 0 && (
+              <div className="text-center py-20">
+                <p className="text-muted-foreground text-lg">{t.labels.noProjectsFound}</p>
               </div>
             )}
-          </div>
+          </section>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {filteredProjects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Card className="group relative h-full flex flex-col bg-card hover:shadow-2xl transition-all duration-500 border-2 border-border hover:border-accent/40 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full blur-3xl -translate-y-32 translate-x-32 group-hover:translate-y-0 group-hover:translate-x-0 transition-transform duration-700" />
-                  
-                  {isAdmin && (
-                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-20 no-print">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={() => {
-                          setEditingProject(project)
-                          setIsDialogOpen(true)
-                        }}
-                        className="shadow-lg h-8 w-8 p-0"
-                      >
-                        <Pencil size={14} weight="bold" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDelete(project.id)}
-                        className="shadow-lg h-8 w-8 p-0"
-                      >
-                        <Trash size={14} weight="bold" />
-                      </Button>
-                    </div>
-                  )}
-
-                  <div className="p-8 flex flex-col h-full relative z-10">
-                    <div className="flex items-start justify-between gap-4 mb-4">
-                      <div className="flex-1">
-                        <h3 className="text-2xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors leading-tight">
-                          {project.name}
-                        </h3>
-                        
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <Badge 
-                            variant={project.status === 'Active' ? 'default' : 'secondary'}
-                            className="text-xs font-semibold"
-                          >
-                            {project.status === 'Active' && <CheckCircle size={12} weight="fill" className="mr-1" />}
-                            {project.status}
-                          </Badge>
-                          
-                          {project.market && (
-                            <Badge variant="outline" className="text-xs font-medium gap-1">
-                              <MapPin size={12} weight="fill" />
-                              {project.market}
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <p className="text-foreground/80 leading-relaxed mb-6 flex-grow text-[15px]">
-                      {project.description}
-                    </p>
-
-                    {project.features && project.features.length > 0 && (
-                      <div className="mb-6">
-                        <h4 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">{t.labels.keyFeatures}:</h4>
-                        <div className="space-y-2">
-                          {project.features.slice(0, 3).map((feature, idx) => (
-                            <div key={idx} className="flex items-start gap-2">
-                              <CheckCircle size={16} weight="fill" className="text-accent mt-0.5 flex-shrink-0" />
-                              <span className="text-sm text-muted-foreground">{feature}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {project.technologies && project.technologies.length > 0 && (
-                      <div className="mb-6">
-                        <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">{t.labels.technicalStack}</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {project.technologies.map((tech) => (
-                            <Badge 
-                              key={tech} 
-                              variant="secondary" 
-                              className="text-xs font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
-                            >
-                              {tech}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {project.url && (
-                      <Button 
-                        asChild 
-                        className="w-full mt-auto gap-2 h-11 shadow-md hover:shadow-lg transition-all group/btn" 
-                        size="lg"
-                      >
-                        <a href={project.url} target="_blank" rel="noopener noreferrer">
-                          <Globe size={18} weight="bold" />
-                          <span>{t.labels.visitLiveSite}</span>
-                          <ArrowRight size={18} weight="bold" className="group-hover/btn:translate-x-1 transition-transform" />
-                        </a>
-                      </Button>
-                    )}
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          {filteredProjects.length === 0 && (
-            <div className="text-center py-20">
-              <p className="text-muted-foreground text-lg">{t.labels.noProjectsFound}</p>
-            </div>
+          {/* Work built for employers */}
+          {keyProjects.length > 0 && (
+            <section>
+              <div className="mb-8">
+                <h2 className="text-3xl font-bold text-foreground mb-2">{t.labels.keyProjectsTitle}</h2>
+                <p className="text-muted-foreground">{t.labels.keyProjectsSubtitle}</p>
+              </div>
+              <div className="grid md:grid-cols-2 gap-8">
+                {keyProjects.map(renderCard)}
+              </div>
+            </section>
           )}
         </motion.div>
       </div>
@@ -288,6 +344,7 @@ function ProjectEditDialog({
   onSave: (project: Project) => void
 }) {
   const [formData, setFormData] = useState(project)
+  const professional = formData.category === 'professional'
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -295,8 +352,20 @@ function ProjectEditDialog({
         <DialogHeader>
           <DialogTitle>{formData.id ? 'Edit Project' : 'Add Project'}</DialogTitle>
         </DialogHeader>
-        
+
         <div className="space-y-4 py-4">
+          <div>
+            <label className="text-sm font-medium mb-2 block">Type</label>
+            <select
+              value={formData.category || 'product'}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value as Project['category'] })}
+              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+            >
+              <option value="product">Own product (Live Products)</option>
+              <option value="professional">Built for an employer (Key Projects)</option>
+            </select>
+          </div>
+
           <div>
             <label className="text-sm font-medium mb-2 block">Project Name</label>
             <Input
@@ -314,24 +383,45 @@ function ProjectEditDialog({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium mb-2 block">Status</label>
-              <Input
-                value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                placeholder="Active, In Progress, etc."
-              />
+          {professional ? (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">Company</label>
+                <Input
+                  value={formData.organization || ''}
+                  onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
+                  placeholder="e.g., Aventra Group"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Period</label>
+                <Input
+                  value={formData.period || ''}
+                  onChange={(e) => setFormData({ ...formData, period: e.target.value })}
+                  placeholder="January 2026 - Present"
+                />
+              </div>
             </div>
-            <div>
-              <label className="text-sm font-medium mb-2 block">Market</label>
-              <Input
-                value={formData.market || ''}
-                onChange={(e) => setFormData({ ...formData, market: e.target.value })}
-                placeholder="Bangladesh, Malaysia, etc."
-              />
+          ) : (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">Status</label>
+                <Input
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  placeholder="Live, In Development, etc."
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Market</label>
+                <Input
+                  value={formData.market || ''}
+                  onChange={(e) => setFormData({ ...formData, market: e.target.value })}
+                  placeholder="Bangladesh, Malaysia, etc."
+                />
+              </div>
             </div>
-          </div>
+          )}
 
           <div>
             <label className="text-sm font-medium mb-2 block">Description</label>
@@ -352,7 +442,9 @@ function ProjectEditDialog({
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 block">Key Features (one per line)</label>
+            <label className="text-sm font-medium mb-2 block">
+              {professional ? 'Key Contributions (one per line)' : 'Key Features (one per line)'}
+            </label>
             <Textarea
               value={formData.features?.join('\n') || ''}
               onChange={(e) => setFormData({ ...formData, features: e.target.value.split('\n').filter(Boolean) })}

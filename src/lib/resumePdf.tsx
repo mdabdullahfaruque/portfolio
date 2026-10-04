@@ -66,7 +66,7 @@ function contentCaps(data: PortfolioData): FitStep {
     scale: 1,
     recentBullets: most(data.experiences.slice(0, 2).map((e) => e.achievements)),
     olderBullets: most(data.experiences.slice(2).map((e) => e.achievements)),
-    projectBullets: most(data.projects.map((p) => p.features || [])),
+    projectBullets: most(data.projects.filter((p) => p.category === 'professional').map((p) => p.features || [])),
     skillsPerCategory: most(Object.values(data.skills)),
   }
 }

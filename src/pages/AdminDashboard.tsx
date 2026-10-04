@@ -770,6 +770,18 @@ export function AdminDashboard({ data, onUpdate, onLogout }: AdminDashboardProps
                       </div>
                     </div>
 
+                    <div>
+                      <Label>Type</Label>
+                      <select
+                        value={project.category || 'product'}
+                        onChange={(e) => updateProject(project.id, 'category', e.target.value)}
+                        className="mt-1 h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                      >
+                        <option value="product">Own product (Live Products)</option>
+                        <option value="professional">Built for an employer (Key Projects, on the resume)</option>
+                      </select>
+                    </div>
+
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <Label>Organization (shown on resume)</Label>

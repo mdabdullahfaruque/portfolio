@@ -123,6 +123,18 @@ const de: ContentOverride = {
         'Geplant: Kliniken, Diagnosezentren, Apotheken, Telemedizin',
       ],
     },
+    mylifestylemart: {
+      description:
+        'Multi-Vendor-Lifestyle-Marktplatz für Kleidung, Taschen, Schuhe und Accessoires. Kunden stöbern in lokalen Shops und bestellen direkt beim Verkäufer über WhatsApp; jeder Händler erhält einen eigenen Markenshop.',
+      status: 'In Entwicklung',
+      market: 'Bangladesch, Malaysia & Italien',
+      features: [
+        'Gemeinsamer Marktplatz für viele Händler',
+        'Eigene Markenshops für Händler auf einer Subdomain, optional mit eigener Domain',
+        'Bestellung direkt beim Verkäufer über WhatsApp',
+        'Eine Codebasis, ein Deployment pro Land',
+      ],
+    },
     'dominos-migration': {
       name: "Globale Webplattform-Migration bei Domino's",
       description:

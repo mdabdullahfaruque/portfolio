@@ -199,8 +199,9 @@ export function NewHome({ data, t, language, isAdmin, onUpdate }: HomeProps) {
   const activePhotoUrl = isPortrait ? data.photoUrlPortrait : data.photoUrl
 
   const recentExperience = data.experiences
+  // Featured: my own live products only (employer work is under Key Projects).
   const featuredProjects = data.projects
-    .filter((p) => (p.status || '').toLowerCase() === 'live')
+    .filter((p) => p.category !== 'professional' && (p.status || '').toLowerCase() === 'live')
     .slice(0, 2)
   const currentRole = data.experiences[0]
   const careerHighlights = data.highlights && data.highlights.length > 0 ? data.highlights.slice(0, 6) : []

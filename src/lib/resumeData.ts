@@ -136,7 +136,8 @@ export function buildResumeData(
       meta: [cert.issuer, cert.date].filter(Boolean).join(' · '),
     })),
     languages: data.languages.map((lang) => ({ language: lang.name, proficiency: lang.proficiency })),
-    projects: data.projects.map((project) => ({
+    // Key Projects on the resume: work built for employers, not my own products.
+    projects: data.projects.filter((project) => project.category === 'professional').map((project) => ({
       name: project.name,
       organization: project.organization || '',
       period: project.period || '',
